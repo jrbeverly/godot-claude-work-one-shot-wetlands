@@ -1,0 +1,735 @@
+{
+ "name": "Sites Test Vale",
+ "mapSize": 1024,
+ "cellSize": 2,
+ "sun": {
+  "azimuthDeg": 225,
+  "elevationDeg": 38,
+  "color": "#FFE7BE",
+  "energy": 1.2
+ },
+ "palette": {
+  "grass": "#5E8C3A",
+  "fog": "#A9BFD3",
+  "skyTop": "#6F95C2",
+  "skyHorizon": "#C9D7E2",
+  "water": "#4C7A8C"
+ },
+ "fog": {
+  "startM": 80,
+  "endM": 800,
+  "density": 0.002,
+  "heightFogEnabled": false,
+  "heightFogLevel": 0
+ },
+ "terrain": {
+  "baseHeight": 5,
+  "rim": {
+   "startRadius": 360,
+   "edgeHeight": 190,
+   "roughness": 0.35
+  },
+  "hills": [
+   {
+    "name": "Mill Hill",
+    "x": 120,
+    "z": -60,
+    "radius": 90,
+    "height": 28,
+    "shape": "dome"
+   },
+   {
+    "name": "Bluff",
+    "x": -200,
+    "z": -220,
+    "radius": 120,
+    "height": 55,
+    "shape": "cliff"
+   }
+  ],
+  "basins": [],
+  "ridges": [
+   {
+    "name": "Spur",
+    "points": [
+     [
+      -350,
+      100
+     ],
+     [
+      -220,
+      160
+     ],
+     [
+      -90,
+      260
+     ]
+    ],
+    "width": 50,
+    "height": 35
+   }
+  ],
+  "flats": [
+   {
+    "name": "Village",
+    "x": 0,
+    "z": 40,
+    "radius": 45,
+    "height": 6
+   },
+   {
+    "name": "Farm",
+    "x": -120,
+    "z": 95,
+    "radius": 40,
+    "height": 6.5
+   },
+   {
+    "name": "Mill Top",
+    "x": 120,
+    "z": -60,
+    "radius": 26,
+    "height": 31
+   },
+   {
+    "name": "Ruin",
+    "x": -110,
+    "z": 200,
+    "radius": 30,
+    "height": 14
+   }
+  ]
+ },
+ "lake": {
+  "name": "Mere",
+  "x": 180,
+  "z": 120,
+  "radiusX": 90,
+  "radiusZ": 70,
+  "waterLevel": 2.5,
+  "depth": 6
+ },
+ "rivers": [
+  {
+   "name": "Brook",
+   "points": [
+    [
+     -60,
+     -400
+    ],
+    [
+     -20,
+     -300
+    ],
+    [
+     40,
+     -180
+    ],
+    [
+     120,
+     -40
+    ],
+    [
+     170,
+     60
+    ]
+   ],
+   "width": 7,
+   "depth": 2.2,
+   "waterLevelStart": 30,
+   "waterLevelEnd": 2.5
+  }
+ ],
+ "roads": [
+  {
+   "name": "Low Road",
+   "points": [
+    [
+     -420,
+     60
+    ],
+    [
+     -300,
+     40
+    ],
+    [
+     -180,
+     70
+    ],
+    [
+     -60,
+     50
+    ],
+    [
+     0,
+     40
+    ],
+    [
+     80,
+     20
+    ],
+    [
+     160,
+     -30
+    ],
+    [
+     260,
+     -80
+    ],
+    [
+     360,
+     -160
+    ],
+    [
+     430,
+     -260
+    ]
+   ],
+   "width": 5,
+   "kind": "main"
+  }
+ ],
+ "biomes": [
+  {
+   "name": "Dark Wood",
+   "x": -150,
+   "z": -150,
+   "radius": 140,
+   "priority": 1,
+   "treeDensity": 0.6,
+   "clumpiness": 0.7,
+   "trees": [
+    {
+     "model": "CommonTree_1",
+     "weight": 1,
+     "scale": 1
+    }
+   ],
+   "undergrowth": [],
+   "groundTexture": "forestFloor",
+   "leafTint": null
+  },
+  {
+   "name": "Gold Meadow",
+   "x": 260,
+   "z": 260,
+   "radius": 150,
+   "priority": 1,
+   "treeDensity": 0.05,
+   "clumpiness": 0.5,
+   "trees": [],
+   "undergrowth": [],
+   "groundTexture": "meadow",
+   "leafTint": null
+  }
+ ],
+ "sites": [
+  {
+   "name": "Thornwick",
+   "type": "village",
+   "x": 0,
+   "z": 52,
+   "rotationDeg": 0,
+   "clearRadius": 42,
+   "pieces": [
+    {
+     "kind": "landmark",
+     "model": "building_well_blue",
+     "x": 0,
+     "z": 0,
+     "rotationDeg": 0,
+     "scale": 6
+    },
+    {
+     "kind": "landmark",
+     "model": "building_tavern_blue",
+     "x": 22,
+     "z": -4,
+     "rotationDeg": 90,
+     "scale": 8
+    },
+    {
+     "kind": "cottage",
+     "x": -16,
+     "z": -10,
+     "rotationDeg": 200,
+     "footprint": [
+      2,
+      2
+     ],
+     "style": "plaster",
+     "storeys": 1
+    },
+    {
+     "kind": "cottage",
+     "x": -14,
+     "z": 12,
+     "rotationDeg": 110,
+     "footprint": [
+      2,
+      4
+     ],
+     "style": "timber",
+     "storeys": 1
+    },
+    {
+     "kind": "cottage",
+     "x": 4,
+     "z": 18,
+     "rotationDeg": 10,
+     "footprint": [
+      3,
+      4
+     ],
+     "style": "plaster",
+     "storeys": 2
+    },
+    {
+     "kind": "cottage",
+     "x": 20,
+     "z": 14,
+     "rotationDeg": 40,
+     "footprint": [
+      2,
+      4
+     ],
+     "style": "stone",
+     "storeys": 1
+    },
+    {
+     "kind": "cottage",
+     "x": -2,
+     "z": -18,
+     "rotationDeg": 170,
+     "footprint": [
+      2,
+      2
+     ],
+     "style": "timber",
+     "storeys": 1,
+     "chimney": false
+    },
+    {
+     "kind": "fence",
+     "points": [
+      [
+       -26,
+       -2
+      ],
+      [
+       -26,
+       14
+      ],
+      [
+       -20,
+       20
+      ]
+     ]
+    },
+    {
+     "kind": "fence",
+     "points": [
+      [
+       10,
+       24
+      ],
+      [
+       22,
+       24
+      ],
+      [
+       28,
+       20
+      ]
+     ]
+    },
+    {
+     "kind": "prop",
+     "model": "Prop_Wagon",
+     "x": 9,
+     "z": -6,
+     "rotationDeg": 70,
+     "scale": 1
+    },
+    {
+     "kind": "prop",
+     "model": "Prop_Crate",
+     "x": 16,
+     "z": 2,
+     "rotationDeg": 20,
+     "scale": 1
+    },
+    {
+     "kind": "prop",
+     "model": "Prop_Crate",
+     "x": 16.9,
+     "z": 2.6,
+     "rotationDeg": 60,
+     "scale": 0.8
+    }
+   ]
+  },
+  {
+   "name": "Hollowmere Farm",
+   "type": "farm",
+   "x": -120,
+   "z": 100,
+   "rotationDeg": 20,
+   "clearRadius": 38,
+   "pieces": [
+    {
+     "kind": "cottage",
+     "x": 0,
+     "z": -14,
+     "rotationDeg": 0,
+     "footprint": [
+      2,
+      4
+     ],
+     "style": "timber",
+     "storeys": 1
+    },
+    {
+     "kind": "field",
+     "x": -12,
+     "z": 6,
+     "rotationDeg": 0,
+     "widthM": 16,
+     "depthM": 14,
+     "crop": "wheat"
+    },
+    {
+     "kind": "fence",
+     "points": [
+      [
+       -20.5,
+       -1.5
+      ],
+      [
+       -3.5,
+       -1.5
+      ],
+      [
+       -3.5,
+       13.5
+      ],
+      [
+       -20.5,
+       13.5
+      ],
+      [
+       -20.5,
+       -1.5
+      ]
+     ]
+    },
+    {
+     "kind": "field",
+     "x": 12,
+     "z": 6,
+     "rotationDeg": 0,
+     "widthM": 14,
+     "depthM": 14,
+     "crop": "wheat"
+    },
+    {
+     "kind": "fence",
+     "points": [
+      [
+       4.5,
+       -1.5
+      ],
+      [
+       19.5,
+       -1.5
+      ],
+      [
+       19.5,
+       13.5
+      ],
+      [
+       4.5,
+       13.5
+      ],
+      [
+       4.5,
+       -1.5
+      ]
+     ]
+    },
+    {
+     "kind": "prop",
+     "model": "Prop_Wagon",
+     "x": 8,
+     "z": -10,
+     "rotationDeg": 110,
+     "scale": 1
+    }
+   ]
+  },
+  {
+   "name": "Mill Hill",
+   "type": "landmark",
+   "x": 120,
+   "z": -60,
+   "rotationDeg": 0,
+   "clearRadius": 28,
+   "pieces": [
+    {
+     "kind": "landmark",
+     "model": "building_windmill_blue",
+     "x": -6,
+     "z": 4,
+     "rotationDeg": 200,
+     "scale": 9
+    },
+    {
+     "kind": "landmark",
+     "model": "building_church_blue",
+     "x": 9,
+     "z": -6,
+     "rotationDeg": 150,
+     "scale": 8
+    },
+    {
+     "kind": "fence",
+     "points": [
+      [
+       -14,
+       10
+      ],
+      [
+       -4,
+       14
+      ],
+      [
+       6,
+       12
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Old Circle",
+   "type": "ruin",
+   "x": -110,
+   "z": 200,
+   "rotationDeg": 30,
+   "clearRadius": 30,
+   "pieces": [
+    {
+     "kind": "tree",
+     "model": "TwistedTree_1",
+     "x": 0,
+     "z": 0,
+     "rotationDeg": 0,
+     "scale": 0.9,
+     "leafTint": "#D9A040"
+    },
+    {
+     "kind": "ruinWall",
+     "x": -12,
+     "z": -10,
+     "rotationDeg": 0,
+     "lengthM": 8,
+     "heightM": 3
+    },
+    {
+     "kind": "ruinWall",
+     "x": -16,
+     "z": -5,
+     "rotationDeg": 90,
+     "lengthM": 6,
+     "heightM": 3
+    },
+    {
+     "kind": "ruinWall",
+     "x": 12,
+     "z": 10,
+     "rotationDeg": 20,
+     "lengthM": 8,
+     "heightM": 3
+    },
+    {
+     "kind": "ruinWall",
+     "x": 16,
+     "z": 3,
+     "rotationDeg": 110,
+     "lengthM": 6,
+     "heightM": 2.4
+    },
+    {
+     "kind": "standingStone",
+     "x": 13.0,
+     "z": 0.0,
+     "rotationDeg": 0,
+     "scale": 1
+    },
+    {
+     "kind": "standingStone",
+     "x": 4.02,
+     "z": 12.36,
+     "rotationDeg": 72,
+     "scale": 1
+    },
+    {
+     "kind": "standingStone",
+     "x": -10.52,
+     "z": 7.64,
+     "rotationDeg": 144,
+     "scale": 1
+    },
+    {
+     "kind": "standingStone",
+     "x": -10.52,
+     "z": -7.64,
+     "rotationDeg": 216,
+     "scale": 1
+    },
+    {
+     "kind": "standingStone",
+     "x": 4.02,
+     "z": -12.36,
+     "rotationDeg": 288,
+     "scale": 1
+    }
+   ]
+  }
+ ],
+ "spawn": {
+  "x": -60,
+  "z": 50,
+  "yawDeg": 90
+ },
+ "shots": [
+  {
+   "name": "wide",
+   "from": [
+    -90,
+    0,
+    160
+   ],
+   "lookAt": [
+    30,
+    0,
+    20
+   ],
+   "fovDeg": 60,
+   "fromAboveGround": 40,
+   "lookAtAboveGround": 8
+  },
+  {
+   "name": "village",
+   "from": [
+    -8,
+    0,
+    82
+   ],
+   "lookAt": [
+    10,
+    0,
+    46
+   ],
+   "fovDeg": 62,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 3
+  },
+  {
+   "name": "village_lane",
+   "from": [
+    -30,
+    0,
+    42
+   ],
+   "lookAt": [
+    10,
+    0,
+    52
+   ],
+   "fovDeg": 62,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 2.5
+  },
+  {
+   "name": "farm",
+   "from": [
+    -128,
+    0,
+    128
+   ],
+   "lookAt": [
+    -120,
+    0,
+    88
+   ],
+   "fovDeg": 62,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 2
+  },
+  {
+   "name": "hilltop",
+   "from": [
+    106,
+    0,
+    -44
+   ],
+   "lookAt": [
+    124,
+    0,
+    -62
+   ],
+   "fovDeg": 65,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 5
+  },
+  {
+   "name": "ruin",
+   "from": [
+    -96,
+    0,
+    222
+   ],
+   "lookAt": [
+    -110,
+    0,
+    200
+   ],
+   "fovDeg": 62,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 5
+  },
+  {
+   "name": "tavern",
+   "from": [
+    6,
+    0,
+    60
+   ],
+   "lookAt": [
+    24,
+    0,
+    46
+   ],
+   "fovDeg": 62,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 4
+  },
+  {
+   "name": "hill_approach",
+   "from": [
+    40,
+    0,
+    -10
+   ],
+   "lookAt": [
+    118,
+    0,
+    -60
+   ],
+   "fovDeg": 55,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 12
+  }
+ ]
+}
