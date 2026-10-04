@@ -1,28 +1,261 @@
 {
-  "name": "Test Vale",
-  "mapSize": 1024, "cellSize": 2,
-  "sun": {"azimuthDeg": 225, "elevationDeg": 38, "color": "#FFE7BE", "energy": 1.2},
-  "palette": {"grass": "#5E8C3A", "fog": "#A9BFD3", "skyTop": "#6F95C2", "skyHorizon": "#C9D7E2", "water": "#4C7A8C"},
-  "fog": {"startM": 80, "endM": 800, "density": 0.002, "heightFogEnabled": false, "heightFogLevel": 0},
-  "terrain": {
-    "baseHeight": 5,
-    "rim": {"startRadius": 360, "edgeHeight": 190, "roughness": 0.35},
-    "hills": [{"name": "Mill Hill", "x": 120, "z": -60, "radius": 90, "height": 28, "shape": "dome"},
-              {"name": "Bluff", "x": -200, "z": -220, "radius": 120, "height": 55, "shape": "cliff"}],
-    "basins": [],
-    "ridges": [{"name": "Spur", "points": [[-350, 100], [-220, 160], [-90, 260]], "width": 50, "height": 35}],
-    "flats": [{"name": "Village", "x": 0, "z": 40, "radius": 45, "height": 6}]
+ "name": "Test Vale",
+ "mapSize": 1024,
+ "cellSize": 2,
+ "sun": {
+  "azimuthDeg": 225,
+  "elevationDeg": 38,
+  "color": "#FFE7BE",
+  "energy": 1.2
+ },
+ "palette": {
+  "grass": "#5E8C3A",
+  "fog": "#A9BFD3",
+  "skyTop": "#6F95C2",
+  "skyHorizon": "#C9D7E2",
+  "water": "#4C7A8C"
+ },
+ "fog": {
+  "startM": 80,
+  "endM": 800,
+  "density": 0.002,
+  "heightFogEnabled": false,
+  "heightFogLevel": 0
+ },
+ "terrain": {
+  "baseHeight": 5,
+  "rim": {
+   "startRadius": 360,
+   "edgeHeight": 190,
+   "roughness": 0.35
   },
-  "lake": {"name": "Mere", "x": 180, "z": 120, "radiusX": 90, "radiusZ": 70, "waterLevel": 2.5, "depth": 6},
-  "rivers": [{"name": "Brook", "points": [[-60, -400], [-20, -300], [40, -180], [120, -40], [170, 60]], "width": 7, "depth": 2.2, "waterLevelStart": 30, "waterLevelEnd": 2.5}],
-  "roads": [{"name": "Low Road", "points": [[-420, 60], [-300, 40], [-180, 70], [-60, 50], [0, 40], [80, 20], [160, -30], [260, -80], [360, -160], [430, -260]], "width": 5, "kind": "main"}],
-  "biomes": [{"name": "Dark Wood", "x": -150, "z": -150, "radius": 140, "priority": 1, "treeDensity": 0.6, "clumpiness": 0.7, "trees": [{"model": "CommonTree_1", "weight": 1, "scale": 1}], "undergrowth": [], "groundTexture": "forestFloor", "leafTint": null},
-             {"name": "Gold Meadow", "x": 260, "z": 260, "radius": 150, "priority": 1, "treeDensity": 0.05, "clumpiness": 0.5, "trees": [], "undergrowth": [], "groundTexture": "meadow", "leafTint": null}],
-  "sites": [],
-  "spawn": {"x": -60, "z": 50, "yawDeg": 90},
-  "shots": [
-    {"name": "wide", "from": [-380, 90, 300], "lookAt": [60, 10, -40], "fovDeg": 60},
-    {"name": "road", "from": [-120, 8.5, 62], "lookAt": [40, 6, 30], "fovDeg": 62},
-    {"name": "lake", "from": [60, 9, 160], "lookAt": [200, 3, 110], "fovDeg": 60}
+  "hills": [
+   {
+    "name": "Mill Hill",
+    "x": 120,
+    "z": -60,
+    "radius": 90,
+    "height": 28,
+    "shape": "dome"
+   },
+   {
+    "name": "Bluff",
+    "x": -200,
+    "z": -220,
+    "radius": 120,
+    "height": 55,
+    "shape": "cliff"
+   }
+  ],
+  "basins": [],
+  "ridges": [
+   {
+    "name": "Spur",
+    "points": [
+     [
+      -350,
+      100
+     ],
+     [
+      -220,
+      160
+     ],
+     [
+      -90,
+      260
+     ]
+    ],
+    "width": 50,
+    "height": 35
+   }
+  ],
+  "flats": [
+   {
+    "name": "Village",
+    "x": 0,
+    "z": 40,
+    "radius": 45,
+    "height": 6
+   }
   ]
+ },
+ "lake": {
+  "name": "Mere",
+  "x": 180,
+  "z": 120,
+  "radiusX": 90,
+  "radiusZ": 70,
+  "waterLevel": 2.5,
+  "depth": 6
+ },
+ "rivers": [
+  {
+   "name": "Brook",
+   "points": [
+    [
+     -60,
+     -400
+    ],
+    [
+     -20,
+     -300
+    ],
+    [
+     40,
+     -180
+    ],
+    [
+     120,
+     -40
+    ],
+    [
+     170,
+     60
+    ]
+   ],
+   "width": 7,
+   "depth": 2.2,
+   "waterLevelStart": 30,
+   "waterLevelEnd": 2.5
+  }
+ ],
+ "roads": [
+  {
+   "name": "Low Road",
+   "points": [
+    [
+     -420,
+     60
+    ],
+    [
+     -300,
+     40
+    ],
+    [
+     -180,
+     70
+    ],
+    [
+     -60,
+     50
+    ],
+    [
+     0,
+     40
+    ],
+    [
+     80,
+     20
+    ],
+    [
+     160,
+     -30
+    ],
+    [
+     260,
+     -80
+    ],
+    [
+     360,
+     -160
+    ],
+    [
+     430,
+     -260
+    ]
+   ],
+   "width": 5,
+   "kind": "main"
+  }
+ ],
+ "biomes": [
+  {
+   "name": "Dark Wood",
+   "x": -150,
+   "z": -150,
+   "radius": 140,
+   "priority": 1,
+   "treeDensity": 0.6,
+   "clumpiness": 0.7,
+   "trees": [
+    {
+     "model": "CommonTree_1",
+     "weight": 1,
+     "scale": 1
+    }
+   ],
+   "undergrowth": [],
+   "groundTexture": "forestFloor",
+   "leafTint": null
+  },
+  {
+   "name": "Gold Meadow",
+   "x": 260,
+   "z": 260,
+   "radius": 150,
+   "priority": 1,
+   "treeDensity": 0.05,
+   "clumpiness": 0.5,
+   "trees": [],
+   "undergrowth": [],
+   "groundTexture": "meadow",
+   "leafTint": null
+  }
+ ],
+ "sites": [],
+ "spawn": {
+  "x": -60,
+  "z": 50,
+  "yawDeg": 90
+ },
+ "shots": [
+  {
+   "name": "wide",
+   "from": [
+    -380,
+    0,
+    300
+   ],
+   "lookAt": [
+    60,
+    0,
+    -40
+   ],
+   "fovDeg": 60,
+   "fromAboveGround": 45,
+   "lookAtAboveGround": 5
+  },
+  {
+   "name": "road",
+   "from": [
+    -120,
+    0,
+    62
+   ],
+   "lookAt": [
+    40,
+    0,
+    30
+   ],
+   "fovDeg": 62,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 1.5
+  },
+  {
+   "name": "lake",
+   "from": [
+    60,
+    0,
+    160
+   ],
+   "lookAt": [
+    200,
+    0,
+    110
+   ],
+   "fovDeg": 60,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 0.5
+  }
+ ]
 }

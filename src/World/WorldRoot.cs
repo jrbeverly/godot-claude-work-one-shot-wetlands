@@ -21,6 +21,9 @@ public partial class WorldRoot : Node3D
     public override void _Ready()
     {
         var sw = Stopwatch.StartNew();
+        // Allow `godot --path . -- --layout=res://assets/world/some_other_layout.json` for subsystem test scenes.
+        foreach (var a in OS.GetCmdlineUserArgs())
+            if (a.StartsWith("--layout=")) LayoutPath = a["--layout=".Length..];
         Layout = WorldLayout.Load(LayoutPath);
         Terrain = TerrainBuilder.Build(Layout, Seed);
         Field = Terrain.Field;

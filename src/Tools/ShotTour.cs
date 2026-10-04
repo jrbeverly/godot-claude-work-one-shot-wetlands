@@ -23,6 +23,7 @@ public partial class ShotTour : Node
     private string _dir = "";
     private int _settle = 8;
     private Camera3D? _cam;
+    private WorldRoot? _world;
 
     public static bool Requested()
         => OS.GetCmdlineUserArgs().Any(a => a == "--shots" || a.StartsWith("--shots="));
@@ -42,8 +43,8 @@ public partial class ShotTour : Node
         }
         Directory.CreateDirectory(_dir);
 
-        var layout = GetNodeOrNull<WorldRoot>(WorldPath ?? "../World")?.Layout;
-        var all = layout?.Shots ?? new List<ShotSpec>();
+        _world = GetNodeOrNull<WorldRoot>(WorldPath ?? "../World");
+        var all = _world?.Layout.Shots ?? new List<ShotSpec>();
         if (all.Count == 0)
             all.Add(new ShotSpec { Name = "default", From = new[] { 0f, 12f, 30f }, LookAt = new[] { 0f, 0f, 0f } });
         _shots = only == null ? all : all.Where(s => only.Split(',').Contains(s.Name)).ToList();
@@ -70,6 +71,8 @@ public partial class ShotTour : Node
         {
             var from = new Vector3(shot.From[0], shot.From[1], shot.From[2]);
             var at = new Vector3(shot.LookAt[0], shot.LookAt[1], shot.LookAt[2]);
+            if (_world != null && shot.FromAboveGround is { } fa) from.Y = _world.GroundHeight(from.X, from.Z) + fa;
+            if (_world != null && shot.LookAtAboveGround is { } la) at.Y = _world.GroundHeight(at.X, at.Z) + la;
             _cam!.Fov = shot.FovDeg;
             _cam.GlobalPosition = from;
             if ((at - from).LengthSquared() > 1e-4f) _cam.LookAt(at, Vector3.Up);

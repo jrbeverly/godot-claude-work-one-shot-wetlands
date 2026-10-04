@@ -228,7 +228,12 @@ public sealed class SpawnSpec
 public sealed class ShotSpec
 {
     public string Name { get; set; } = "shot";
+    /// <summary>Camera position [x, y, z]. When <see cref="FromAboveGround"/> is set, y is ignored and replaced by ground height + that offset.</summary>
     public float[] From { get; set; } = { 0, 10, 20 };
     public float[] LookAt { get; set; } = { 0, 0, 0 };
     public float FovDeg { get; set; } = 60f;
+    /// <summary>Eye height above the terrain at From.xz (e.g. 1.7 for a walking shot, 40 for a high vista). Null = use From.y as absolute.</summary>
+    public float? FromAboveGround { get; set; }
+    /// <summary>Height above the terrain at LookAt.xz. Null = use LookAt.y as absolute.</summary>
+    public float? LookAtAboveGround { get; set; }
 }
