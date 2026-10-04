@@ -4,12 +4,15 @@ Use the Decision cells to write **include selected paths**, **reference only**, 
 
 ## Selected and pushed assets
 
-This pass selects 88 glTF scenes, 33.95 MiB including previews, with one model format per selection. Full archives and unused formats/colourways remain local.
+This pass selects 114 glTF scenes, 35.67 MiB including previews, with one model format per selection. Full archives and unused formats/colourways remain local.
 
 | Selection / preview sheets | Scenes | Stored size | Choice |
 |---|---|---|---|
 | [Quaternius Stylized Nature](references/assets/selected/quaternius-stylized-nature/README.md) | 37 | 18.64 MiB | Broadleaf/pine/dead trees, bushes, tufts, ferns, flowers, mushrooms and rocks. Red twisted-tree/bush defaults are palette references; recolour for Elwynn. |
 | [Quaternius Medieval Village](references/assets/selected/quaternius-medieval-village/README.md) | 51 | 15.31 MiB | Timber/plaster cottage kit, roofs, stone walls, stairs, windows, fences, chimneys and wagon. |
+| [KayKit village landmarks](references/assets/selected/kaykit-medieval-landmarks/README.md) | 8 | 0.98 MiB | Church, smithy, tavern, mine, mills, well and tower; exaggerated silhouettes, blue-roof colourway. |
+| [KayKit forest silhouettes](references/assets/selected/kaykit-forest/README.md) | 16 | 0.32 MiB | Atlas-based broadleaf/pine/bare trees, bushes, grass and rocks; cleaner/toylike alternative to textured foliage. |
+| [Classic pine references](references/assets/selected/classic-pines/README.md) | 2 | 0.43 MiB | Two low-poly textured pine packs for Dun Morogh; the second scene contains multiple pine variants. |
 
 Selected models were imported and rendered in Godot 4.5.1. Dependencies and retained-file hashes were checked. Quaternius textures are capped at 1024 px; other selections are unchanged. These are reference assets, with application integration left for world work.
 
@@ -29,8 +32,8 @@ tar -tzf .git/reference-archives/KayKit-Medieval-Hexagon-Pack.tar.gz
 
 | Reference / omitted-file inventory | Local archive / MiB | What to judge | Recorded licence notes | Decision |
 |---|---|---|---|---|
-| [KayKit-Medieval-Hexagon-Pack](https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0) · [inventory](references/assets/KayKit-Medieval-Hexagon-Pack/SNAPSHOT.json) | [KayKit-Medieval-Hexagon-Pack.tar.gz](.git/reference-archives/KayKit-Medieval-Hexagon-Pack.tar.gz) / 7.5 | Buildings, hex tiles, colour variants and texture atlas. Decide whether to keep buildings only and one model format. | CC0; LICENSE.txt retained. | Pending |
-| [godot-forest-demo](https://github.com/GamesNotDeveloped/godot-forest-demo) · [inventory](references/godot/foliage/godot-forest-demo/SNAPSHOT.json) | [godot-forest-demo.tar.gz](.git/reference-archives/godot-forest-demo.tar.gz) / 328.1 | Trees, plants, old house, textures, sky HDRI, LUTs and generated data. Select individual objects rather than the whole demo. | CC-BY-4.0; per-model notices; music has separate Pixabay terms. | Pending |
+| [KayKit-Medieval-Hexagon-Pack](https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0) · [inventory](references/assets/KayKit-Medieval-Hexagon-Pack/SNAPSHOT.json) | [KayKit-Medieval-Hexagon-Pack.tar.gz](.git/reference-archives/KayKit-Medieval-Hexagon-Pack.tar.gz) / 7.5 | Buildings, hex tiles, colour variants and texture atlas. Decide whether to keep buildings only and one model format. | CC0; LICENSE.txt retained. | Selected eight blue-roof landmarks + atlas; hex tiles and other colourways deferred. |
+| [godot-forest-demo](https://github.com/GamesNotDeveloped/godot-forest-demo) · [inventory](references/godot/foliage/godot-forest-demo/SNAPSHOT.json) | [godot-forest-demo.tar.gz](.git/reference-archives/godot-forest-demo.tar.gz) / 328.1 | Trees, plants, old house, textures, sky HDRI, LUTs and generated data. Select individual objects rather than the whole demo. | CC-BY-4.0; per-model notices; music has separate Pixabay terms. | Selected pine-tree-3 and pine-tree-4 with artist credits; other assets deferred. |
 | [godotwind](https://github.com/lihogloglo/godotwind) · [inventory](references/environment-case-studies/godotwind/SNAPSHOT.json) | [godotwind.tar.gz](.git/reference-archives/godotwind.tar.gz) / 728.1 | La Palma terrain data, sky/cloud textures, demo assets and addon binaries. Decide separately on terrain data, textures and binaries. | MIT project; terrain-data provenance and SunshineClouds2 terms unresolved. | Pending |
 | [Terrain3D](https://github.com/TokisanGames/Terrain3D) · [inventory](references/godot/terrain/Terrain3D/SNAPSHOT.json) | [Terrain3D.tar.gz](.git/reference-archives/Terrain3D.tar.gz) / 38.6 | Demo terrain regions, ground textures, models and documentation images. Decide whether any demo assets are useful. | MIT code; ambientCG textures recorded as CC0; model terms unresolved. | Pending |
 | [scatter](https://github.com/HungryProton/scatter) · [inventory](references/godot/foliage/scatter/SNAPSHOT.json) | [scatter.tar.gz](.git/reference-archives/scatter.tar.gz) / 9.5 | Demo foliage, ground textures, sky texture and Blender source. Decide whether to keep demo art or only plugin source. | MIT code; demo-asset provenance unresolved. | Pending |
@@ -74,7 +77,7 @@ These archives mainly contain tooling, editor images, test fixtures or documenta
 
 ## Asset pages only — not downloaded
 
-These links come from the existing asset catalogue. Selected downloads are now noted in their Decision cells. Selected downloads are now noted in their Decision cells. Licence notes are recorded claims, not a new verification of current download terms. Check the actual pack/version you choose.
+These links come from the existing asset catalogue. Selected downloads are now noted in their Decision cells. Selected downloads are now noted in their Decision cells. Selected downloads are now noted in their Decision cells. Licence notes are recorded claims, not a new verification of current download terms. Check the actual pack/version you choose.
 
 | Asset page | What to judge | Recorded licence notes | Decision |
 |---|---|---|---|
@@ -84,8 +87,8 @@ These links come from the existing asset catalogue. Selected downloads are now n
 | [Quaternius Ultimate Fantasy RTS](https://quaternius.com/packs/ultimatefantasyrts.html) | Buildings and nature; choose useful environment pieces. | CC0 recorded. | Pending |
 | [Kenney Nature Kit](https://kenney.nl/assets/nature-kit) | Simple trees, rocks and terrain pieces. | CC0 recorded. | Pending |
 | [Kenney asset catalogue](https://kenney.nl/assets) | Find the Fantasy Town Kit or other building packs; no specific additional download chosen. | Verify the selected pack. | Pending |
-| [KayKit Forest Nature Pack](https://kaylousberg.itch.io/kaykit-forest) | Trees, rocks, grass and recolours; decide which tier and variants you need. | CC0 recorded; verify selected download. | Pending |
-| [WizP Lowpoly Stylized Fantasy Environment Pack](https://wizp.itch.io/lowpoly-stylized-fantasy-enviroment-pack) | Fantasy buildings and props; assess silhouette and palette. | CC0 claim remains unverified. | Pending |
+| [KayKit Forest Nature Pack](https://kaylousberg.itch.io/kaykit-forest) | Trees, rocks, grass and recolours; decide which tier and variants you need. | CC0 recorded; verify selected download. | Selected 16 Free 1.0 glTF models + shared atlas. |
+| [WizP Lowpoly Stylized Fantasy Environment Pack](https://wizp.itch.io/lowpoly-stylized-fantasy-enviroment-pack) | Fantasy buildings and props; assess silhouette and palette. | CC0 claim remains unverified. | Deferred: page labels CC0 but prose prohibits resale; terms conflict. |
 | [KayKit City Builder Bits](https://github.com/KayKit-Game-Assets/KayKit-City-Builder-Bits-1.0) · [Dungeon Remastered](https://github.com/KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0) | Other building/prop sets mentioned in the catalogue. | Licence and size not checked. | Pending |
 | [ambientCG](https://ambientcg.com/) · [licence](https://docs.ambientcg.com/license/) | Choose specific terrain textures or HDRIs; no items selected. | CC0 recorded. | Pending |
 | [Poly Haven](https://polyhaven.com/) · [licence](https://polyhaven.com/license) | Choose specific HDRIs, textures or models; no items selected. | CC0 recorded. | Pending |

@@ -51,5 +51,8 @@ Godot Engine 4.5.1 .NET (MIT), .NET SDK 8.
 |---|---|---|
 | [Quaternius Stylized Nature](references/assets/selected/quaternius-stylized-nature/README.md) | CC0; Quaternius; notice retained in selection. | PNG textures capped at 1024 px; glTF geometry/materials unchanged. |
 | [Quaternius Medieval Village](references/assets/selected/quaternius-medieval-village/README.md) | CC0; Quaternius; notice retained in selection. | PNG textures capped at 1024 px; glTF geometry/materials unchanged. |
+| [KayKit village landmarks](references/assets/selected/kaykit-medieval-landmarks/README.md) | CC0; Kay Lousberg; notice retained in selection. | Selected files unchanged. |
+| [KayKit forest silhouettes](references/assets/selected/kaykit-forest/README.md) | CC0; Kay Lousberg; notice retained in selection. | Selected files unchanged. |
+| [Classic pine references](references/assets/selected/classic-pines/README.md) | CC-BY-4.0; Wersaus33 and Vova Truestory; notice retained in selection. | Selected files unchanged. Preserve [artist credits](references/assets/selected/classic-pines/ATTRIBUTION.md) wherever redistributed; per-model licence files retained. Upstream demo may have tuned original textures/materials. |
 
 Source download paths, archive hashes and individual file hashes are recorded in each `selection.json`. Selection previews were rendered in Godot 4.5.1; the same asset attribution applies to these images. Application code/assets/addons in sections 1–3 remain unchanged.

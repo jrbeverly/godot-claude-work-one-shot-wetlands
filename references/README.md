@@ -81,4 +81,4 @@ Links + original written analysis only. **No Blizzard screenshots/art are stored
 | `visual/asset-packs.md` | Stylised free packs with licences (Quaternius, Kenney, KayKit, WizP, ambientCG, Poly Haven…). |
 
 ## Assets (`assets/`)
-`assets/README.md` + `visual/asset-packs.md`: pack links and licences (Quaternius Stylized Nature MegaKit, WizP, Kenney, …). One local copy: `assets/KayKit-Medieval-Hexagon-Pack` (**CC0**, ASSET?; only the buildings are useful, not the hex tiles). Import only what a task needs into `assets/` and log it in `THIRD_PARTY.md`.
+Selected, committed models/textures and rendered previews live under `assets/selected/`; [asset index](assets/README.md) lists sizes and licences. Full upstream archives stay local in `.git/reference-archives/`. `../../needs-review.md` records choices and remaining links. Copy only chosen assets into application `assets/` and record imports in `THIRD_PARTY.md`.
