@@ -1,14 +1,15 @@
 # CLAUDE.md
 
-Godot 4.5 .NET (C#) project, bootstrapped as a clean runnable base for later environment/world work.
-Nothing game-specific exists yet. Do not add gameplay, RPG, streaming, or world-generation systems unless asked.
+Godot 4.5 .NET (C#) project: an original single-player fantasy zone that captures the environmental feel of Vanilla-era MMO worlds (see `docs/WORLD_BIBLE.md`). The whole world is generated at startup from `assets/world/layout.json` by small project-specific systems in `src/World/`. Do not add gameplay, RPG, networking or streaming systems unless asked.
 
 ## Conventions
 - Project-owned code is **C#** (`src/`, namespace `GodotWarcraft`, file-scoped namespaces). GDScript only where a third-party addon requires it.
 - Layout: `scenes/` (.tscn), `src/` (C#), `assets/`, `addons/` (empty; nothing integrated), `tools/` (scripts), `docs/`, `references/`.
 - Keep it simple. Prefer small project-specific tools over generic frameworks. Do not overengineer.
 - Keep it buildable: `dotnet build` must pass. Smoke test: `tools/run.sh` (needs `GODOT` env var pointing to the Godot 4.5 .NET binary).
-- Once visual work begins, run the project and look at it frequently; do not rely on code review alone.
+- Look at the world, don't just reason about it: `tools/screenshot.sh` renders the layout's hero shots headlessly (Xvfb + lavapipe); view the PNGs and judge them with `references/visual/README.md`. Diagnostics: `EXTRA="--nofog --noshadow"`, `EXTRA="--debug-draw=unshaded"`.
+- World authoring lives in `assets/world/layout.json` (schema: `src/World/WorldLayout.cs`; check with `tools/validate_layout.py`). Change the world by editing the layout or the builders, not by hand-placing nodes in scenes. Coordinates: metres from map centre, X east, Z south, Y up.
+- Build order in `WorldRoot`: terrain → water → sites → foliage; `Atmosphere` owns sky/sun/fog. New assets need a headless import (`godot --headless --import`), which `tools/screenshot.sh` does for you.
 
 ## Reference library: look here before relevant decisions
 These materials ground the project. Index: `references/README.md`. Fetch code refs once with `tools/fetch-references.sh` (pinned; committed source snapshots, assets omitted). Docs, catalogues and visual notes below are committed and available immediately.
