@@ -76,7 +76,7 @@ public static class TerrainBuilder
         }
 
         // 2b. Banded rock: steep ground steps softly into terraces (reads as painted strata, not noise).
-        Terrace(f, 7f, 0.55f);
+        Terrace(f, 9f, 0.42f, rimNoise);
 
         // 3. Lake: bowl with the shoreline exactly at water level.
         if (L.Lake is { } lake)
@@ -127,6 +127,17 @@ public static class TerrainBuilder
         foreach (var flat in L.Terrain.Flats)
             ApplyRadial(f, flat.X, flat.Z, flat.Radius * 1.5f, (dn, h) => Mathf.Lerp(flat.Height, h, Smooth(Mathf.Clamp((dn * 1.5f - 0.8f) / 0.7f, 0f, 1f))));
 
+        // 5b. Flats may raise islets/promontories above the lake: recompute lake depth from final heights.
+        if (L.Lake is { } lk)
+        {
+            float rmax = MathF.Max(lk.RadiusX, lk.RadiusZ) * 1.1f;
+            ApplyRect(f, lk.X - rmax, lk.Z - rmax, lk.X + rmax, lk.Z + rmax, (x, z, k) =>
+            {
+                float dx = (x - lk.X) / lk.RadiusX, dz = (z - lk.Z) / lk.RadiusZ;
+                if (dx * dx + dz * dz < 1.02f * 1.02f) f.WaterDepth[k] = MathF.Max(0f, lk.WaterLevel - f.Heights[k]);
+            });
+        }
+
         // 6. Roads: smooth the centreline height, then flatten the ground across the ribbon and paint it.
         foreach (var road in L.Roads)
         {
@@ -169,7 +180,7 @@ public static class TerrainBuilder
             float slopeDeg = Mathf.RadToDeg(MathF.Acos(Mathf.Clamp(nrm.Y, -1f, 1f)));
             float sn = splatNoise.GetNoise2D(x, z);
 
-            float rock = Smooth(Mathf.Clamp((slopeDeg - 30f + sn * 6f) / 14f, 0f, 1f));
+            float rock = Smooth(Mathf.Clamp((slopeDeg - 36f + sn * 5f) / 12f, 0f, 1f));
             foreach (var b in rockBiomes) rock = MathF.Max(rock, BiomeWeight(b, x, z, sn));
             float forest = 0f;
             foreach (var b in forestBiomes) forest = MathF.Max(forest, BiomeWeight(b, x, z, sn));
@@ -204,24 +215,26 @@ public static class TerrainBuilder
     // ---- helpers -------------------------------------------------------------------------------
 
     /// <summary>Blend steep slopes toward soft height steps so cliffs and mountains read as banded strata.</summary>
-    private static void Terrace(HeightField f, float step, float strength)
+    private static void Terrace(HeightField f, float step, float strength, FastNoiseLite phase)
     {
         var src = (float[])f.Heights.Clone();
         for (int j = 1; j < f.Size - 1; j++)
         for (int i = 1; i < f.Size - 1; i++)
         {
             int k = f.Index(i, j);
+            // Tilt the strata a little so bands are not dead level contour lines.
+            float shift = phase.GetNoise2D(f.WorldX(i) * 0.6f, f.WorldZ(j) * 0.6f) * step * 0.45f;
             float hl = src[f.Index(i - 1, j)], hr = src[f.Index(i + 1, j)];
             float hd = src[f.Index(i, j - 1)], hu = src[f.Index(i, j + 1)];
             float gx = (hr - hl) / (2f * f.CellSize), gz = (hu - hd) / (2f * f.CellSize);
             float slopeDeg = Mathf.RadToDeg(MathF.Atan(MathF.Sqrt(gx * gx + gz * gz)));
             float w = Smooth((slopeDeg - 26f) / 22f) * strength;
             if (w <= 0f) continue;
-            float h = src[k];
+            float h = src[k] + shift;
             float q = MathF.Floor(h / step) * step;
             float fr = (h - q) / step;
-            float terr = q + step * Smooth((fr - 0.25f) / 0.5f);
-            f.Heights[k] = Mathf.Lerp(h, terr, w);
+            float terr = q + step * Smooth((fr - 0.2f) / 0.6f) - shift;
+            f.Heights[k] = Mathf.Lerp(src[k], terr, w);
         }
     }
 
