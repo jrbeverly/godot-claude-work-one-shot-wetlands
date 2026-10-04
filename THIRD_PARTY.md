@@ -43,4 +43,12 @@ Quaternius Stylized Nature MegaKit; WizP Lowpoly Stylized Fantasy Environment Pa
 Godot Engine 4.5.1 .NET (MIT), .NET SDK 8.
 
 ## Visual references and catalogues (tracked in git)
-`references/visual/` and `references/godot/candidates/` are original notes written for this project, with links to third-party material. No third-party images, Blizzard screenshots or art are stored. Link-only candidates that were flagged GPL/unlicensed in the catalogues (e.g. a GPL C# city generator, unlicensed grass/sky shader repos) must not be imported.
+`references/visual/` and `references/godot/candidates/` are original notes written for this project, with links to third-party material. Selected third-party reference assets are listed below. No Blizzard screenshots or art are stored. Link-only candidates that were flagged GPL/unlicensed in the catalogues (e.g. a GPL C# city generator, unlicensed grass/sky shader repos) must not be imported.
+
+## Selected reference assets (committed; no application integration)
+
+| Selection | Licence / attribution | Stored changes |
+|---|---|---|
+| [Quaternius Stylized Nature](references/assets/selected/quaternius-stylized-nature/README.md) | CC0; Quaternius; notice retained in selection. | PNG textures capped at 1024 px; glTF geometry/materials unchanged. |
+
+Source download paths, archive hashes and individual file hashes are recorded in each `selection.json`. Selection previews were rendered in Godot 4.5.1; the same asset attribution applies to these images. Application code/assets/addons in sections 1–3 remain unchanged.
