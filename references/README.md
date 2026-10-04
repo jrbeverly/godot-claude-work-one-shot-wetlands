@@ -81,4 +81,4 @@ Links + original written analysis only. **No Blizzard screenshots/art are stored
 | `visual/asset-packs.md` | Stylised free packs with licences (Quaternius, Kenney, KayKit, WizP, ambientCG, Poly Haven…). |
 
 ## Assets (`assets/`)
-Selected, committed models/textures and rendered previews live under `assets/selected/`; [asset index](assets/README.md) lists sizes and licences. Full upstream archives stay local in `.git/reference-archives/`. `../../needs-review.md` records choices and remaining links. Copy only chosen assets into application `assets/` and record imports in `THIRD_PARTY.md`.
+Selected, committed models/textures and rendered previews live under `assets/selected/`; [asset index](assets/README.md) lists sizes and licences. Full upstream archives stay local in `.git/reference-archives/`. More candidate pages are listed in [asset-packs.md](visual/asset-packs.md). Copy only chosen assets into application `assets/` and record imports in `THIRD_PARTY.md`.

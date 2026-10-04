@@ -15,4 +15,4 @@ Selected reference assets are committed under `selected/`; Godot ignores this li
 - Each selection includes external glTF buffers/images, a licence notice and `selection.json` with source paths and hashes.
 - Quaternius PNG textures are capped at 1024 px; full-resolution originals remain in `.git/reference-archives/` locally. Other selected models/textures are unchanged.
 - These are silhouette/material references; palettes and scale still need tuning against the [Classic look notes](../visual/wow-classic/CLASSIC_LOOK.md).
-- More candidate pages and remaining decisions: [needs-review.md](../../needs-review.md) and [asset-packs.md](../visual/asset-packs.md).
+- More candidate pages: [asset-packs.md](../visual/asset-packs.md).
