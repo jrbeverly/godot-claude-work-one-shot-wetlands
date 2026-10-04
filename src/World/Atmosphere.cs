@@ -30,7 +30,7 @@ public static class Atmosphere
         skyMat.SetShaderParameter("cloud_light", Paint(new Color("#F2EBDC"), tonemapWhite));
         skyMat.SetShaderParameter("cloud_shadow", Paint(new Color("#7F85A6"), tonemapWhite));
         // Horizon warmth and disc derive from the sun colour so a palette change moves everything together.
-        skyMat.SetShaderParameter("sun_warm", Paint(sunCol.Lerp(new Color("#F9EFD6"), 0.7f), tonemapWhite));
+        skyMat.SetShaderParameter("sun_warm", Paint(sunCol.Lerp(new Color("#F6E8C4"), 0.7f), tonemapWhite));
         skyMat.SetShaderParameter("sun_color", sunCol.Lerp(Colors.White, 0.5f));
         var sky = new Sky
         {
@@ -47,7 +47,7 @@ public static class Atmosphere
             Sky = sky,
             AmbientLightSource = Godot.Environment.AmbientSource.Color,
             AmbientLightColor = ambient,
-            AmbientLightEnergy = 1.15f,
+            AmbientLightEnergy = 1.0f,
             ReflectedLightSource = Godot.Environment.ReflectionSource.Disabled,
             TonemapMode = Godot.Environment.ToneMapper.Filmic,
             TonemapWhite = tonemapWhite,
@@ -69,7 +69,7 @@ public static class Atmosphere
             FogSkyAffect = 0.12f,
             FogHeightDensity = 0.0f,
             AdjustmentEnabled = true,
-            AdjustmentSaturation = 1.05f,
+            AdjustmentSaturation = 1.0f,
             AdjustmentContrast = 0.98f,
             SsaoEnabled = false,
             SsilEnabled = false,
@@ -84,7 +84,7 @@ public static class Atmosphere
             LightColor = sunCol,
             LightEnergy = L.Sun.Energy,
             ShadowEnabled = true,
-            ShadowOpacity = 0.55f,
+            ShadowOpacity = 0.6f,
             ShadowBlur = 1.6f,
             DirectionalShadowMode = DirectionalLight3D.ShadowMode.Parallel4Splits,
             DirectionalShadowMaxDistance = 260f,

@@ -22,7 +22,7 @@ uniform float wobble_strength = 0.08;  // normal tilt; small on purpose
 uniform float wobble_scale = 0.22;     // repeats per metre (~4-5 m ripple cells)
 uniform float wobble_speed = 0.18;
 uniform float ripple_tint = 0.12;      // albedo lightness swing from the wobble field
-uniform float streak_strength = 0.2;  // soft pale streaks on the ripple crests: the painted "animated water" read
+uniform float streak_strength = 0.12; // soft pale streaks on the ripple crests: the painted "animated water" read
 uniform vec2 flow = vec2(0.0, 0.0);    // UV units per second; rivers scroll along +x (downstream)
 uniform sampler2D DEPTH_TEXTURE : hint_depth_texture, filter_linear;
 
@@ -65,8 +65,10 @@ void fragment() {
 	view_pos.xyz /= view_pos.w;
 	float scene_dist = -view_pos.z;
 	float water_dist = -VERTEX.z;
-	// Along-ray thickness, scaled toward vertical thickness so grazing views do not go black.
-	float thickness = max(scene_dist - water_dist, 0.0) * max(abs(VIEW.y), 0.35);
+	// Along-ray thickness, scaled toward vertical thickness so grazing views do not go black
+	// (VIEW and the water's up vector compared in view space, so this is the true grazing angle).
+	vec3 up_view = normalize((VIEW_MATRIX * vec4(0.0, 1.0, 0.0, 0.0)).xyz);
+	float thickness = max(scene_dist - water_dist, 0.0) * max(abs(dot(VIEW, up_view)), 0.35);
 
 	float deep = 1.0 - exp(-thickness / depth_fade);
 	float shore = 1.0 - smoothstep(0.0, shore_band, thickness);

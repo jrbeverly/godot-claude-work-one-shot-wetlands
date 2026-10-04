@@ -15,11 +15,11 @@
   "road": "#B99862",
   "rock": "#857C70",
   "snow": "#E4EAEE",
-  "water": "#4F7A86",
-  "waterDeep": "#3E6470",
-  "skyTop": "#6F9BC8",
-  "skyHorizon": "#CDD3C4",
-  "fog": "#CDD3C4",
+  "water": "#4A7E90",
+  "waterDeep": "#345F6F",
+  "skyTop": "#5E8EC4",
+  "skyHorizon": "#C6D1D6",
+  "fog": "#C6D1D6",
   "ambient": "#9AA8B8",
   "shadowTint": "#5A6A8C",
   "roofTile": "#5E7079",
@@ -3064,18 +3064,18 @@
   {
    "name": "postcard",
    "from": [
-    -52,
-    9.2,
-    22
+    -82,
+    0,
+    -8
    ],
    "lookAt": [
-    -50,
-    22,
+    -45,
+    0,
     -290
    ],
    "fovDeg": 58,
    "fromAboveGround": 1.7,
-   "lookAtAboveGround": 10
+   "lookAtAboveGround": 14
   }
  ]
 }

@@ -65,8 +65,8 @@ public static class WaterBuilder
         var mat = new ShaderMaterial { Shader = shader };
         mat.SetShaderParameter("color_shallow", water);
         mat.SetShaderParameter("color_deep", deep);
-        // Shoreline: the water colour pushed toward the pale horizon, so it reads as light shallows, not foam.
-        mat.SetShaderParameter("color_shore", water.Lerp(horizon, 0.55f));
+        // Shoreline: a lighter version of the water colour (not the grey horizon), so shallows stay coloured.
+        mat.SetShaderParameter("color_shore", water.Lightened(0.35f).Lerp(horizon, 0.25f));
         mat.SetShaderParameter("sky_color", horizon.Lerp(top, 0.35f));
         mat.SetShaderParameter("flow", new Vector2(flowPerSecond, 0f));
         return mat;
@@ -118,6 +118,7 @@ public static class WaterBuilder
         var right = new List<Vector3>();
         var arcs = new List<float>();
         int n = Math.Max(2, (int)MathF.Ceiling(pl.Length / step) + 1);
+        bool wasOutside = false;
         for (int i = 0; i < n; i++)
         {
             float arc = MathF.Min(i * step, pl.Length);
@@ -126,10 +127,12 @@ public static class WaterBuilder
             var side = new Vector2(-tan.Y, tan.X);
             float y = Mathf.Lerp(spec.WaterLevelStart, spec.WaterLevelEnd, arc / pl.Length) - RiverSink;
             bool inLake = lake != null && InsideEllipse(p, lake, 0.97f);
+            if (!inLake) wasOutside = true;
             left.Add(new Vector3(p.X - side.X * halfW, y, p.Y - side.Y * halfW));
             right.Add(new Vector3(p.X + side.X * halfW, y, p.Y + side.Y * halfW));
             arcs.Add(arc);
-            if (inLake && arcs.Count > 1) break;   // one section inside the lake, then stop
+            // One section inside the lake, then stop; a river that STARTS in the lake (an outlet) keeps going.
+            if (inLake && wasOutside && arcs.Count > 1) break;
         }
         if (arcs.Count < 2) return null;
 
