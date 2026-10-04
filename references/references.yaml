@@ -1,0 +1,81 @@
+# Pinned reference library manifest. Consumed by tools/fetch-references.sh.
+# Format: flat list of entries, each with `- id:` then indented `key: value` lines.
+# Keep it simple (no nesting, no quoting) -- the fetch script parses it with awk.
+# Pins were the default-branch HEAD on 2026-10-04. To bump: change `commit`, re-run fetch.
+references:
+  - id: GoDotNet.BlankTemplate
+    path: references/starters/GoDotNet.BlankTemplate
+    url: https://github.com/Mikeware/GoDotNet.BlankTemplate
+    commit: c86953dc46b880fde37d3a4576260166d4fb1738
+  - id: GodotGame
+    path: references/starters/GodotGame
+    url: https://github.com/chickensoft-games/GodotGame
+    commit: 9879f7f41dfb17b7adc9651493d68246fb7e9a5c
+  - id: CSharpGodotTools-Template
+    path: references/starters/CSharpGodotTools-Template
+    url: https://github.com/CSharpGodotTools/Template
+    commit: df0f493c74371d7f081131aed937439fa9de035a
+  - id: godot-game-dev-studio
+    path: references/ai-development/godot-game-dev-studio
+    url: https://github.com/bgrenat/godot-game-dev-studio
+    commit: 9e2b2beaf0bc7ba2e27a40326d058ff2c7a619a9
+  - id: godot-mcp-toolkit
+    path: references/ai-development/godot-mcp-toolkit
+    url: https://github.com/NPGameDev/godot-mcp-toolkit
+    commit: 4df1b80423fa5ff51f3716beed68f50f7a98cc77
+  - id: godot-skill
+    path: references/ai-development/godot-skill
+    url: https://github.com/BangRocket/godot-skill
+    commit: 2306f66e32c336ffb3fe90bee26eb104cb879e78
+  - id: gai
+    path: references/ai-development/gai
+    url: https://github.com/godot-fun/gai
+    commit: 2e1514402968d70073831c78cf01fffc18ad3a57
+  - id: Terrain3D
+    path: references/godot/terrain/Terrain3D
+    url: https://github.com/TokisanGames/Terrain3D
+    commit: dabc3c3393083acc3b9d8c0787f9e12b0fde7f3b
+  - id: scatter
+    path: references/godot/foliage/scatter
+    url: https://github.com/HungryProton/scatter
+    commit: 7198cc00078ebde61307578137c3f35223c6e438
+  - id: godot-road-generator
+    path: references/godot/roads/godot-road-generator
+    url: https://github.com/TheDuckCow/godot-road-generator
+    commit: 9d144dc4a28dd6bee870895d2b77d69174356281
+  - id: godot-forest-demo
+    path: references/godot/foliage/godot-forest-demo
+    url: https://github.com/GamesNotDeveloped/godot-forest-demo
+    commit: 623212ffeb4efbf4c95323a4a6a57e726be4f6e9
+  - id: mkdevkit-godot-mcp
+    path: references/godot/mcp/mkdevkit-godot-mcp
+    url: https://github.com/mkdevkit/godot-mcp
+    commit: 328e15f7d38092371b2aca8b81c40b8188bbe747
+  - id: slangwald-godot-mcp
+    path: references/godot/mcp/slangwald-godot-mcp
+    url: https://github.com/slangwald/godot-mcp
+    commit: 95532c4eb632d61c9a3c7a281f1a8a2925042345
+  - id: claudot-pub
+    path: references/godot/mcp/claudot-pub
+    url: https://github.com/Claudot-Code/claudot-pub
+    commit: d6fc621af26a0d4b1d8985268409888d78035955
+  - id: wow-1121-client-internals
+    path: references/classic-terrain-analysis/wow-1121-client-internals
+    url: https://github.com/samwhosung/wow-1121-client-internals
+    commit: d7e639fab1a022af86eaa30180b3056011d42b4f
+  - id: warcraft-rs
+    path: references/classic-terrain-analysis/warcraft-rs
+    url: https://github.com/wowemulation-dev/warcraft-rs
+    commit: 76bedfd8a8937af5bfa6a08e7df32d78e86c9123
+  - id: noggit3
+    path: references/classic-terrain-analysis/noggit3
+    url: https://github.com/wowdev/noggit3
+    commit: 59e58add868608339fe292970196985d4ce050ff
+  - id: godotwind
+    path: references/environment-case-studies/godotwind
+    url: https://github.com/lihogloglo/godotwind
+    commit: e074931e7f227d6bdcfa2d02889d1209dc025a33
+  - id: skelerealms
+    path: references/environment-case-studies/skelerealms
+    url: https://github.com/SlashScreen/skelerealms
+    commit: 293dfd0b68541066bc505eadf03255d85218b4bf

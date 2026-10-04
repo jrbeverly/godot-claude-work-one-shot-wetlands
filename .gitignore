@@ -1,0 +1,42 @@
+# Godot
+.godot/
+*.translation
+.import/
+export_presets.cfg
+.mono/
+data_*/
+mono_crash.*.json
+
+# .NET
+bin/
+obj/
+*.user
+.vs/
+
+# Reference library: clones are fetched by tools/fetch-references.sh (pinned in references/references.yaml).
+# Docs, the manifest and references/assets/ notes are tracked; the clones themselves are not.
+/references/starters/GoDotNet.BlankTemplate/
+/references/starters/GodotGame/
+/references/starters/CSharpGodotTools-Template/
+/references/ai-development/godot-game-dev-studio/
+/references/ai-development/godot-mcp-toolkit/
+/references/ai-development/godot-skill/
+/references/ai-development/gai/
+/references/godot/terrain/Terrain3D/
+/references/godot/foliage/scatter/
+/references/godot/roads/godot-road-generator/
+/references/godot/foliage/godot-forest-demo/
+/references/godot/mcp/mkdevkit-godot-mcp/
+/references/godot/mcp/slangwald-godot-mcp/
+/references/godot/mcp/claudot-pub/
+/references/classic-terrain-analysis/wow-1121-client-internals/
+/references/classic-terrain-analysis/warcraft-rs/
+/references/classic-terrain-analysis/noggit3/
+/references/environment-case-studies/godotwind/
+/references/environment-case-studies/skelerealms/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+*.swp
