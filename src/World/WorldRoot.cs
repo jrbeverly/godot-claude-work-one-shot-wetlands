@@ -30,6 +30,11 @@ public partial class WorldRoot : Node3D
         GD.Print($"World '{Layout.Name}': heightfield {Field.Size}x{Field.Size} built in {sw.ElapsedMilliseconds} ms");
 
         var mat = GD.Load<ShaderMaterial>("res://assets/materials/terrain.tres");
+        // Snow starts about two thirds of the way up the rim; the palette may steer layer tints (default white).
+        mat.SetShaderParameter("snow_line", Layout.Terrain.BaseHeight + Layout.Terrain.Rim.EdgeHeight * 0.62f);
+        mat.SetShaderParameter("snow_blend", MathF.Max(12f, Layout.Terrain.Rim.EdgeHeight * 0.12f));
+        foreach (var (key, uniform) in new[] { ("tintGrass", "tint_grass"), ("tintForest", "tint_forest"), ("tintRoad", "tint_road"), ("tintRock", "tint_rock"), ("tintSnow", "tint_snow") })
+            if (Layout.Palette.TryGetValue(key, out var hex) && !string.IsNullOrWhiteSpace(hex)) mat.SetShaderParameter(uniform, new Color(hex));
         AddChild(TerrainMesh.Build(Field, mat));
         GD.Print($"World: terrain meshes in {sw.ElapsedMilliseconds} ms");
 

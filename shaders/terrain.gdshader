@@ -19,6 +19,12 @@ uniform float macro_strength = 0.35;
 uniform float snow_line = 115.0;
 uniform float snow_blend = 22.0;
 uniform float blend_sharpness = 1.8;     // >1 = crisper painted layer edges
+// Per-layer tints let the zone palette steer the painted tiles without repainting them.
+uniform vec3 tint_grass : source_color = vec3(1.0);
+uniform vec3 tint_forest : source_color = vec3(1.0);
+uniform vec3 tint_road : source_color = vec3(1.0);
+uniform vec3 tint_rock : source_color = vec3(1.0);
+uniform vec3 tint_snow : source_color = vec3(1.0);
 uniform vec3 wet_tint : source_color = vec3(0.55, 0.62, 0.55);
 
 varying vec4 v_splat;
@@ -53,10 +59,10 @@ void fragment() {
 	vec4 w = pow(max(v_splat, vec4(0.0)), vec4(blend_sharpness));
 	w /= max(w.r + w.g + w.b + w.a, 1e-4);
 
-	vec3 grass = sample_layer(tex_grass, uv, tile_grass);
-	vec3 forest = sample_layer(tex_forest, uv, tile_forest);
-	vec3 road = sample_layer(tex_road, uv, tile_road);
-	vec3 rock = sample_triplanar(tex_rock, v_wpos, v_wnormal, tile_rock);
+	vec3 grass = sample_layer(tex_grass, uv, tile_grass) * tint_grass;
+	vec3 forest = sample_layer(tex_forest, uv, tile_forest) * tint_forest;
+	vec3 road = sample_layer(tex_road, uv, tile_road) * tint_road;
+	vec3 rock = sample_triplanar(tex_rock, v_wpos, v_wnormal, tile_rock) * tint_rock;
 
 	vec3 albedo = grass * w.r + forest * w.g + road * w.b + rock * w.a;
 
@@ -64,7 +70,7 @@ void fragment() {
 	float flatness = smoothstep(0.55, 0.9, v_wnormal.y);
 	float snow_noise = (texture(tex_snow, uv * 0.01).r - 0.5) * snow_blend * 1.2;
 	float snow = smoothstep(snow_line - snow_blend, snow_line + snow_blend, v_wpos.y + snow_noise) * mix(0.35, 1.0, flatness);
-	vec3 snow_col = sample_layer(tex_snow, uv, tile_snow);
+	vec3 snow_col = sample_layer(tex_snow, uv, tile_snow) * tint_snow;
 	albedo = mix(albedo, snow_col, snow);
 
 	// Baked tint (vertex hue drift) and darker, cooler ground under water.
