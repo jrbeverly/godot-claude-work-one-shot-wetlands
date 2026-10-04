@@ -1,0 +1,453 @@
+{
+ "name": "Foliage Test Vale",
+ "mapSize": 1024,
+ "cellSize": 2,
+ "sun": {
+  "azimuthDeg": 225,
+  "elevationDeg": 38,
+  "color": "#FFE7BE",
+  "energy": 1.2
+ },
+ "palette": {
+  "grass": "#5E8C3A",
+  "fog": "#A9BFD3",
+  "skyTop": "#6F95C2",
+  "skyHorizon": "#C9D7E2",
+  "water": "#4C7A8C"
+ },
+ "fog": {
+  "startM": 80,
+  "endM": 800,
+  "density": 0.002,
+  "heightFogEnabled": false,
+  "heightFogLevel": 0
+ },
+ "terrain": {
+  "baseHeight": 5,
+  "rim": {
+   "startRadius": 360,
+   "edgeHeight": 190,
+   "roughness": 0.35
+  },
+  "hills": [
+   {
+    "name": "Mill Hill",
+    "x": 120,
+    "z": -60,
+    "radius": 90,
+    "height": 28,
+    "shape": "dome"
+   },
+   {
+    "name": "Bluff",
+    "x": -200,
+    "z": -220,
+    "radius": 120,
+    "height": 55,
+    "shape": "cliff"
+   }
+  ],
+  "basins": [],
+  "ridges": [
+   {
+    "name": "Spur",
+    "points": [
+     [
+      -350,
+      100
+     ],
+     [
+      -220,
+      160
+     ],
+     [
+      -90,
+      260
+     ]
+    ],
+    "width": 50,
+    "height": 35
+   }
+  ],
+  "flats": [
+   {
+    "name": "Village",
+    "x": 0,
+    "z": 40,
+    "radius": 45,
+    "height": 6
+   }
+  ]
+ },
+ "lake": {
+  "name": "Mere",
+  "x": 180,
+  "z": 120,
+  "radiusX": 90,
+  "radiusZ": 70,
+  "waterLevel": 2.5,
+  "depth": 6
+ },
+ "rivers": [
+  {
+   "name": "Brook",
+   "points": [
+    [
+     -60,
+     -400
+    ],
+    [
+     -20,
+     -300
+    ],
+    [
+     40,
+     -180
+    ],
+    [
+     120,
+     -40
+    ],
+    [
+     170,
+     60
+    ]
+   ],
+   "width": 7,
+   "depth": 2.2,
+   "waterLevelStart": 30,
+   "waterLevelEnd": 2.5
+  }
+ ],
+ "roads": [
+  {
+   "name": "Low Road",
+   "points": [
+    [
+     -420,
+     60
+    ],
+    [
+     -300,
+     40
+    ],
+    [
+     -180,
+     70
+    ],
+    [
+     -60,
+     50
+    ],
+    [
+     0,
+     40
+    ],
+    [
+     80,
+     20
+    ],
+    [
+     160,
+     -30
+    ],
+    [
+     260,
+     -80
+    ],
+    [
+     360,
+     -160
+    ],
+    [
+     430,
+     -260
+    ]
+   ],
+   "width": 5,
+   "kind": "main"
+  }
+ ],
+ "biomes": [
+  {
+   "name": "Hollow Wood",
+   "x": -150,
+   "z": -150,
+   "radius": 150,
+   "priority": 1,
+   "treeDensity": 1.0,
+   "clumpiness": 0.6,
+   "trees": [
+    {
+     "model": "CommonTree_1",
+     "weight": 1,
+     "scale": 1.05
+    },
+    {
+     "model": "CommonTree_2",
+     "weight": 1,
+     "scale": 1.05
+    },
+    {
+     "model": "CommonTree_3",
+     "weight": 0.8,
+     "scale": 0.95
+    },
+    {
+     "model": "CommonTree_4",
+     "weight": 0.8,
+     "scale": 0.95
+    },
+    {
+     "model": "CommonTree_5",
+     "weight": 1,
+     "scale": 1.1
+    }
+   ],
+   "undergrowth": [
+    {
+     "model": "Fern_1",
+     "weight": 0.8,
+     "density": 0.25
+    },
+    {
+     "model": "Bush_Common",
+     "weight": 0.6,
+     "density": 0.1
+    },
+    {
+     "model": "Mushroom_Common",
+     "weight": 0.7,
+     "density": 0.08
+    },
+    {
+     "model": "Grass_Wispy_Short",
+     "weight": 0.7,
+     "density": 0.3
+    }
+   ],
+   "groundTexture": "forestFloor",
+   "leafTint": "#7E9C58"
+  },
+  {
+   "name": "Harrow Parkland",
+   "x": 40,
+   "z": -90,
+   "radius": 180,
+   "priority": 0,
+   "treeDensity": 0.1,
+   "clumpiness": 0.25,
+   "trees": [
+    {
+     "model": "CommonTree_3",
+     "weight": 1,
+     "scale": 1.45
+    },
+    {
+     "model": "CommonTree_4",
+     "weight": 1,
+     "scale": 1.45
+    },
+    {
+     "model": "CommonTree_1",
+     "weight": 0.6,
+     "scale": 1.5
+    }
+   ],
+   "undergrowth": [
+    {
+     "model": "Flower_3_Group",
+     "weight": 0.8,
+     "density": 0.12
+    },
+    {
+     "model": "Flower_4_Group",
+     "weight": 0.8,
+     "density": 0.12
+    },
+    {
+     "model": "Grass_Common_Tall",
+     "weight": 0.8,
+     "density": 0.3
+    },
+    {
+     "model": "Bush_Common_Flowers",
+     "weight": 0.5,
+     "density": 0.04
+    }
+   ],
+   "groundTexture": "meadow",
+   "leafTint": "#A4BE66"
+  },
+  {
+   "name": "North Rim Pines",
+   "x": -20,
+   "z": -360,
+   "radius": 210,
+   "priority": 2,
+   "treeDensity": 0.5,
+   "clumpiness": 0.5,
+   "trees": [
+    {
+     "model": "Pine_1",
+     "weight": 1,
+     "scale": 1.1
+    },
+    {
+     "model": "Pine_2",
+     "weight": 1,
+     "scale": 1.1
+    },
+    {
+     "model": "Pine_3",
+     "weight": 0.7,
+     "scale": 1.0
+    },
+    {
+     "model": "Pine_4",
+     "weight": 1,
+     "scale": 1.0
+    },
+    {
+     "model": "Pine_5",
+     "weight": 0.8,
+     "scale": 1.05
+    }
+   ],
+   "undergrowth": [
+    {
+     "model": "Grass_Wispy_Short",
+     "weight": 0.6,
+     "density": 0.15
+    },
+    {
+     "model": "Mushroom_Laetiporus",
+     "weight": 0.5,
+     "density": 0.03
+    }
+   ],
+   "groundTexture": "grass",
+   "leafTint": "#7F9E6B"
+  }
+ ],
+ "sites": [],
+ "spawn": {
+  "x": -60,
+  "z": 50,
+  "yawDeg": 90
+ },
+ "shots": [
+  {
+   "name": "wide",
+   "from": [
+    130,
+    0,
+    90
+   ],
+   "lookAt": [
+    -150,
+    0,
+    -160
+   ],
+   "fovDeg": 60,
+   "fromAboveGround": 55,
+   "lookAtAboveGround": 10
+  },
+  {
+   "name": "wood_wide",
+   "from": [
+    -110,
+    0,
+    40
+   ],
+   "lookAt": [
+    -170,
+    0,
+    -170
+   ],
+   "fovDeg": 60,
+   "fromAboveGround": 42,
+   "lookAtAboveGround": 6
+  },
+  {
+   "name": "wood_edge",
+   "from": [
+    -20,
+    0,
+    -40
+   ],
+   "lookAt": [
+    -140,
+    0,
+    -130
+   ],
+   "fovDeg": 62,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 4
+  },
+  {
+   "name": "wood_inside",
+   "from": [
+    -130,
+    0,
+    -110
+   ],
+   "lookAt": [
+    -190,
+    0,
+    -180
+   ],
+   "fovDeg": 65,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 3
+  },
+  {
+   "name": "parkland",
+   "from": [
+    -10,
+    0,
+    -30
+   ],
+   "lookAt": [
+    110,
+    0,
+    -110
+   ],
+   "fovDeg": 62,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 4
+  },
+  {
+   "name": "pines",
+   "from": [
+    -40,
+    0,
+    -250
+   ],
+   "lookAt": [
+    -10,
+    0,
+    -380
+   ],
+   "fovDeg": 62,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 12
+  },
+  {
+   "name": "road",
+   "from": [
+    -120,
+    0,
+    62
+   ],
+   "lookAt": [
+    40,
+    0,
+    30
+   ],
+   "fovDeg": 62,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 1.5
+  }
+ ]
+}
