@@ -18,6 +18,9 @@ public static class FoliagePlacer
     private const float TreeAltitudeLimit = 125f;
     private const float PineAltitudeLimit = 165f;
     private const float ChunkSize = 128f;      // MultiMeshes are split spatially so the camera can cull/LOD them
+    // Kinds with a visibility range are chunked finer: the range is judged on the whole MultiMesh AABB, so a big
+    // chunk would fade out its near instances along with its far ones.
+    private const float RangedChunkSize = 40f;
 
     private enum Kind { Tree, Bush, Tuft, Rock, Pebble }
 
@@ -168,7 +171,7 @@ public static class FoliagePlacer
                     if (f.SampleWaterDepth(px, pz) > 0f || f.SampleSiteClear(px, pz) > 0.6f) continue;
                     string m = pebbleModels[rng.RandiRange(0, pebbleModels.Length - 1)];
                     if (ModelLibrary.Get(m) == null) continue;
-                    float scale = rng.RandfRange(1.4f, 2.4f);  // kit pebbles are 0.4 m; verge stones should read from eye level
+                    float scale = rng.RandfRange(2.0f, 3.2f);  // kit pebbles are 0.4 m; verge stones should read from eye level
                     var xf = Upright(px, f.SampleHeight(px, pz) - 0.03f, pz, rng.RandfRange(0f, Mathf.Tau), scale);
                     Add(groups, Key(m, Colors.White, Kind.Pebble, px, pz), new Instance(xf, Colors.White));
                     pebbles++;
@@ -220,7 +223,12 @@ public static class FoliagePlacer
             {
                 mmi.VisibilityRangeEnd = rangeEnd;
                 mmi.VisibilityRangeEndMargin = rangeEnd * 0.2f;
-                mmi.VisibilityRangeFadeMode = GeometryInstance3D.VisibilityRangeFadeModeEnum.Self;
+                // Dithered self-fade only works on the foliage ShaderMaterial here; on the kit's StandardMaterial3D
+                // (pebbles, mushrooms) it hid the instances outright, so those get a plain hysteresis cut instead.
+                bool shaderMat = mesh.SurfaceGetMaterial(0) is ShaderMaterial;
+                mmi.VisibilityRangeFadeMode = shaderMat
+                    ? GeometryInstance3D.VisibilityRangeFadeModeEnum.Self
+                    : GeometryInstance3D.VisibilityRangeFadeModeEnum.Disabled;
             }
             root.AddChild(mmi);
             nodes++;
@@ -337,7 +345,10 @@ public static class FoliagePlacer
     }
 
     private static GroupKey Key(string model, Color tint, Kind kind, float x, float z)
-        => new(model, tint, kind, (int)MathF.Floor(x / ChunkSize), (int)MathF.Floor(z / ChunkSize));
+    {
+        float cs = kind is Kind.Tree or Kind.Rock ? ChunkSize : RangedChunkSize;
+        return new(model, tint, kind, (int)MathF.Floor(x / cs), (int)MathF.Floor(z / cs));
+    }
 
     private static void Add(Dictionary<GroupKey, List<Instance>> groups, GroupKey key, Instance inst)
     {
