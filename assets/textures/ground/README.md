@@ -18,22 +18,27 @@ Do not hand-edit the PNGs; change the painter and regenerate. Previews land in
 - Painted on a torus (coordinates wrap), so tiles are seamless by construction.
 - Albedo only. The shader sets ROUGHNESS 1 / SPECULAR 0; there are no normal or roughness maps.
 - Tiles are kept a notch duller than the colour we want on screen, because sun + sky light sit on top.
+  Grass in particular: sun, sky and the vertex tint all push saturation up, so the grass tile is painted
+  olive (mean ~ (93,115,69), B/G ~0.6). A greener tile rendered neon lime in-engine.
+- Rock strata are flat-sided slabs (superellipse brush, `power=4`) with a hard crack-tone shadow under each
+  lip, so cliffs read as angular bedding rather than cobbles.
 
 ## Materials
 | File | Use | Palette idea | Suggested world tile |
 |---|---|---|---|
-| `grass.png` | default ground | mid green turf blobs, lighter tufts, deep pockets, warm patches | 6-7 m |
-| `meadow.png` | dry/golden biome ground | yellower, wind-leaned clumps, sparse tiny flower specks | 6-7 m |
+| `grass.png` | default ground | olive-green turf: wide soft tufts, thin lit blades, deep pockets, warm patches | 6-7 m |
+| `meadow.png` | dry/golden biome ground (`groundTexture: "meadow"`) | straw-coloured wind-combed blades over green, sparse flower specks | 6.5 m |
 | `forest_floor.png` | under tree canopy | dark green-brown, moss cushions, ochre leaf drifts, root shadows | 8 m |
 | `dirt_road.png` | road ribbon | tan, lighter worn pools, soft pebbles, one faint rut | 5 m |
-| `rock.png` | steep slopes / cliffs (triplanar) | banded strata: lit top edges, dark undersides, vertical fissures | 11 m |
+| `rock.png` | steep slopes / cliffs (triplanar) | warm angular strata of varying bed thickness: lit top edges, hard dark undersides, tall vertical joints | 11 m |
 | `snow.png` | above the snow line | near-white drifts with soft blue hollows | 9 m |
 | `mud.png` | lake / river bed | dark olive-brown, silt streaks along the current | 6 m |
 
-`meadow.png` and `mud.png` are not yet wired into the terrain material; they are ready for a
-biome layer and the water subsystem respectively.
+`meadow.png` is the fifth terrain layer (`tex_meadow`, weight in `CUSTOM0.a`, see `shaders/terrain.gdshader`).
+`mud.png` is not yet wired; it is ready for the water subsystem (lake / river beds).
 
 ## Import settings
 The `.import` files enable `mipmaps/generate=true` (the shader samples with
 `filter_linear_mipmap_anisotropic`; without mipmaps distant ground sparkles). Keep that when
-re-importing. Compression stays lossless (mode 0) so the soft gradients do not band.
+re-importing. Compression stays lossless (`compress/mode=0`, and `detect_3d/compress_to=0` so the editor
+does not silently switch the tiles to VRAM compression on first 3D use) so the soft gradients do not band.

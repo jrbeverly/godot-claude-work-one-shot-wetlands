@@ -13,7 +13,22 @@
     "fog": "#A9BFD3",
     "skyTop": "#6F95C2",
     "skyHorizon": "#C9D7E2",
-    "water": "#4C7A8C"
+    "water": "#4C7A8C",
+    "meadow": "#94AE52",
+    "forestFloor": "#4D5530",
+    "road": "#B99862",
+    "rock": "#857C70",
+    "snow": "#E4EAEE",
+    "waterDeep": "#3E6470",
+    "ambient": "#9AA8B8",
+    "shadowTint": "#5A6A8C",
+    "roofTile": "#5E7079",
+    "timber": "#7E5A3A",
+    "plaster": "#E6D9B8",
+    "stone": "#8C8A80",
+    "leafWarm": "#7FA448",
+    "leafCool": "#4D7A3C",
+    "pine": "#3F6A3A"
   },
   "fog": {
     "startM": 80,
