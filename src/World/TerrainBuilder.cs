@@ -189,10 +189,15 @@ public static class TerrainBuilder
             float wet = Mathf.Clamp(f.WaterDepth[k] / 1.5f, 0f, 1f);
             forest = MathF.Max(forest, wet * 0.7f);
 
-            float grass = Mathf.Clamp(1f - rock - forest * 0.9f, 0f, 1f);
+            float meadow = 0f;
+            foreach (var b in meadowBiomes) meadow = MathF.Max(meadow, BiomeWeight(b, x, z, sn));
+            meadow *= (1f - forest) * (1f - rock);
+
+            float grass = Mathf.Clamp(1f - rock - forest * 0.9f - meadow, 0f, 1f);
             f.SplatRock[k] = rock * (1f - road * 0.7f);
             f.SplatForest[k] = forest * (1f - road) * (1f - rock);
             f.SplatRoad[k] = road * (1f - rock * 0.6f);
+            f.SplatMeadow[k] = meadow * (1f - road);
             f.SplatGrass[k] = grass * (1f - road);
 
             // Tint: warm/cool hue drift, sunlit south-west facing slopes a touch lighter, hollows cooler.
@@ -201,11 +206,8 @@ public static class TerrainBuilder
             float v = 1f + 0.07f * tn + 0.05f * facing;
             float warm = 0.5f + 0.5f * tn;
             var tint = new Color(v * (1f + 0.04f * (warm - 0.5f)), v * (1f + 0.03f * (warm - 0.5f)), v * (1f - 0.06f * (warm - 0.5f)), 1f);
-            foreach (var b in meadowBiomes)
-            {
-                float mw = BiomeWeight(b, x, z, sn);
-                if (mw > 0f) tint = tint.Lerp(new Color(tint.R * 1.08f, tint.G * 1.02f, tint.B * 0.82f, 1f), mw * 0.8f);
-            }
+            // Meadow has its own straw tile; only a whisper of warmth in the tint so the blend edge stays soft.
+            if (meadow > 0f) tint = tint.Lerp(new Color(tint.R * 1.03f, tint.G * 1.0f, tint.B * 0.95f, 1f), meadow);
             f.Tint[k] = tint;
         }
         f.NormaliseSplat();

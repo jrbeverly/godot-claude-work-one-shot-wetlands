@@ -6,8 +6,8 @@ namespace GodotWarcraft.World;
 
 /// <summary>
 /// Builds the visible terrain as a grid of chunk meshes (for frustum culling) plus one heightmap collider.
-/// Vertex COLOR carries the four ground-layer weights (grass, forest floor, road, rock);
-/// CUSTOM0 carries the baked hue tint. The terrain shader does the painterly blending.
+/// Vertex COLOR carries four ground-layer weights (grass, forest floor, road, rock); CUSTOM0 carries the
+/// baked hue tint (rgb) and the meadow weight (a); CUSTOM1.r carries water depth. The shader blends painterly.
 /// </summary>
 public static class TerrainMesh
 {
@@ -47,6 +47,7 @@ public static class TerrainMesh
         var uvs = new Vector2[n * n];
         var colors = new Color[n * n];
         var custom = new float[n * n * 4];
+        var custom1 = new float[n * n];
         var indices = new int[ChunkQuads * ChunkQuads * 6];
 
         for (int j = 0; j < n; j++)
@@ -60,7 +61,8 @@ public static class TerrainMesh
             uvs[v] = new Vector2(f.WorldX(gi), f.WorldZ(gj));
             colors[v] = new Color(f.SplatGrass[k], f.SplatForest[k], f.SplatRoad[k], f.SplatRock[k]);
             var t = f.Tint[k];
-            custom[v * 4 + 0] = t.R; custom[v * 4 + 1] = t.G; custom[v * 4 + 2] = t.B; custom[v * 4 + 3] = f.WaterDepth[k];
+            custom[v * 4 + 0] = t.R; custom[v * 4 + 1] = t.G; custom[v * 4 + 2] = t.B; custom[v * 4 + 3] = f.SplatMeadow[k];
+            custom1[v] = f.WaterDepth[k];
         }
 
         int idx = 0;
@@ -89,9 +91,11 @@ public static class TerrainMesh
         arrays[(int)Mesh.ArrayType.TexUV] = uvs;
         arrays[(int)Mesh.ArrayType.Color] = colors;
         arrays[(int)Mesh.ArrayType.Custom0] = custom;
+        arrays[(int)Mesh.ArrayType.Custom1] = custom1;
         arrays[(int)Mesh.ArrayType.Index] = indices;
 
-        var flags = (Mesh.ArrayFormat)((long)Mesh.ArrayCustomFormat.RgbaFloat << (int)Mesh.ArrayFormat.FormatCustom0Shift);
+        var flags = (Mesh.ArrayFormat)(((long)Mesh.ArrayCustomFormat.RgbaFloat << (int)Mesh.ArrayFormat.FormatCustom0Shift)
+                                     | ((long)Mesh.ArrayCustomFormat.RFloat << (int)Mesh.ArrayFormat.FormatCustom1Shift));
         var mesh = new ArrayMesh();
         mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, arrays, null, null, flags);
         return mesh;

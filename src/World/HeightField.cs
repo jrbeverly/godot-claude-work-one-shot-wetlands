@@ -16,11 +16,12 @@ public sealed class HeightField
 
     public float[] Heights { get; }
 
-    /// <summary>Ground layer weights per vertex, each 0..1: R grass, G forest floor, B dirt road, A rock. Snow is altitude-driven in the shader.</summary>
+    /// <summary>Ground layer weights per vertex, each 0..1: grass, forest floor, dirt road, rock, dry meadow. Snow is altitude-driven in the shader.</summary>
     public float[] SplatGrass { get; }
     public float[] SplatForest { get; }
     public float[] SplatRoad { get; }
     public float[] SplatRock { get; }
+    public float[] SplatMeadow { get; }
     /// <summary>Hue/value tint multiplied into the ground albedo (baked-light look). Default white.</summary>
     public Color[] Tint { get; }
 
@@ -41,6 +42,7 @@ public sealed class HeightField
         SplatForest = new float[n];
         SplatRoad = new float[n];
         SplatRock = new float[n];
+        SplatMeadow = new float[n];
         Tint = new Color[n];
         RoadDistance = new float[n];
         WaterDepth = new float[n];
@@ -65,6 +67,7 @@ public sealed class HeightField
     public float SampleSiteClear(float x, float z) => Bilinear(SiteClear, x, z);
     public float SampleRock(float x, float z) => Bilinear(SplatRock, x, z);
     public float SampleForest(float x, float z) => Bilinear(SplatForest, x, z);
+    public float SampleMeadow(float x, float z) => Bilinear(SplatMeadow, x, z);
 
     public float Bilinear(float[] data, float x, float z)
     {
@@ -108,14 +111,14 @@ public sealed class HeightField
     public bool InBounds(float x, float z)
         => x > -HalfExtent && x < HalfExtent && z > -HalfExtent && z < HalfExtent;
 
-    /// <summary>Normalise the four splat weights at every vertex so they sum to 1.</summary>
+    /// <summary>Normalise the five splat weights at every vertex so they sum to 1.</summary>
     public void NormaliseSplat()
     {
         for (int k = 0; k < Heights.Length; k++)
         {
-            float s = SplatGrass[k] + SplatForest[k] + SplatRoad[k] + SplatRock[k];
+            float s = SplatGrass[k] + SplatForest[k] + SplatRoad[k] + SplatRock[k] + SplatMeadow[k];
             if (s <= 1e-5f) { SplatGrass[k] = 1f; continue; }
-            SplatGrass[k] /= s; SplatForest[k] /= s; SplatRoad[k] /= s; SplatRock[k] /= s;
+            SplatGrass[k] /= s; SplatForest[k] /= s; SplatRoad[k] /= s; SplatRock[k] /= s; SplatMeadow[k] /= s;
         }
     }
 }

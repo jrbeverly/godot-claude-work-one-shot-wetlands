@@ -1,19 +1,22 @@
 shader_type spatial;
 render_mode cull_back, diffuse_lambert, specular_disabled;
 
-// Four hand-painted ground layers blended by vertex weights (COLOR.rgba = grass, forest floor, road, rock),
-// snow by altitude, and a baked hue tint in CUSTOM0.rgb. No normal/roughness maps on purpose.
+// Five hand-painted ground layers blended by vertex weights (COLOR.rgba = grass, forest floor, road, rock;
+// CUSTOM0.a = dry meadow), snow by altitude, a baked hue tint in CUSTOM0.rgb and water depth in CUSTOM1.r.
+// No normal/roughness maps on purpose.
 uniform sampler2D tex_grass : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D tex_forest : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D tex_road : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D tex_rock : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D tex_snow : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
+uniform sampler2D tex_meadow : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 
 uniform float tile_grass = 7.0;   // metres per texture repeat
 uniform float tile_forest = 8.0;
 uniform float tile_road = 5.0;
 uniform float tile_rock = 11.0;
 uniform float tile_snow = 9.0;
+uniform float tile_meadow = 6.5;
 uniform float macro_scale = 0.013;        // breaks tiling with a second, large-scale sample
 uniform float macro_strength = 0.35;
 uniform float snow_line = 115.0;
@@ -25,16 +28,19 @@ uniform vec3 tint_forest : source_color = vec3(1.0);
 uniform vec3 tint_road : source_color = vec3(1.0);
 uniform vec3 tint_rock : source_color = vec3(1.0);
 uniform vec3 tint_snow : source_color = vec3(1.0);
+uniform vec3 tint_meadow : source_color = vec3(1.0);
 uniform vec3 wet_tint : source_color = vec3(0.55, 0.62, 0.55);
 
 varying vec4 v_splat;
 varying vec4 v_custom;
+varying float v_wet;
 varying vec3 v_wpos;
 varying vec3 v_wnormal;
 
 void vertex() {
 	v_splat = COLOR;
 	v_custom = CUSTOM0;
+	v_wet = CUSTOM1.r;
 	v_wpos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	v_wnormal = normalize(mat3(MODEL_MATRIX) * NORMAL);
 }
@@ -57,14 +63,17 @@ vec3 sample_triplanar(sampler2D tex, vec3 p, vec3 n, float tile) {
 void fragment() {
 	vec2 uv = v_wpos.xz;
 	vec4 w = pow(max(v_splat, vec4(0.0)), vec4(blend_sharpness));
-	w /= max(w.r + w.g + w.b + w.a, 1e-4);
+	float wm = pow(max(v_custom.a, 0.0), blend_sharpness);
+	float wsum = max(w.r + w.g + w.b + w.a + wm, 1e-4);
+	w /= wsum; wm /= wsum;
 
 	vec3 grass = sample_layer(tex_grass, uv, tile_grass) * tint_grass;
 	vec3 forest = sample_layer(tex_forest, uv, tile_forest) * tint_forest;
 	vec3 road = sample_layer(tex_road, uv, tile_road) * tint_road;
 	vec3 rock = sample_triplanar(tex_rock, v_wpos, v_wnormal, tile_rock) * tint_rock;
+	vec3 meadow = sample_layer(tex_meadow, uv, tile_meadow) * tint_meadow;
 
-	vec3 albedo = grass * w.r + forest * w.g + road * w.b + rock * w.a;
+	vec3 albedo = grass * w.r + forest * w.g + road * w.b + rock * w.a + meadow * wm;
 
 	// Snow settles on flatter ground above the snow line; rock faces stay darker.
 	float flatness = smoothstep(0.55, 0.9, v_wnormal.y);
@@ -75,7 +84,7 @@ void fragment() {
 
 	// Baked tint (vertex hue drift) and darker, cooler ground under water.
 	albedo *= v_custom.rgb;
-	float wet = clamp(v_custom.a / 1.2, 0.0, 1.0);
+	float wet = clamp(v_wet / 1.2, 0.0, 1.0);
 	albedo = mix(albedo, albedo * wet_tint, wet);
 
 	ALBEDO = albedo;
