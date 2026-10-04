@@ -27,8 +27,9 @@ public static class TerrainBuilder
         var res = new Result { Field = f };
         float half = f.HalfExtent;
 
-        var broad = new FastNoiseLite { Seed = seed, NoiseType = FastNoiseLite.NoiseTypeEnum.SimplexSmooth, Frequency = 1f / 140f, FractalOctaves = 3, FractalLacunarity = 2f, FractalGain = 0.45f };
-        var medium = new FastNoiseLite { Seed = seed + 7, NoiseType = FastNoiseLite.NoiseTypeEnum.SimplexSmooth, Frequency = 1f / 48f, FractalOctaves = 2, FractalGain = 0.5f };
+        // Nothing finer than ~60 m in the base: Classic ground is chunky and smooth, detail comes from texture.
+        var broad = new FastNoiseLite { Seed = seed, NoiseType = FastNoiseLite.NoiseTypeEnum.SimplexSmooth, Frequency = 1f / 150f, FractalOctaves = 2, FractalLacunarity = 2f, FractalGain = 0.45f };
+        var medium = new FastNoiseLite { Seed = seed + 7, NoiseType = FastNoiseLite.NoiseTypeEnum.SimplexSmooth, Frequency = 1f / 62f, FractalOctaves = 1, FractalGain = 0.5f };
         var rimNoise = new FastNoiseLite { Seed = seed + 11, NoiseType = FastNoiseLite.NoiseTypeEnum.SimplexSmooth, Frequency = 1f / 90f, FractalOctaves = 3, FractalGain = 0.5f };
         var tintNoise = new FastNoiseLite { Seed = seed + 23, NoiseType = FastNoiseLite.NoiseTypeEnum.SimplexSmooth, Frequency = 1f / 70f, FractalOctaves = 2, FractalGain = 0.5f };
         var splatNoise = new FastNoiseLite { Seed = seed + 31, NoiseType = FastNoiseLite.NoiseTypeEnum.SimplexSmooth, Frequency = 1f / 14f, FractalOctaves = 2, FractalGain = 0.5f };
@@ -39,7 +40,7 @@ public static class TerrainBuilder
         for (int i = 0; i < size; i++)
         {
             float x = f.WorldX(i), z = f.WorldZ(j);
-            float h = L.Terrain.BaseHeight + broad.GetNoise2D(x, z) * 4.5f + medium.GetNoise2D(x, z) * 1.2f;
+            float h = L.Terrain.BaseHeight + broad.GetNoise2D(x, z) * 4.5f + medium.GetNoise2D(x, z) * 0.8f;
 
             // Rim: squircle distance so corners are not oddly high. Broad massive forms (very low frequency
             // ridged noise) rather than spiky peaks: Classic mountains are a few big readable shapes.
@@ -53,8 +54,9 @@ public static class TerrainBuilder
                 float ridged = MathF.Pow(1f - MathF.Abs(m1), 1.6f);             // soft crests and saddles
                 float mass = (1f - rim.Roughness * 0.9f) + rim.Roughness * 0.9f * ridged;
                 float ramp = MathF.Pow(t * t * (3f - 2f * t), 1.25f);
-                float shoulder = 0.12f * rim.EdgeHeight * Smooth(t * 2.2f) * (0.5f + 0.5f * medium.GetNoise2D(x * 0.5f, z * 0.5f));
-                h += rim.EdgeHeight * ramp * mass + shoulder;
+                float edgeH = rim.HeightToward(x, z);
+                float shoulder = 0.12f * edgeH * Smooth(t * 2.2f) * (0.5f + 0.5f * medium.GetNoise2D(x * 0.5f, z * 0.5f));
+                h += edgeH * ramp * mass + shoulder;
             }
             f.Heights[f.Index(i, j)] = h;
         }

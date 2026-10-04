@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
@@ -82,6 +83,23 @@ public sealed class RimSpec
     public float StartRadius { get; set; } = 380f;
     public float EdgeHeight { get; set; } = 180f;
     public float Roughness { get; set; } = 0.3f;
+    /// <summary>Optional per-side edge heights (north = -Z, south = +Z, east = +X, west = -X); null = EdgeHeight.</summary>
+    public float? EdgeHeightNorth { get; set; }
+    public float? EdgeHeightSouth { get; set; }
+    public float? EdgeHeightEast { get; set; }
+    public float? EdgeHeightWest { get; set; }
+
+    /// <summary>Edge height in the direction of (x, z), blended smoothly around the compass.</summary>
+    public float HeightToward(float x, float z)
+    {
+        float n = EdgeHeightNorth ?? EdgeHeight, s = EdgeHeightSouth ?? EdgeHeight;
+        float e = EdgeHeightEast ?? EdgeHeight, w = EdgeHeightWest ?? EdgeHeight;
+        float len = MathF.Max(MathF.Sqrt(x * x + z * z), 1e-3f);
+        float dx = x / len, dz = z / len;
+        float wx = dx * dx, wz = dz * dz;                     // sums to 1
+        float ew = dx >= 0 ? e : w, ns = dz >= 0 ? s : n;
+        return wx * ew + wz * ns;
+    }
 }
 
 public sealed class HillSpec
