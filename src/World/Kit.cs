@@ -98,8 +98,20 @@ public sealed class Kit
         return tex;
     }
 
+    /// <summary>Layout short names (schema: church|tavern|...|tower, wagon|crate) to kit file names.</summary>
+    private static string Alias(string name) => name switch
+    {
+        "church" or "tavern" or "blacksmith" or "windmill" or "lumbermill" or "mine" or "well" => $"building_{name}_blue",
+        "tower" => "building_tower_A_blue",
+        "wagon" => "Prop_Wagon",
+        "crate" => "Prop_Crate",
+        "chimney" => "Prop_Chimney2",
+        _ => name,
+    };
+
     private Model? Load(string name)
     {
+        name = Alias(name);
         string? path = null;
         foreach (var folder in Folders)
         {

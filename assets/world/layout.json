@@ -918,8 +918,8 @@
    "z": 100,
    "radius": 110,
    "priority": 5,
-   "treeDensity": 0.85,
-   "clumpiness": 0.25,
+   "treeDensity": 1.0,
+   "clumpiness": 0.12,
    "trees": [
     {
      "model": "CommonTree_1",
@@ -1731,20 +1731,30 @@
      "heightM": 2.2
     },
     {
-     "kind": "landmark",
-     "model": "tavern",
+     "kind": "cottage",
      "x": 23,
      "z": 17,
-     "rotationDeg": 0,
-     "scale": 8.0
+     "rotationDeg": 180,
+     "footprint": [
+      3,
+      4
+     ],
+     "style": "timber",
+     "chimney": true,
+     "storeys": 2
     },
     {
-     "kind": "landmark",
-     "model": "blacksmith",
+     "kind": "cottage",
      "x": -23,
      "z": 21,
      "rotationDeg": 0,
-     "scale": 8.0
+     "footprint": [
+      2,
+      4
+     ],
+     "style": "stone",
+     "chimney": true,
+     "storeys": 1
     },
     {
      "kind": "landmark",
@@ -2974,18 +2984,18 @@
   {
    "name": "village",
    "from": [
-    -130,
-    9.2,
-    100
+    -150,
+    0,
+    118
    ],
    "lookAt": [
-    -75,
-    10.5,
-    60
+    -85,
+    0,
+    70
    ],
-   "fovDeg": 62,
+   "fovDeg": 60,
    "fromAboveGround": 1.7,
-   "lookAtAboveGround": 3
+   "lookAtAboveGround": 4
   },
   {
    "name": "hall",
@@ -3006,34 +3016,34 @@
   {
    "name": "candle",
    "from": [
-    300,
-    74,
-    150
+    286,
+    0,
+    160
    ],
    "lookAt": [
     -20,
-    12,
+    0,
     0
    ],
    "fovDeg": 62,
-   "fromAboveGround": 18,
+   "fromAboveGround": 4.5,
    "lookAtAboveGround": 6
   },
   {
    "name": "wood",
    "from": [
-    172,
-    9.5,
-    94
+    190,
+    0,
+    96
    ],
    "lookAt": [
-    222,
-    15,
-    82
+    232,
+    0,
+    84
    ],
-   "fovDeg": 65,
+   "fovDeg": 62,
    "fromAboveGround": 1.7,
-   "lookAtAboveGround": 4
+   "lookAtAboveGround": 3
   },
   {
    "name": "throat",
