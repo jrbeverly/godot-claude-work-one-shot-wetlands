@@ -21,3 +21,6 @@ obj/
 Thumbs.db
 .idea/
 *.swp
+
+# Rendered shots (regenerate with tools/screenshot.sh); curated ones live in docs/screenshots
+screenshots/

@@ -1,0 +1,41 @@
+using System;
+using System.Diagnostics;
+using Godot;
+
+namespace GodotWarcraft.World;
+
+/// <summary>
+/// Root of the generated zone. Loads <c>assets/world/layout.json</c>, builds the terrain and
+/// (as systems come online) water, foliage, settlements and the atmosphere. Other nodes read
+/// <see cref="Layout"/> and <see cref="Field"/> from here.
+/// </summary>
+public partial class WorldRoot : Node3D
+{
+    [Export] public string LayoutPath { get; set; } = "res://assets/world/layout.json";
+    [Export] public int Seed { get; set; } = 1337;
+
+    public WorldLayout Layout { get; private set; } = new();
+    public HeightField Field { get; private set; } = null!;
+    public TerrainBuilder.Result Terrain { get; private set; } = null!;
+
+    public override void _Ready()
+    {
+        var sw = Stopwatch.StartNew();
+        Layout = WorldLayout.Load(LayoutPath);
+        Terrain = TerrainBuilder.Build(Layout, Seed);
+        Field = Terrain.Field;
+        GD.Print($"World '{Layout.Name}': heightfield {Field.Size}x{Field.Size} built in {sw.ElapsedMilliseconds} ms");
+
+        var mat = GD.Load<ShaderMaterial>("res://assets/materials/terrain.tres");
+        AddChild(TerrainMesh.Build(Field, mat));
+        GD.Print($"World: terrain meshes in {sw.ElapsedMilliseconds} ms");
+
+        WaterBuilder.Build(this);
+        SiteBuilder.Build(this);
+        FoliagePlacer.Build(this);
+        GD.Print($"World: complete in {sw.ElapsedMilliseconds} ms");
+    }
+
+    /// <summary>Ground height at a world xz position.</summary>
+    public float GroundHeight(float x, float z) => Field.SampleHeight(x, z);
+}
