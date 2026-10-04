@@ -16,9 +16,9 @@ GODOT=/path/to/godot tools/run.sh              # build + headless smoke test (pr
 
 ## Reference library
 ```sh
-tools/fetch-references.sh        # one command; pinned in references/references.yaml (~2.6 GB)
+tools/fetch-references.sh        # one command; pinned in references/references.yaml (~3.1 GB)
 ```
-Then read `references/README.md` (index: what, why, licence, key files). Licences: `THIRD_PARTY.md`.
+Then read `references/README.md` (index: what, why, licence, key files). Visual benchmarks live in `references/visual/` and topic catalogues in `references/godot/candidates/` (committed, no fetch needed). Licences: `THIRD_PARTY.md`.
 
 ## Layout
 `scenes/` `src/` (C#) `assets/` `addons/` `tools/` `references/` `docs/` · agent guidance: `CLAUDE.md`, `AGENTS.md`

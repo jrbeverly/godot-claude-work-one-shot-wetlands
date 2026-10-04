@@ -30,6 +30,10 @@ Fetched by `tools/fetch-references.sh` at the commits in `references/references.
 | warcraft-rs | MIT OR Apache-2.0 | Analysis only; do not implement Blizzard formats. |
 | noggit3 | **GPL-3.0** | UX study only; never import code. |
 | godotwind | MIT | Bundled SunshineClouds2 (licence ?), terrain data source (?), older Terrain3D binaries. |
+| godot_heightmap_plugin (HTerrain), gaea, GodotGrass, SimpleGrassTextured, godot-imposter, waterways-net, godot_spatial_gardener, func_godot_plugin | MIT each | Reference/candidate only; not integrated. |
+| phantom-camera, GameDemo (Chickensoft), GodotOceanWaves, boujie_water_shader, Sky3D, GodotWeatherSystem | MIT each | Not integrated. GameDemo targets Godot 4.7 and Chickensoft infrastructure. Sky3D's GitHub licence field says NOASSERTION but the LICENSE text is MIT. |
+| godot-4-stylized-sky | Code MIT; **art CC-BY-NC-SA** | Shader ideas only; never import its art (non-commercial). |
+| KayKit Medieval Hexagon Pack 1.0 (Kay Lousberg) | CC0-1.0 | Candidate asset source; stored locally, not imported. |
 | skelerealms | MIT | Future RPG reference only. |
 
 ## 5. Candidate asset sources (links only, nothing downloaded)
@@ -37,3 +41,6 @@ Quaternius Stylized Nature MegaKit; WizP Lowpoly Stylized Fantasy Environment Pa
 
 ## Tooling used (not distributed)
 Godot Engine 4.5.1 .NET (MIT), .NET SDK 8.
+
+## Visual references and catalogues (tracked in git)
+`references/visual/` and `references/godot/candidates/` are original notes written for this project, with links to third-party material. No third-party images, Blizzard screenshots or art are stored. Link-only candidates that were flagged GPL/unlicensed in the catalogues (e.g. a GPL C# city generator, unlicensed grass/sky shader repos) must not be imported.

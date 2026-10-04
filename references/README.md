@@ -3,7 +3,7 @@
 Local, **pinned** copies of third-party repos for agents to inspect. Not dependencies; not git submodules; not committed.
 
 ```
-tools/fetch-references.sh          # fetch/verify everything (shallow, ~2.6 GB, ~1 min)
+tools/fetch-references.sh          # fetch/verify everything (shallow, ~3.1 GB, a few minutes)
 tools/fetch-references.sh Terrain3D godotwind   # fetch only some ids
 tools/fetch-references.sh --list   # id, path, url, pinned commit
 ```
@@ -47,11 +47,36 @@ Never copy code/assets; no Blizzard formats, data or assets. See `docs/CLASSIC_T
 | `warcraft-rs` | MIT OR Apache-2.0 | `docs/src/guides/adt-rendering.md`, `file-formats/world-data/wow-adt/` |
 | `noggit3` | **GPL-3.0** – never import code | `src/noggit/{MapChunk,MapTile,alphamap,Brush,World}.cpp`, `src/noggit/ui/` (tools). Editor UX reference only. |
 
+### Added: systems candidates (cloned; catalogues in `godot/candidates/`)
+`godot/candidates/*.md` rank **all** researched repos (CLONE / LINK-ONLY / SKIP, licence, Godot version, last push). Open the catalogue for your topic first; it also lists link-only repos we did not clone.
+| Topic | Catalogue | Cloned (path under `godot/`) | Licence | Consult when / caveats |
+|---|---|---|---|---|
+| Terrain | `candidates/terrain.md` | `terrain/godot_heightmap_plugin` (HTerrain), `terrain/gaea` | MIT | Splat/detail-layer terrain (HTerrain), graph-based heightmap/biome generation (Gaea). Alternatives to Terrain3D. |
+| Foliage / grass / LOD | `candidates/foliage.md` | `foliage/GodotGrass`, `foliage/SimpleGrassTextured`, `foliage/godot-imposter` | MIT | GPU-wind MultiMesh grass, brush-painted grass cards, billboard/impostor LOD for distant trees. |
+| Roads / rivers | `candidates/roads-and-paths.md` | `roads/waterways-net` (C#, river meshes), plus `roads/godot-road-generator` (above) | MIT | Rivers on Bezier curves. GodotRoadTool (Terrain3D carving) is unlicensed → link-only. |
+| Villages / props | `candidates/villages-and-props.md` | none | – | No maintained permissive village generator exists. A C# city generator found is **GPL – do not import**. |
+| World editing | `candidates/world-editing.md` | `editing/godot_spatial_gardener` (prop/foliage painting), `editing/func_godot_plugin` (Trenchbroom blockout) | MIT | In-editor authoring tools. See also `docs/WORLD_EDITOR_REFERENCE.md`. |
+| Third-person | `candidates/third-person.md` | `controllers/GameDemo` (C#, Chickensoft; don't copy its infra), `controllers/phantom-camera` | MIT | **No open WoW-style (mouse-look/orbit/click-move) controller exists**; plan to write on SpringArm3D. |
+| Water | `candidates/water.md` | `water/GodotOceanWaves` (C#, compute shaders), `water/boujie_water_shader` | MIT | Ocean FFT is overkill for a small lake; boujie is a cheap stylised option. |
+| Atmosphere | `candidates/atmosphere.md` | `atmosphere/Sky3D`, `atmosphere/godot-4-stylized-sky`, `atmosphere/GodotWeatherSystem` (C#) | MIT (stylized-sky **art is CC-BY-NC-SA** – shader only) | Day-night, sky, fog, weather. |
+| Stylised rendering | `candidates/stylized-rendering.md` | none | – | No single package gives the hand-painted look; assemble from vertex colour, fog, simple foliage. Use built-in VisibilityRange/Occluder/MultiMesh for perf. |
+
 ## Environment case studies (`environment-case-studies/`)
 | Path | Role | Licence | Notes |
 |---|---|---|---|
 | `godotwind` | REF – learn what **not** to build | MIT (bundled: SunshineClouds2 licence ?, La Palma terrain data source ?) | 1.6 GB (incl. its `.git`; `lapalma_terrain/` 673 MB). Read `docs/ARCHITECTURE.md`, `docs/reference/terrain_research.md`, `docs/reference/streaming_rendering_bible.md`, `docs/systems/distance_rendering.md`. Heavy: cell streaming, 4-tier distance/HLOD/impostors, ocean (14k lines), horizon baking, weather/volumetric clouds, format importers, IK. Skip for a small environment. Includes Terrain3D v1.0.1 prebuilt binaries in `addons/terrain_3d/bin/` (old version). |
 | `skelerealms` | REF (future RPG, **not now**) | MIT | GDScript RPG-framework addon: `scripts/{entities,components,ai,schedules}/`. No terrain/LOD. |
 
+
+## Visual references (`visual/`) — the look targets
+Links + original written analysis only. **No Blizzard screenshots/art are stored** (copyright); use the links for lawful viewing. Palette hexes are approximate impressions, not sampled values; zone files flag which claims are search-backed.
+| File | Use |
+|---|---|
+| `visual/README.md` | Index + **11-point checklist for evaluating a Godot screenshot** against the refs. Read before judging visuals. |
+| `visual/wow-classic/CLASSIC_LOOK.md` | Cross-zone synthesis (palette, painted textures, vertex lighting, fog as depth, chunky silhouettes) + how to approximate in Godot. |
+| `visual/wow-classic/{elwynn-forest,dun-morogh,westfall,wetlands}.md` | Per-zone terrain shape, palette, vegetation, roads, architecture, fog, scale, landmarks, links. |
+| `visual/concept-art-and-style.md` | Concept art / hand-painted-texture / stylised-environment links. |
+| `visual/asset-packs.md` | Stylised free packs with licences (Quaternius, Kenney, KayKit, WizP, ambientCG, Poly Haven…). |
+
 ## Assets (`assets/`)
-Links and licence notes only: `assets/README.md` (Quaternius Stylized Nature MegaKit, WizP Lowpoly Stylized Fantasy Environment Pack).
+`assets/README.md` + `visual/asset-packs.md`: pack links and licences (Quaternius Stylized Nature MegaKit, WizP, Kenney, …). One local copy: `assets/KayKit-Medieval-Hexagon-Pack` (**CC0**, ASSET?; only the buildings are useful, not the hex tiles). Import only what a task needs into `assets/` and log it in `THIRD_PARTY.md`.
