@@ -17,8 +17,11 @@ tools/validate_layout.py                       # sanity-check assets/world/layou
 ```
 `tools/screenshot.sh [shotA,shotB]` renders the shots listed in the layout. `EXTRA="--nofog --noshadow"` and `EXTRA="--debug-draw=unshaded"` help diagnose rendering; `LAYOUT=res://assets/world/other.json` renders a different layout.
 
+## Walking the zone
+Run `godot --path .` and you spawn at Pilgrim's Gap as a hooded wanderer. WoW-style controls: W/S walk along the camera, A/D strafe, Q/E turn, Shift run, right-drag steers the camera and character, left-drag orbits only, wheel zooms (2-14 m), F toggles a free fly camera, Escape releases the mouse. Follow the road east: windmill, saddle reveal, Thistlebury, the Fallen Span, Hollin Wood, the coil up Candlehill.
+
 ## How the world is built
-`src/World/WorldRoot.cs` loads the layout and runs, in order: `TerrainBuilder` (heightfield from authored hills/ridges/basins/lake/rivers/roads/flats, plus ground layers and a baked hue tint) → `TerrainMesh` (chunked meshes + heightmap collider, `shaders/terrain.gdshader`) → `WaterBuilder` → `SiteBuilder` (cottages from the modular kit, landmarks, fences, ruins, fields) → `FoliagePlacer` (clumped trees, undergrowth, rocks via MultiMesh). `Atmosphere` sets the painted sky, sun and horizon-matched fog. Everything reads coordinates as metres from the map centre, X east, Z south, Y up.
+`src/World/WorldRoot.cs` loads the layout and runs, in order: `TerrainBuilder` (heightfield from authored hills/ridges/basins/lake/rivers/roads/flats, plus five ground layers and a baked hue tint) → `TerrainMesh` (chunked meshes + heightmap collider, `shaders/terrain.gdshader`) → `WaterBuilder` (lake disc and river ribbons, `shaders/water.gdshader`) → `SiteBuilder` (cottages assembled from the modular kit by `CottageBuilder`, KayKit landmarks with a muted palette, fences, ruins, standing stones, fields; marks ground as claimed) → `FoliagePlacer` (clumped tree stands with glades, undergrowth, rocks and verge pebbles via MultiMesh, `shaders/foliage.gdshader` wind). `Atmosphere` sets the painted sky (`shaders/sky.gdshader`), one soft sun and horizon-matched depth fog. Ground tiles are painted procedurally by `tools/paint_textures.py`; the KayKit palette is muted by `tools/retint_kaykit.py`. Everything reads coordinates as metres from the map centre, X east, Z south, Y up.
 
 ## Reference library
 ```sh
