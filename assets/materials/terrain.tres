@@ -14,3 +14,4 @@ shader_parameter/tex_forest = ExtResource("3_forest")
 shader_parameter/tex_road = ExtResource("4_road")
 shader_parameter/tex_rock = ExtResource("5_rock")
 shader_parameter/tex_snow = ExtResource("6_snow")
+shader_parameter/tile_grass = 6.0
