@@ -150,9 +150,14 @@ Codas: Sawyer's Path north to the wheel, the cascade and the loaded wagon at the
 10. **Restraint:** nine landmarks on 1 km², ≤ 4 prop types per view, an empty moor and parkland, a lake with a single tree in it, ten hero trees, dead trees only where they mean something.
 11. **Zone identity:** Elwynn-register pastoral cosiness (lake village, mill, church, fences, fields) with a Dun Morogh cold rim as accent, one Wetlands-grade dark passage and a fogged exit gorge; the quiet story of a lordship that ended and a village that stayed makes it Fallowmere, not a generic stylised forest.
 
-## 10. Build notes / integrator requests
-- `TerrainBuilder`: after `flats`, recompute `WaterDepth = max(0, waterLevel − h)` inside the lake ellipse (Ladyholm and the church promontory are flats inside the lake and must not read as wet).
-- `SiteBuilder`: pieces over water (the Hythe pier `ruinWall`, Fallen Span pier/arch, ford `RockPath` planks) sit on max(ground, waterLevel + 0.1); `tower` at the Candle gets a 1 m emissive box (#F0A050) on top; the hall tower is tinted toward soot; `rotationDeg` convention: 0 = local +x along world +x, clockwise seen from above.
-- Throat Road: snap the profile to the river bank (level + 1.6) where it is within 14 m of the lower Fallow so it reads as a towpath, not a ledge.
-- Water: the Whitestep reach (19 %) wants a pale foam tint; nothing else.
-- Validator warnings expected and accepted: Hoarfells hill centre is off-map (it is the north rim mass); Fallow Beck ends where the upper Fallow begins (one river split in two for the grade kink).
+## 10. Build status
+Implemented against this bible (all generated at startup from `assets/world/layout.json`):
+- Terrain: rolling base, per-side rim heights (north 215 m), hills/ridges/basins, lake bowl with dry islets (water depth recomputed after flats), river trenches, flattened painted roads, settlement flats, soft banded strata on steep slopes, five painted ground layers (grass, forest floor, road, rock, dry meadow) plus altitude snow.
+- Water: lake disc at 4.0 m and three river ribbons with a painted depth-coloured shader; the lower Fallow starts inside the lake as an outlet.
+- Sites: cottages assembled from the modular kit (tavern and smithy are kit cottages, not KayKit, for cohesion), KayKit church / windmill / well / lumbermill / mine / towers with a muted palette, fences, fields, ruined walls with end caps and rubble, height-true standing stones, the Hythe as a stone jetty (`pier` piece), the lit brazier on the Candle (`brazier` piece), soot-tinted ruin towers.
+- Foliage: ~2,300 trees in clumped stands with glades, ~24k undergrowth instances, boulders and verge pebbles; hero elders placed per site.
+- Atmosphere: painted gradient sky with cream cloud banks and a soft sun, horizon-matched depth fog 130-820 m, soft WSW sun at 28 deg.
+- Wanderer: 1.8 m hooded figure with WoW-style orbit camera; spawns at Pilgrim's Gap.
+
+Not yet done (small, optional): the Throat Road towpath snap to the river bank; a pale foam tint on the Whitestep reach; height fog on the Mere (the layout flag is read but the atmosphere keeps depth fog only).
+Validator warnings expected and accepted: the Hoarfells hill centre is off-map (north rim mass); Fallow Beck ends where the upper Fallow begins (one river split for the grade kink).

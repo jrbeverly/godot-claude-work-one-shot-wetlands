@@ -143,7 +143,9 @@ public static class SiteBuilder
         var line = new Node3D { Name = "RuinWall" };
         parent.AddChild(line);
         // Weathered grey with a hint of moss; the kit's cream plaster/orange plate would read freshly built.
-        var stoneTint = new Color("#A9ADA0");
+        // Recoloured (greyscale texture x tint) so the kit's orange timber plate and cream plaster end faces
+        // become weathered stone too.
+        var stoneTint = new Color("#A6A49A");
         var rubbleTint = new Color("#9A9C92");
         for (int k = 0; k < modules; k++)
         {
@@ -158,9 +160,9 @@ public static class SiteBuilder
             var seg = new Node3D { Position = new Vector3(wp.X, gy - 0.12f, wp.Y) };
             seg.RotationDegrees = new Vector3(rng.RandfRange(-3f, 3f), -yaw, rng.RandfRange(-3f, 3f));
             seg.Scale = new Vector3(1, hScale, 1);
-            var front = kit.Instance("Wall_UnevenBrick_Straight", stoneTint);
+            var front = kit.Instance("Wall_UnevenBrick_Straight", stoneTint, recolour: true);
             front.Position = new Vector3(0, 0, 0.2f);
-            var back = kit.Instance("Wall_UnevenBrick_Straight", stoneTint);
+            var back = kit.Instance("Wall_UnevenBrick_Straight", stoneTint, recolour: true);
             back.Position = new Vector3(0, 0, -0.2f);
             back.RotationDegrees = new Vector3(0, 180, 0);
             seg.AddChild(front);
@@ -168,7 +170,7 @@ public static class SiteBuilder
             // Brick end caps hide the open module ends; rubble at the foot sells the collapse.
             foreach (float ex in new[] { -1f, 1f })
             {
-                var cap = kit.Instance("Corner_Exterior_Brick", stoneTint);
+                var cap = kit.Instance("Corner_Exterior_Brick", stoneTint, recolour: true);
                 cap.Position = new Vector3(ex * 1.0f, 0, 0);
                 seg.AddChild(cap);
             }
