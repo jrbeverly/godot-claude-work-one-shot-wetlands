@@ -36,6 +36,10 @@ fail=0
 while IFS='|' read -r id path url commit; do
   wanted "$id" || continue
   dest="$ROOT/$path"
+  # Safety net: never let `git add -A` pick up a clone as an embedded repo.
+  if [[ -d "$ROOT/.git/info" ]] && ! grep -qxF "/$path/" "$ROOT/.git/info/exclude" 2>/dev/null; then
+    echo "/$path/" >> "$ROOT/.git/info/exclude"
+  fi
   if [[ -d "$dest/.git" ]] && [[ "$(git -C "$dest" rev-parse HEAD 2>/dev/null)" == "$commit" ]]; then
     echo "ok       $id @ ${commit:0:10}"
     continue
