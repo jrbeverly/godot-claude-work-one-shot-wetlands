@@ -111,3 +111,7 @@ references:
     path: references/godot/editing/func_godot_plugin
     url: https://github.com/func-godot/func_godot_plugin
     commit: ce8cf99de28c4aa0a111d5e8600afcea57be0cd4
+  - id: KayKit-Medieval-Hexagon-Pack
+    path: references/assets/KayKit-Medieval-Hexagon-Pack
+    url: https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0
+    commit: 84fa4e91af6a88989be7c99e0891cede11f2ca38

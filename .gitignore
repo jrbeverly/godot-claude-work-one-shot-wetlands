@@ -14,7 +14,8 @@ obj/
 .vs/
 
 # Reference library: clones are fetched by tools/fetch-references.sh (pinned in references/references.yaml).
-# Docs, the manifest and references/assets/ notes are tracked; the clones themselves are not.
+# Docs, the manifest and notes are tracked; the clones themselves are not. Regenerate this block when adding manifest entries
+# (the fetch script also adds clones to .git/info/exclude as a safety net).
 /references/starters/GoDotNet.BlankTemplate/
 /references/starters/GodotGame/
 /references/starters/CSharpGodotTools-Template/
@@ -34,6 +35,15 @@ obj/
 /references/classic-terrain-analysis/noggit3/
 /references/environment-case-studies/godotwind/
 /references/environment-case-studies/skelerealms/
+/references/godot/terrain/godot_heightmap_plugin/
+/references/godot/terrain/gaea/
+/references/godot/foliage/GodotGrass/
+/references/godot/foliage/SimpleGrassTextured/
+/references/godot/foliage/godot-imposter/
+/references/godot/roads/waterways-net/
+/references/godot/editing/godot_spatial_gardener/
+/references/godot/editing/func_godot_plugin/
+/references/assets/KayKit-Medieval-Hexagon-Pack/
 
 # OS / editor
 .DS_Store
