@@ -1,0 +1,358 @@
+{
+ "name": "Test Vale (water/sky)",
+ "mapSize": 1024,
+ "cellSize": 2,
+ "sun": {
+  "azimuthDeg": 225,
+  "elevationDeg": 38,
+  "color": "#FFE7BE",
+  "energy": 1.2
+ },
+ "palette": {
+  "grass": "#5E8C3A",
+  "fog": "#A9BFD3",
+  "skyTop": "#6F95C2",
+  "skyHorizon": "#C9D7E2",
+  "water": "#4C7A8C",
+  "waterDeep": "#2C4F62",
+  "ambient": "#B9C8D6"
+ },
+ "fog": {
+  "startM": 80,
+  "endM": 800,
+  "density": 0.002,
+  "heightFogEnabled": false,
+  "heightFogLevel": 0
+ },
+ "terrain": {
+  "baseHeight": 5,
+  "rim": {
+   "startRadius": 360,
+   "edgeHeight": 190,
+   "roughness": 0.35
+  },
+  "hills": [
+   {
+    "name": "Mill Hill",
+    "x": 120,
+    "z": -60,
+    "radius": 90,
+    "height": 28,
+    "shape": "dome"
+   },
+   {
+    "name": "Bluff",
+    "x": -200,
+    "z": -220,
+    "radius": 120,
+    "height": 55,
+    "shape": "cliff"
+   }
+  ],
+  "basins": [],
+  "ridges": [
+   {
+    "name": "Spur",
+    "points": [
+     [
+      -350,
+      100
+     ],
+     [
+      -220,
+      160
+     ],
+     [
+      -90,
+      260
+     ]
+    ],
+    "width": 50,
+    "height": 35
+   }
+  ],
+  "flats": [
+   {
+    "name": "Village",
+    "x": 0,
+    "z": 40,
+    "radius": 45,
+    "height": 6
+   }
+  ]
+ },
+ "lake": {
+  "name": "Mere",
+  "x": 180,
+  "z": 120,
+  "radiusX": 90,
+  "radiusZ": 70,
+  "waterLevel": 2.5,
+  "depth": 6
+ },
+ "rivers": [
+  {
+   "name": "Brook",
+   "points": [
+    [
+     -60,
+     -400
+    ],
+    [
+     -20,
+     -300
+    ],
+    [
+     40,
+     -180
+    ],
+    [
+     120,
+     -40
+    ],
+    [
+     170,
+     60
+    ]
+   ],
+   "width": 7,
+   "depth": 2.2,
+   "waterLevelStart": 30,
+   "waterLevelEnd": 2.5
+  }
+ ],
+ "roads": [
+  {
+   "name": "Low Road",
+   "points": [
+    [
+     -420,
+     60
+    ],
+    [
+     -300,
+     40
+    ],
+    [
+     -180,
+     70
+    ],
+    [
+     -60,
+     50
+    ],
+    [
+     0,
+     40
+    ],
+    [
+     80,
+     20
+    ],
+    [
+     160,
+     -30
+    ],
+    [
+     260,
+     -80
+    ],
+    [
+     360,
+     -160
+    ],
+    [
+     430,
+     -260
+    ]
+   ],
+   "width": 5,
+   "kind": "main"
+  }
+ ],
+ "biomes": [
+  {
+   "name": "Dark Wood",
+   "x": -150,
+   "z": -150,
+   "radius": 140,
+   "priority": 1,
+   "treeDensity": 0.6,
+   "clumpiness": 0.7,
+   "trees": [
+    {
+     "model": "CommonTree_1",
+     "weight": 1,
+     "scale": 1
+    }
+   ],
+   "undergrowth": [],
+   "groundTexture": "forestFloor",
+   "leafTint": null
+  },
+  {
+   "name": "Gold Meadow",
+   "x": 260,
+   "z": 260,
+   "radius": 150,
+   "priority": 1,
+   "treeDensity": 0.05,
+   "clumpiness": 0.5,
+   "trees": [],
+   "undergrowth": [],
+   "groundTexture": "meadow",
+   "leafTint": null
+  }
+ ],
+ "sites": [],
+ "spawn": {
+  "x": -60,
+  "z": 50,
+  "yawDeg": 90
+ },
+ "shots": [
+  {
+   "name": "wide",
+   "from": [
+    -380,
+    0,
+    300
+   ],
+   "lookAt": [
+    60,
+    0,
+    -40
+   ],
+   "fovDeg": 60,
+   "fromAboveGround": 45,
+   "lookAtAboveGround": 5
+  },
+  {
+   "name": "road",
+   "from": [
+    -120,
+    0,
+    62
+   ],
+   "lookAt": [
+    40,
+    0,
+    30
+   ],
+   "fovDeg": 62,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 1.5
+  },
+  {
+   "name": "lake",
+   "from": [
+    60,
+    0,
+    160
+   ],
+   "lookAt": [
+    200,
+    0,
+    110
+   ],
+   "fovDeg": 60,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 0.5
+  },
+  {
+   "name": "water_lake_shore",
+   "from": [
+    176,
+    0,
+    198
+   ],
+   "lookAt": [
+    125,
+    0,
+    30
+   ],
+   "fovDeg": 62,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 12
+  },
+  {
+   "name": "water_river",
+   "from": [
+    159.8,
+    0,
+    15.1
+   ],
+   "lookAt": [
+    149.1,
+    0,
+    29.4
+   ],
+   "fovDeg": 62,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 0.3
+  },
+  {
+   "name": "water_river_down",
+   "from": [
+    44.4,
+    0,
+    -182.4
+   ],
+   "lookAt": [
+    59,
+    0,
+    -145
+   ],
+   "fovDeg": 60,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 0.0
+  },
+  {
+   "name": "water_vista",
+   "from": [
+    -300,
+    0,
+    250
+   ],
+   "lookAt": [
+    120,
+    0,
+    -120
+   ],
+   "fovDeg": 65,
+   "fromAboveGround": 22,
+   "lookAtAboveGround": 90
+  },
+  {
+   "name": "water_sun",
+   "from": [
+    0,
+    0,
+    0
+   ],
+   "lookAt": [
+    -100,
+    118,
+    100
+   ],
+   "fovDeg": 70,
+   "fromAboveGround": 1.7
+  },
+  {
+   "name": "water_lake_high",
+   "from": [
+    90,
+    0,
+    30
+   ],
+   "lookAt": [
+    185,
+    0,
+    120
+   ],
+   "fovDeg": 60,
+   "fromAboveGround": 14,
+   "lookAtAboveGround": 0
+  }
+ ]
+}
