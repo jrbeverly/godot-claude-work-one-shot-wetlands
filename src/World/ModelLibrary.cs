@@ -151,6 +151,8 @@ public static class ModelLibrary
         m.MetallicSpecular = 0f;
         m.NormalEnabled = false;      // normal maps add micro-detail the painted look does not want
         m.VertexColorUseAsAlbedo = true; // kit AO in COLOR_0 plus the MultiMesh per-instance tint
+        // Salmon-pink kit bark -> warm brown trunks.
+        if ((std.ResourceName ?? "").Contains("Bark", StringComparison.OrdinalIgnoreCase)) m.AlbedoColor *= new Color(0.86f, 0.78f, 0.72f);
         m.RoughnessTexture = null;
         m.MetallicTexture = null;
         if (m.Transparency == BaseMaterial3D.TransparencyEnum.AlphaScissor) m.AlphaScissorThreshold = 0.4f;

@@ -9,7 +9,7 @@ UNDER = {"Bush_Common", "Bush_Common_Flowers", "Fern_1", "Clover_1", "Flower_3_G
 LANDMARKS = {"church", "tavern", "blacksmith", "windmill", "lumbermill", "mine", "well", "tower"}
 PROPS = {"wagon", "crate", "RockPath_Round_Thin", "RockPath_Square_Thin"}
 GROUND = {"grass", "meadow", "forestFloor", "rock", "snow"}
-PIECE_KINDS = {"cottage", "landmark", "fence", "prop", "ruinWall", "standingStone", "tree", "field"}
+PIECE_KINDS = {"cottage", "landmark", "fence", "prop", "ruinWall", "standingStone", "tree", "field", "pier", "brazier"}
 PALETTE_KEYS = ["grass", "meadow", "forestFloor", "road", "rock", "snow", "water", "waterDeep", "skyTop", "skyHorizon", "fog", "ambient", "shadowTint", "roofTile", "timber", "plaster", "stone", "leafWarm", "leafCool", "pine"]
 
 errors, warnings = [], []

@@ -25,7 +25,7 @@ public sealed class Kit
 
     private const string Root = "res://assets/third_party/";
     private static readonly string[] Folders = { "quaternius_village", "quaternius_nature", "kaykit_landmarks" };
-    private static readonly Color RoofMultiply = new("#B08A72");
+    private static readonly Color RoofMultiply = new("#A8887A");
 
     private readonly Dictionary<string, Model?> _models = new();
     private readonly Dictionary<string, Material> _muted = new();
@@ -75,7 +75,7 @@ public sealed class Kit
         var copy = (Material)muted.Duplicate();
         if (copy is StandardMaterial3D std)
         {
-            if (recolour && std.AlbedoTexture != null) std.AlbedoTexture = Desaturated(std.AlbedoTexture, 0f, 1.9f);
+            if (recolour && std.AlbedoTexture != null) std.AlbedoTexture = Desaturated(std.AlbedoTexture, 0f, 1.45f);
             std.AlbedoColor *= tint;
         }
         _tinted[key] = copy;
@@ -177,9 +177,11 @@ public sealed class Kit
             // Terracotta tiles are near-neon orange in the kit: pull most of the saturation out, then warm/darken toward slate-red.
             if (key.Contains("RoundTiles", StringComparison.OrdinalIgnoreCase))
             {
-                if (m.AlbedoTexture != null) m.AlbedoTexture = Desaturated(m.AlbedoTexture, 0.45f, 0.95f);
+                if (m.AlbedoTexture != null) m.AlbedoTexture = Desaturated(m.AlbedoTexture, 0.38f, 0.92f);
                 m.AlbedoColor *= RoofMultiply;
             }
+            // The kit's bark is salmon-pink; pull it toward a warm brown so trunks stop reading as candy.
+            if (key.Contains("Bark", StringComparison.OrdinalIgnoreCase)) m.AlbedoColor *= new Color(0.86f, 0.78f, 0.72f);
             if (key.Contains("hexagons_medieval", StringComparison.OrdinalIgnoreCase))
             {
                 var tex = KayKitMutedAtlas();

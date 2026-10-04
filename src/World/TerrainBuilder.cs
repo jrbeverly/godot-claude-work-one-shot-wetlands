@@ -76,7 +76,7 @@ public static class TerrainBuilder
         }
 
         // 2b. Banded rock: steep ground steps softly into terraces (reads as painted strata, not noise).
-        Terrace(f, 9f, 0.42f, rimNoise);
+        Terrace(f, 10f, 0.34f, rimNoise);
 
         // 3. Lake: bowl with the shoreline exactly at water level.
         if (L.Lake is { } lake)
@@ -230,7 +230,7 @@ public static class TerrainBuilder
             float hd = src[f.Index(i, j - 1)], hu = src[f.Index(i, j + 1)];
             float gx = (hr - hl) / (2f * f.CellSize), gz = (hu - hd) / (2f * f.CellSize);
             float slopeDeg = Mathf.RadToDeg(MathF.Atan(MathF.Sqrt(gx * gx + gz * gz)));
-            float w = Smooth((slopeDeg - 26f) / 22f) * strength;
+            float w = Smooth((slopeDeg - 30f) / 22f) * strength;
             if (w <= 0f) continue;
             float h = src[k] + shift;
             float q = MathF.Floor(h / step) * step;

@@ -1723,12 +1723,13 @@
      "scale": 8.0
     },
     {
-     "kind": "ruinWall",
-     "x": 68,
+     "kind": "pier",
+     "x": 61,
      "z": -60,
-     "rotationDeg": 90,
+     "rotationDeg": 0,
      "lengthM": 16,
-     "heightM": 2.2
+     "widthM": 2.4,
+     "heightM": 1.4
     },
     {
      "kind": "cottage",
@@ -2667,6 +2668,13 @@
      "z": -4,
      "rotationDeg": 20,
      "scale": 1.0
+    },
+    {
+     "kind": "brazier",
+     "x": 0,
+     "z": 0,
+     "rotationDeg": 0,
+     "heightM": 20.2
     }
    ]
   },
@@ -3000,18 +3008,18 @@
   {
    "name": "hall",
    "from": [
-    -48,
-    9.2,
-    14
+    -44,
+    0,
+    8
    ],
    "lookAt": [
     165,
-    36,
+    0,
     20
    ],
-   "fovDeg": 60,
-   "fromAboveGround": 1.7,
-   "lookAtAboveGround": 16
+   "fovDeg": 58,
+   "fromAboveGround": 2.4,
+   "lookAtAboveGround": 14
   },
   {
    "name": "candle",
@@ -3076,6 +3084,70 @@
    "fovDeg": 58,
    "fromAboveGround": 1.7,
    "lookAtAboveGround": 14
+  },
+  {
+   "name": "harrowfold",
+   "from": [
+    118,
+    0,
+    62
+   ],
+   "lookAt": [
+    165,
+    0,
+    20
+   ],
+   "fovDeg": 58,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 14
+  },
+  {
+   "name": "sisters",
+   "from": [
+    216,
+    0,
+    143
+   ],
+   "lookAt": [
+    215,
+    0,
+    160
+   ],
+   "fovDeg": 64,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 2.5
+  },
+  {
+   "name": "candle_tower",
+   "from": [
+    324,
+    0,
+    152
+   ],
+   "lookAt": [
+    300,
+    0,
+    150
+   ],
+   "fovDeg": 60,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 11
+  },
+  {
+   "name": "gap",
+   "from": [
+    -454,
+    0,
+    129
+   ],
+   "lookAt": [
+    -428,
+    0,
+    121
+   ],
+   "fovDeg": 62,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 2
   }
  ]
 }
