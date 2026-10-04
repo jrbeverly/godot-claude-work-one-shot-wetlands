@@ -79,3 +79,35 @@ references:
     path: references/environment-case-studies/skelerealms
     url: https://github.com/SlashScreen/skelerealms
     commit: 293dfd0b68541066bc505eadf03255d85218b4bf
+  - id: godot_heightmap_plugin
+    path: references/godot/terrain/godot_heightmap_plugin
+    url: https://github.com/Zylann/godot_heightmap_plugin
+    commit: 7f574eb47fbd74cb1a79adc2cc9fb7f0694fccc3
+  - id: gaea
+    path: references/godot/terrain/gaea
+    url: https://github.com/gaea-godot/gaea
+    commit: ee2cdc3e1f87f067c376fe5e64f9a5a9793a1280
+  - id: GodotGrass
+    path: references/godot/foliage/GodotGrass
+    url: https://github.com/2Retr0/GodotGrass
+    commit: 3785bec8e2567f57faf3b9a6c0e617af710d090a
+  - id: SimpleGrassTextured
+    path: references/godot/foliage/SimpleGrassTextured
+    url: https://github.com/IcterusGames/SimpleGrassTextured
+    commit: 88ff153711dad115d42717542bb9009e1c862440
+  - id: godot-imposter
+    path: references/godot/foliage/godot-imposter
+    url: https://github.com/zhangjt93/godot-imposter
+    commit: e86fd4786d36202129c7b7d5873131fc21dbbe72
+  - id: waterways-net
+    path: references/godot/roads/waterways-net
+    url: https://github.com/Tshmofen/waterways-net
+    commit: 37ed6fe45a0431d7b8c88e7fabc9e5d984f3d19f
+  - id: godot_spatial_gardener
+    path: references/godot/editing/godot_spatial_gardener
+    url: https://github.com/dreadpon/godot_spatial_gardener
+    commit: 77b822f50ded7211f91c0f0588d7b7c8bedac5f6
+  - id: func_godot_plugin
+    path: references/godot/editing/func_godot_plugin
+    url: https://github.com/func-godot/func_godot_plugin
+    commit: ce8cf99de28c4aa0a111d5e8600afcea57be0cd4
