@@ -1,0 +1,97 @@
+# Renames the three main project identity files from their template names to
+# the chosen project name:
+#   Template.csproj  → ProjectName.csproj  (also updates RootNamespace)
+#   Template.sln     → ProjectName.sln
+#   project.godot    → unchanged path, but internal name/assembly fields updated
+class_name ProjectFileRenamer
+
+const TEMPLATE_PROJECT_NAME: String = "Template"
+const VSCODE_FILE_PATHS: Array[String] = [
+	".vscode/launch.json",
+	".vscode/settings.json",
+	".vscode/tasks.json"
+]
+
+# Entry point: runs all three file-rename helpers in order.
+static func rename_template_project_files(project_root: String, project_name: String) -> void:
+	rename_csproj_file(project_root, project_name)
+	rename_solution_file(project_root, project_name)
+	rename_project_godot_file(project_root, project_name)
+	replace_template_name_in_vscode_files(project_root, project_name)
+
+# Replaces all occurrences of "Template" with the chosen project name in
+# Template/.vscode launch, settings, and tasks files used by the workflow.
+static func replace_template_name_in_vscode_files(project_root: String, project_name: String) -> void:
+	for relative_path in VSCODE_FILE_PATHS:
+		var vscode_file_path: String = project_root.path_join(relative_path)
+		if not FileAccess.file_exists(vscode_file_path):
+			continue
+
+		var file_text: String = FileAccess.get_file_as_string(vscode_file_path)
+		if file_text.is_empty():
+			continue
+
+		var updated_text: String = file_text.replace(TEMPLATE_PROJECT_NAME, project_name)
+		if updated_text == file_text:
+			continue
+
+		var file: FileAccess = FileAccess.open(vscode_file_path, FileAccess.WRITE)
+		if file != null:
+			file.store_string(updated_text)
+
+# Updates the config/name and project/assembly_name fields inside project.godot.
+static func rename_project_godot_file(project_root: String, project_name: String) -> void:
+	var project_file_path: String = project_root.path_join("project.godot")
+	require_file(project_file_path)
+	
+	var project_text: String = FileAccess.get_file_as_string(project_file_path)
+	
+	project_text = project_text.replace(
+		"project/assembly_name=\"%s\"" % TEMPLATE_PROJECT_NAME,
+		"project/assembly_name=\"%s\"" % project_name)
+	
+	project_text = project_text.replace(
+		"config/name=\"%s\"" % TEMPLATE_PROJECT_NAME,
+		"config/name=\"%s\"" % project_name)
+	
+	var file: FileAccess = FileAccess.open(project_file_path, FileAccess.WRITE)
+	if file != null:
+		file.store_string(project_text)
+
+# Replaces all occurrences of "Template" in the .sln text, then renames the
+# file from Template.sln to ProjectName.sln.
+static func rename_solution_file(project_root: String, project_name: String) -> void:
+	var solution_file_path: String = project_root.path_join("%s.sln" % TEMPLATE_PROJECT_NAME)
+	require_file(solution_file_path)
+	
+	var solution_text: String = FileAccess.get_file_as_string(solution_file_path)
+	solution_text = solution_text.replace(TEMPLATE_PROJECT_NAME, project_name)
+	
+	DirAccess.remove_absolute(solution_file_path)
+	var new_file: FileAccess = FileAccess.open(project_root.path_join(project_name + ".sln"), FileAccess.WRITE)
+	if new_file != null:
+		new_file.store_string(solution_text)
+
+# Updates the <RootNamespace> element in the .csproj, then renames the file
+# from Template.csproj to ProjectName.csproj.
+static func rename_csproj_file(project_root: String, project_name: String) -> void:
+	var csproj_file_path: String = project_root.path_join("%s.csproj" % TEMPLATE_PROJECT_NAME)
+	require_file(csproj_file_path)
+	
+	var csproj_text: String = FileAccess.get_file_as_string(csproj_file_path)
+	csproj_text = csproj_text.replace(
+		"<RootNamespace>%s</RootNamespace>" % TEMPLATE_PROJECT_NAME,
+		"<RootNamespace>%s</RootNamespace>" % project_name)
+	
+	DirAccess.remove_absolute(csproj_file_path)
+	var new_file: FileAccess = FileAccess.open(project_root.path_join(project_name + ".csproj"), FileAccess.WRITE)
+	if new_file != null:
+		new_file.store_string(csproj_text)
+
+# Logs an error if the required file does not exist.
+# Used as a pre-condition guard before reading setup artifacts.
+static func require_file(path: String) -> void:
+	if FileAccess.file_exists(path):
+		return
+	
+	push_error("Missing setup artifact: %s" % path)

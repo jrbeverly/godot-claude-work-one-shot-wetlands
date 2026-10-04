@@ -1,0 +1,92 @@
+{
+  "id": "func_godot_plugin",
+  "path": "references/godot/editing/func_godot_plugin",
+  "url": "https://github.com/func-godot/func_godot_plugin",
+  "commit": "ce8cf99de28c4aa0a111d5e8600afcea57be0cd4",
+  "archive_url": "https://codeload.github.com/func-godot/func_godot_plugin/tar.gz/ce8cf99de28c4aa0a111d5e8600afcea57be0cd4",
+  "archive_bytes": 91773,
+  "kept_files": 94,
+  "kept_bytes": 240556,
+  "omitted": [
+    {
+      "path": "addons/func_godot/icon.png",
+      "bytes": 5356,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/func_godot/icon32.png",
+      "bytes": 5356,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/func_godot/palette.lmp",
+      "bytes": 768,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/func_godot/quake2_palette.lmp",
+      "bytes": 768,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/func_godot/textures/clip.png",
+      "bytes": 1124,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/func_godot/textures/default_texture.png",
+      "bytes": 1044,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/func_godot/textures/origin.png",
+      "bytes": 239,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/func_godot/textures/skip.png",
+      "bytes": 1138,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/func_godot/icon.svg",
+      "bytes": 10506,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/func_godot/icons/icon_slipgate.svg",
+      "bytes": 3037,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/func_godot/icons/icon_godot_ranger3d.svg",
+      "bytes": 19554,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/func_godot/icons/icon_slipgate3d.svg",
+      "bytes": 3037,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/func_godot/icons/icon_godot_ranger.svg",
+      "bytes": 19554,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/func_godot/icons/icon_godambler.svg",
+      "bytes": 9676,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/func_godot/icons/icon_godambler3d.svg",
+      "bytes": 11121,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/func_godot/icons/icon_quake_file.svg",
+      "bytes": 7282,
+      "reason": "image asset"
+    }
+  ]
+}

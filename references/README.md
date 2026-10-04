@@ -1,12 +1,14 @@
 # Reference library
 
-Local, **pinned** copies of third-party repos for agents to inspect. Not dependencies; not git submodules; not committed.
+Local, **pinned** copies of third-party repos for agents to inspect. Not dependencies or git submodules. Source snapshots are committed; large assets and binaries are omitted.
 
 ```
-tools/fetch-references.sh          # fetch/verify everything (shallow, ~3.1 GB, a few minutes)
-tools/fetch-references.sh Terrain3D godotwind   # fetch only some ids
+tools/fetch-references.sh          # preserve committed snapshots; fetch missing entries
+tools/fetch-references.sh Terrain3D godotwind   # check only some ids
 tools/fetch-references.sh --list   # id, path, url, pinned commit
 ```
+
+Each snapshot has a `SNAPSHOT.json` recording the upstream archive URL, pin, retained size, and every omitted file. Full downloaded archives remain locally in `.git/reference-archives/` for asset review; they are not pushed. Files over 1 MiB, binary files, model/image/audio/font assets, and LFS pointers are omitted. Snapshots are for reading and may not run without those files. `godot-skill` has metadata only because it has no redistribution licence. Submodules are not downloaded. Link-only catalogues and visual benchmarks remain links.
 
 Pins live in `references.yaml` (commit = default-branch HEAD on 2026-10-04). Godot ignores this dir (`.gdignore`); `dotnet build` excludes it.
 **Consult selectively**: open the one entry you need, then Grep inside that directory. Licences: see `THIRD_PARTY.md`. Licence facts below were read from each checkout; "?" = not determined.

@@ -1,0 +1,1907 @@
+{
+  "id": "godotwind",
+  "path": "references/environment-case-studies/godotwind",
+  "url": "https://github.com/lihogloglo/godotwind",
+  "commit": "e074931e7f227d6bdcfa2d02889d1209dc025a33",
+  "archive_url": "https://codeload.github.com/lihogloglo/godotwind/tar.gz/e074931e7f227d6bdcfa2d02889d1209dc025a33",
+  "archive_bytes": 763505613,
+  "kept_files": 2445,
+  "kept_bytes": 14057498,
+  "omitted": [
+    {
+      "path": "addons/SunshineClouds2/.vs/SunshineClouds2/CopilotIndices/17.14.670.39694/CodeChunks.db",
+      "bytes": 180224,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/SunshineClouds2/.vs/SunshineClouds2/CopilotIndices/17.14.670.39694/SemanticSymbols.db",
+      "bytes": 126976,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/SunshineClouds2/.vs/SunshineClouds2/FileContentIndex/5e54b9c7-82b4-481e-9085-ea250dc3d8c6.vsidx",
+      "bytes": 226353,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/SunshineClouds2/.vs/SunshineClouds2/v17/.wsuo",
+      "bytes": 17408,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/SunshineClouds2/.vs/slnx.sqlite",
+      "bytes": 102400,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/SunshineClouds2/NoiseTextures/bluenoise_Dither.png",
+      "bytes": 262616,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/SunshineClouds2/NoiseTextures/curl_noise_packed.png",
+      "bytes": 4566744,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/SunshineClouds2/NoiseTextures/curl_noise_varied.tga",
+      "bytes": 8388652,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/gdUnit4/src/core/assets/touch-button.png",
+      "bytes": 3292,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/gdUnit4/src/reporters/html/template/css/logo.png",
+      "bytes": 49775,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/gdUnit4/src/ui/settings/logo.png",
+      "bytes": 49775,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/gdUnit4/src/update/assets/border_bottom.png",
+      "bytes": 1757,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/gdUnit4/src/update/assets/border_top.png",
+      "bytes": 1749,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/gdUnit4/src/update/assets/dot1.png",
+      "bytes": 730,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/gdUnit4/src/update/assets/dot2.png",
+      "bytes": 883,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/gdUnit4/src/update/assets/embedded.png",
+      "bytes": 287,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/gdUnit4/src/update/assets/horizontal-line2.png",
+      "bytes": 332,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/gdUnit4/test/core/resources/GdUnitRunner_old_format.cfg",
+      "bytes": 84,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/gdUnit4/test/core/resources/scenes/icon.png",
+      "bytes": 49775,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/gdUnit4/test/core/resources/scenes/simple_scene.scn",
+      "bytes": 884,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/gdUnit4/test/update/resources/icon48.png",
+      "bytes": 916,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/gdUnit4/test/update/resources/update.zip",
+      "bytes": 1194,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/meshoptimizer/.sconsign.dblite",
+      "bytes": 17120513,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "addons/meshoptimizer/bin/libmeshoptimizer.windows.template_debug.x86_64.dll",
+      "bytes": 416768,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/meshoptimizer/bin/libmeshoptimizer.windows.template_debug.x86_64.exp",
+      "bytes": 821,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/meshoptimizer/bin/libmeshoptimizer.windows.template_debug.x86_64.lib",
+      "bytes": 2362,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/meshoptimizer/bin/libmeshoptimizer.windows.template_release.x86_64.dll",
+      "bytes": 392192,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/meshoptimizer/bin/libmeshoptimizer.windows.template_release.x86_64.exp",
+      "bytes": 825,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/meshoptimizer/bin/libmeshoptimizer.windows.template_release.x86_64.lib",
+      "bytes": 2388,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/meshoptimizer/bin/~libmeshoptimizer.windows.template_debug.x86_64.dll~RF2344cf.TMP",
+      "bytes": 416768,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/meshoptimizer/bin/~libmeshoptimizer.windows.template_debug.x86_64.dll~RF2a08066.TMP",
+      "bytes": 416768,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/meshoptimizer/bin/~libmeshoptimizer.windows.template_debug.x86_64.dll~RF400eae.TMP",
+      "bytes": 416768,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/meshoptimizer/bin/~libmeshoptimizer.windows.template_debug.x86_64.dll~RF5b02a5.TMP",
+      "bytes": 416768,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/meshoptimizer/bin/~libmeshoptimizer.windows.template_debug.x86_64.dll~RF9700b04.TMP",
+      "bytes": 416768,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/meshoptimizer/src/meshoptimizer_gdext.windows.template_debug.x86_64.obj",
+      "bytes": 409656,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/meshoptimizer/src/register_types.windows.template_debug.x86_64.obj",
+      "bytes": 203326,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/meshoptimizer/thirdparty/allocator.windows.template_debug.x86_64.obj",
+      "bytes": 1143,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/meshoptimizer/thirdparty/clusterizer.windows.template_debug.x86_64.obj",
+      "bytes": 41016,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/meshoptimizer/thirdparty/indexgenerator.windows.template_debug.x86_64.obj",
+      "bytes": 27408,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/meshoptimizer/thirdparty/overdrawoptimizer.windows.template_debug.x86_64.obj",
+      "bytes": 19910,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/meshoptimizer/thirdparty/simplifier.windows.template_debug.x86_64.obj",
+      "bytes": 94720,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/meshoptimizer/thirdparty/spatialorder.windows.template_debug.x86_64.obj",
+      "bytes": 14000,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/meshoptimizer/thirdparty/vcacheoptimizer.windows.template_debug.x86_64.obj",
+      "bytes": 17740,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/meshoptimizer/thirdparty/vfetchoptimizer.windows.template_debug.x86_64.obj",
+      "bytes": 5644,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/bin/libterrain.android.debug.arm32.so",
+      "bytes": 3539272,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/bin/libterrain.android.debug.arm64.so",
+      "bytes": 3572728,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/bin/libterrain.android.release.arm32.so",
+      "bytes": 2694156,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/bin/libterrain.android.release.arm64.so",
+      "bytes": 2887424,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/bin/libterrain.ios.debug.universal.dylib",
+      "bytes": 1697600,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/bin/libterrain.ios.release.universal.dylib",
+      "bytes": 1286672,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/bin/libterrain.linux.debug.x86_64.so",
+      "bytes": 3876864,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/bin/libterrain.linux.release.x86_64.so",
+      "bytes": 3251016,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/bin/libterrain.macos.debug.framework/libterrain.macos.debug",
+      "bytes": 3466184,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "addons/terrain_3d/bin/libterrain.macos.release.framework/libterrain.macos.release",
+      "bytes": 2592968,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "addons/terrain_3d/bin/libterrain.web.debug.wasm32.wasm",
+      "bytes": 2451583,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "addons/terrain_3d/bin/libterrain.web.release.wasm32.wasm",
+      "bytes": 2047736,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "addons/terrain_3d/bin/libterrain.windows.debug.x86_64.dll",
+      "bytes": 4220416,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/bin/libterrain.windows.release.x86_64.dll",
+      "bytes": 3549184,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/bin/~libterrain.windows.debug.x86_64.dll~RF2345e8.TMP",
+      "bytes": 4220416,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "addons/terrain_3d/bin/~libterrain.windows.debug.x86_64.dll~RF5b039f.TMP",
+      "bytes": 4220416,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/acrylic1.exr",
+      "bytes": 12881,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/circle0.exr",
+      "bytes": 214156,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/circle1.exr",
+      "bytes": 11022,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/circle2.exr",
+      "bytes": 17380,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/circle3.exr",
+      "bytes": 10895,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/circle4.exr",
+      "bytes": 8906,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/hill1.exr",
+      "bytes": 198208,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/hill2.exr",
+      "bytes": 266517,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/mountain1.exr",
+      "bytes": 266517,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/mountain2.exr",
+      "bytes": 266517,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/mountain3.exr",
+      "bytes": 266517,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/mountain4.exr",
+      "bytes": 181277,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/peak1.exr",
+      "bytes": 25254,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/peak2.exr",
+      "bytes": 280242,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/peak3.exr",
+      "bytes": 290239,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/ring1.exr",
+      "bytes": 82316,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/smoke.exr",
+      "bytes": 10348,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/square1.exr",
+      "bytes": 2321,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/square2.exr",
+      "bytes": 2973,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/square3.exr",
+      "bytes": 4264,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/square4.exr",
+      "bytes": 7498,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/square5.exr",
+      "bytes": 11564,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/stones.exr",
+      "bytes": 1581369,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/terrain1.exr",
+      "bytes": 303941,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/terrain2.exr",
+      "bytes": 339271,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/terrain3.exr",
+      "bytes": 314338,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/terrain4.exr",
+      "bytes": 341265,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/terrain5.exr",
+      "bytes": 302296,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/terrain6.exr",
+      "bytes": 236240,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/texture1.exr",
+      "bytes": 17201,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/texture2.exr",
+      "bytes": 872793,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/texture3.exr",
+      "bytes": 1581369,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/texture4.exr",
+      "bytes": 1581369,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/texture5.exr",
+      "bytes": 1581369,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/terrain_3d/brushes/vegetation1.exr",
+      "bytes": 12597,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/sky/Milkyway.jpg",
+      "bytes": 4857484,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/sky/MoonMap.png",
+      "bytes": 6120738,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/sky/StarField.jpg",
+      "bytes": 117303,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/sky/cirrus_noise.png",
+      "bytes": 125654,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/sky/clouds/perlworlnoise.tga",
+      "bytes": 8405011,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/sky/clouds/weather.bmp",
+      "bytes": 786486,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/sky/clouds/worlnoise.bmp",
+      "bytes": 98358,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/ui/fonts/pelagiad/Pelagiad.ttf",
+      "bytes": 30836,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/water/caustics_noise.png",
+      "bytes": 653262,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/water/water_normal.png",
+      "bytes": 24405,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "comp.spv",
+      "bytes": 110676,
+      "reason": "binary content"
+    },
+    {
+      "path": "docs/images/chunks.png",
+      "bytes": 2016930,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "docs/images/distantlighting.jpg",
+      "bytes": 735262,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "docs/images/erosion.gif",
+      "bytes": 1207772,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "docs/images/erosion.jpg",
+      "bytes": 1321065,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "docs/images/fargoth.gif",
+      "bytes": 1120927,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "docs/images/hero.jpg",
+      "bytes": 1910827,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "docs/images/hydrology.jpg",
+      "bytes": 1030480,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "docs/images/impostors.jpg",
+      "bytes": 387570,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "docs/images/logo.png",
+      "bytes": 314869,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "docs/images/ocean.jpg",
+      "bytes": 1216618,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "docs/images/rivers.gif",
+      "bytes": 3443779,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "docs/images/shore.gif",
+      "bytes": 3637928,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "docs/images/splitwater.gif",
+      "bytes": 3316614,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "docs/images/wetness.jpg",
+      "bytes": 442679,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-01-01.res",
+      "bytes": 3839464,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-01-02.res",
+      "bytes": 4149593,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-01-03.res",
+      "bytes": 4071429,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-01-04.res",
+      "bytes": 4250615,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-01-05.res",
+      "bytes": 3975594,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-01-06.res",
+      "bytes": 3747703,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-01-07.res",
+      "bytes": 3801501,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-01-08.res",
+      "bytes": 3418855,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-01-09.res",
+      "bytes": 3820397,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-01-10.res",
+      "bytes": 3854104,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-01-11.res",
+      "bytes": 2196887,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-01_00.res",
+      "bytes": 3617757,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-01_01.res",
+      "bytes": 3641888,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-01_02.res",
+      "bytes": 3642742,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-01_03.res",
+      "bytes": 3716940,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-01_04.res",
+      "bytes": 3847185,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-01_05.res",
+      "bytes": 3103858,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-01_06.res",
+      "bytes": 1229940,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-01_07.res",
+      "bytes": 576218,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-01_08.res",
+      "bytes": 744576,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-01_09.res",
+      "bytes": 234510,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-02-01.res",
+      "bytes": 3562172,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-02-02.res",
+      "bytes": 4047763,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-02-03.res",
+      "bytes": 3949542,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-02-04.res",
+      "bytes": 3914673,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-02-05.res",
+      "bytes": 3812302,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-02-06.res",
+      "bytes": 3827062,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-02-07.res",
+      "bytes": 3692632,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-02-08.res",
+      "bytes": 3382066,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-02-09.res",
+      "bytes": 3475095,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-02-10.res",
+      "bytes": 3867552,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-02-11.res",
+      "bytes": 2633808,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-02_00.res",
+      "bytes": 3259323,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-02_01.res",
+      "bytes": 3403230,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-02_02.res",
+      "bytes": 3602314,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-02_03.res",
+      "bytes": 3478299,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-02_04.res",
+      "bytes": 1627573,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-02_05.res",
+      "bytes": 155607,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-03-01.res",
+      "bytes": 3997408,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-03-02.res",
+      "bytes": 3741912,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-03-03.res",
+      "bytes": 3750675,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-03-04.res",
+      "bytes": 3824554,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-03-05.res",
+      "bytes": 3690205,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-03-06.res",
+      "bytes": 3666542,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-03-07.res",
+      "bytes": 3636513,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-03-08.res",
+      "bytes": 3698319,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-03-09.res",
+      "bytes": 3802356,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-03-10.res",
+      "bytes": 3561374,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-03-11.res",
+      "bytes": 944188,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-03_00.res",
+      "bytes": 3755781,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-03_01.res",
+      "bytes": 2572420,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-03_02.res",
+      "bytes": 1030340,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-03_03.res",
+      "bytes": 666900,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-04-01.res",
+      "bytes": 3454951,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-04-02.res",
+      "bytes": 3918343,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-04-03.res",
+      "bytes": 3904758,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-04-04.res",
+      "bytes": 3760925,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-04-05.res",
+      "bytes": 3711661,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-04-06.res",
+      "bytes": 3628837,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-04-07.res",
+      "bytes": 3732903,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-04-08.res",
+      "bytes": 3872924,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-04-09.res",
+      "bytes": 3929594,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-04-10.res",
+      "bytes": 1867590,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-04-11.res",
+      "bytes": 105563,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-04_00.res",
+      "bytes": 1792482,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-05-01.res",
+      "bytes": 289975,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-05-02.res",
+      "bytes": 1188317,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-05-03.res",
+      "bytes": 2381978,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-05-04.res",
+      "bytes": 3462982,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-05-05.res",
+      "bytes": 4050150,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-05-06.res",
+      "bytes": 3614315,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-05-07.res",
+      "bytes": 3727123,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-05-08.res",
+      "bytes": 3412164,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-05-09.res",
+      "bytes": 1884505,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-05-10.res",
+      "bytes": 148066,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-06-04.res",
+      "bytes": 546640,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-06-05.res",
+      "bytes": 1860144,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-06-06.res",
+      "bytes": 3482817,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-06-07.res",
+      "bytes": 3422510,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-06-08.res",
+      "bytes": 693355,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-07-06.res",
+      "bytes": 283800,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d-07-07.res",
+      "bytes": 603967,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00-01.res",
+      "bytes": 3721922,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00-02.res",
+      "bytes": 3934947,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00-03.res",
+      "bytes": 4075744,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00-04.res",
+      "bytes": 3886315,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00-05.res",
+      "bytes": 4311610,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00-06.res",
+      "bytes": 4025701,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00-07.res",
+      "bytes": 3897070,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00-08.res",
+      "bytes": 3515129,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00-09.res",
+      "bytes": 4096948,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00-10.res",
+      "bytes": 3140112,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00-11.res",
+      "bytes": 284892,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00_00.res",
+      "bytes": 3371586,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00_01.res",
+      "bytes": 3522686,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00_02.res",
+      "bytes": 3704039,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00_03.res",
+      "bytes": 3737273,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00_04.res",
+      "bytes": 3811125,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00_05.res",
+      "bytes": 3903620,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00_06.res",
+      "bytes": 4072421,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00_07.res",
+      "bytes": 3940304,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00_08.res",
+      "bytes": 3731941,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00_09.res",
+      "bytes": 3168283,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00_10.res",
+      "bytes": 1592735,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_00_11.res",
+      "bytes": 551025,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01-01.res",
+      "bytes": 3351139,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01-02.res",
+      "bytes": 3817649,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01-03.res",
+      "bytes": 4156807,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01-04.res",
+      "bytes": 4026728,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01-05.res",
+      "bytes": 4294472,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01-06.res",
+      "bytes": 3878018,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01-07.res",
+      "bytes": 3942855,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01-08.res",
+      "bytes": 3831978,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01-09.res",
+      "bytes": 4005188,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01-10.res",
+      "bytes": 2042340,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01_00.res",
+      "bytes": 3205954,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01_01.res",
+      "bytes": 3475545,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01_02.res",
+      "bytes": 3566431,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01_03.res",
+      "bytes": 3774280,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01_04.res",
+      "bytes": 3780293,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01_05.res",
+      "bytes": 3810222,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01_06.res",
+      "bytes": 3761719,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01_07.res",
+      "bytes": 3645231,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01_08.res",
+      "bytes": 3645890,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01_09.res",
+      "bytes": 3711962,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01_10.res",
+      "bytes": 3698600,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_01_11.res",
+      "bytes": 2238546,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02-01.res",
+      "bytes": 3940374,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02-02.res",
+      "bytes": 4020896,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02-03.res",
+      "bytes": 4083082,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02-04.res",
+      "bytes": 4216223,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02-05.res",
+      "bytes": 4069340,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02-06.res",
+      "bytes": 4126636,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02-07.res",
+      "bytes": 3941346,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02-08.res",
+      "bytes": 3925663,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02-09.res",
+      "bytes": 3982660,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02-10.res",
+      "bytes": 2215829,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02_00.res",
+      "bytes": 3755969,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02_01.res",
+      "bytes": 3622015,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02_02.res",
+      "bytes": 3624783,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02_03.res",
+      "bytes": 3636576,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02_04.res",
+      "bytes": 3743366,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02_05.res",
+      "bytes": 3817001,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02_06.res",
+      "bytes": 3816768,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02_07.res",
+      "bytes": 3707603,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02_08.res",
+      "bytes": 3791387,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02_09.res",
+      "bytes": 3792364,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02_10.res",
+      "bytes": 2461262,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_02_11.res",
+      "bytes": 614579,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_03-01.res",
+      "bytes": 3904675,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_03-02.res",
+      "bytes": 3909732,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_03-03.res",
+      "bytes": 4067821,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_03-04.res",
+      "bytes": 3805735,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_03-05.res",
+      "bytes": 3774831,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_03-06.res",
+      "bytes": 3930266,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_03-07.res",
+      "bytes": 4052302,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_03-08.res",
+      "bytes": 3741102,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_03-09.res",
+      "bytes": 3640362,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_03-10.res",
+      "bytes": 3169106,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_03-11.res",
+      "bytes": 253165,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_03_00.res",
+      "bytes": 3851629,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_03_01.res",
+      "bytes": 3743479,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_03_02.res",
+      "bytes": 3603893,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_03_03.res",
+      "bytes": 3681243,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_03_04.res",
+      "bytes": 3738555,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_03_05.res",
+      "bytes": 3760270,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_03_06.res",
+      "bytes": 3830012,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_03_07.res",
+      "bytes": 3980644,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_03_08.res",
+      "bytes": 2985568,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_03_09.res",
+      "bytes": 767852,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_04-01.res",
+      "bytes": 3674522,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_04-02.res",
+      "bytes": 3955583,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_04-03.res",
+      "bytes": 4055513,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_04-04.res",
+      "bytes": 3766663,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_04-05.res",
+      "bytes": 3848026,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_04-06.res",
+      "bytes": 3930507,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_04-07.res",
+      "bytes": 3881483,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_04-08.res",
+      "bytes": 4021177,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_04-09.res",
+      "bytes": 3880532,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_04-10.res",
+      "bytes": 3281678,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_04_00.res",
+      "bytes": 3638631,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_04_01.res",
+      "bytes": 3658740,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_04_02.res",
+      "bytes": 3795013,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_04_03.res",
+      "bytes": 3734298,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_04_04.res",
+      "bytes": 3784529,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_04_05.res",
+      "bytes": 3862781,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_04_06.res",
+      "bytes": 3203722,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_04_07.res",
+      "bytes": 1516256,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_04_08.res",
+      "bytes": 241515,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_05-01.res",
+      "bytes": 3200769,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_05-02.res",
+      "bytes": 3717589,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_05-03.res",
+      "bytes": 3909546,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_05-04.res",
+      "bytes": 3890558,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_05-05.res",
+      "bytes": 3874779,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_05-06.res",
+      "bytes": 4000093,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_05-07.res",
+      "bytes": 3923586,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_05-08.res",
+      "bytes": 3825905,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_05-09.res",
+      "bytes": 3326165,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_05-10.res",
+      "bytes": 1757209,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_05_00.res",
+      "bytes": 3614214,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_05_01.res",
+      "bytes": 3704711,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_05_02.res",
+      "bytes": 3747494,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_05_03.res",
+      "bytes": 3795364,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_05_04.res",
+      "bytes": 3751002,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_05_05.res",
+      "bytes": 2543739,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_05_06.res",
+      "bytes": 424157,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_06-01.res",
+      "bytes": 499483,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_06-02.res",
+      "bytes": 1054289,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_06-03.res",
+      "bytes": 3244000,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_06-04.res",
+      "bytes": 3813103,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_06-05.res",
+      "bytes": 3801468,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_06-06.res",
+      "bytes": 3580629,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_06-07.res",
+      "bytes": 2417496,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_06-08.res",
+      "bytes": 1198062,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_06_00.res",
+      "bytes": 706074,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_06_01.res",
+      "bytes": 1111287,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_06_02.res",
+      "bytes": 1672988,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_06_03.res",
+      "bytes": 848515,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_06_04.res",
+      "bytes": 563802,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_06_05.res",
+      "bytes": 91715,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_07-03.res",
+      "bytes": 1456747,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_07-04.res",
+      "bytes": 2926297,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_07-05.res",
+      "bytes": 2782519,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lapalma_terrain/terrain3d_07-06.res",
+      "bytes": 943589,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "logo.png",
+      "bytes": 191312,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/core/water/textures/boujie/ocean_albedo_white_highcontrast.png",
+      "bytes": 36234,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/core/water/textures/boujie/refraction.png",
+      "bytes": 279489,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/core/water/textures/foam_albedo.png",
+      "bytes": 1438620,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/core/water/textures/sea_spray.png",
+      "bytes": 78006,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "icon.svg",
+      "bytes": 248,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/SunshineClouds2/CloudsDriverIcon.svg",
+      "bytes": 4709,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/SunshineClouds2/Dock/Icons/caret-down-solid.svg",
+      "bytes": 1385,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/SunshineClouds2/Dock/Icons/cloud-solid-toggled.svg",
+      "bytes": 2830,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/SunshineClouds2/Dock/Icons/paintbrush-solid-hovered.svg",
+      "bytes": 1578,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/SunshineClouds2/Dock/Icons/cloud-solid-hovered.svg",
+      "bytes": 1482,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/SunshineClouds2/Dock/Icons/cloud-solid.svg",
+      "bytes": 1474,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/SunshineClouds2/Dock/Icons/paintbrush-solid.svg",
+      "bytes": 1570,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/SunshineClouds2/Dock/Icons/paintbrush-solid-toggled.svg",
+      "bytes": 3406,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/SunshineClouds2/Dock/Icons/caret-up-solid.svg",
+      "bytes": 1383,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/terrain_3d/icons/layers.svg",
+      "bytes": 3639,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/terrain_3d/icons/height_slope.svg",
+      "bytes": 3204,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/terrain_3d/icons/terrain3d.svg",
+      "bytes": 4860,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/terrain_3d/icons/holes.svg",
+      "bytes": 1105,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/terrain_3d/icons/region_remove.svg",
+      "bytes": 3704,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/terrain_3d/icons/region_add.svg",
+      "bytes": 3637,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/terrain_3d/icons/height_flat.svg",
+      "bytes": 3228,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/terrain_3d/icons/height_add.svg",
+      "bytes": 3210,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/terrain_3d/icons/height_mul.svg",
+      "bytes": 6628,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/terrain_3d/icons/texture_spray.svg",
+      "bytes": 5832,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/terrain_3d/icons/multimesh.svg",
+      "bytes": 1785,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/terrain_3d/icons/texture_paint.svg",
+      "bytes": 5559,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/terrain_3d/icons/color_paint.svg",
+      "bytes": 5914,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/terrain_3d/icons/height_sub.svg",
+      "bytes": 3242,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/terrain_3d/icons/height_smooth.svg",
+      "bytes": 1716,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/terrain_3d/icons/height_div.svg",
+      "bytes": 6477,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/terrain_3d/icons/autoshader.svg",
+      "bytes": 6187,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/terrain_3d/icons/picker_checked.svg",
+      "bytes": 1580,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/terrain_3d/icons/wetness.svg",
+      "bytes": 4666,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/terrain_3d/icons/navigation.svg",
+      "bytes": 3003,
+      "reason": "image asset"
+    }
+  ]
+}

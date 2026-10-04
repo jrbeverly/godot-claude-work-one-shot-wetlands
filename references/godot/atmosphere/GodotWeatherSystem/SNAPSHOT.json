@@ -1,0 +1,57 @@
+{
+  "id": "GodotWeatherSystem",
+  "path": "references/godot/atmosphere/GodotWeatherSystem",
+  "url": "https://github.com/mlavik1/GodotWeatherSystem",
+  "commit": "c48b4a19010f6c4978a651ef124e02950797a3a8",
+  "archive_url": "https://codeload.github.com/mlavik1/GodotWeatherSystem/tar.gz/c48b4a19010f6c4978a651ef124e02950797a3a8",
+  "archive_bytes": 345821,
+  "kept_files": 37,
+  "kept_bytes": 50981,
+  "omitted": [
+    {
+      "path": "icon.png",
+      "bytes": 4156,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "sample_scene/Map.blend.glb",
+      "bytes": 389664,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "screenshots/new_season.jpg",
+      "bytes": 30680,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "screenshots/screenshot1.jpg",
+      "bytes": 72283,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "screenshots/screenshot2.jpg",
+      "bytes": 64307,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "screenshots/season_settings.jpg",
+      "bytes": 37775,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "screenshots/weather_controller_settings.jpg",
+      "bytes": 28251,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "screenshots/weather_settings.jpg",
+      "bytes": 22346,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "icon.svg",
+      "bytes": 950,
+      "reason": "image asset"
+    }
+  ]
+}

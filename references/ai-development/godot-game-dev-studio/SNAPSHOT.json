@@ -1,0 +1,82 @@
+{
+  "id": "godot-game-dev-studio",
+  "path": "references/ai-development/godot-game-dev-studio",
+  "url": "https://github.com/bgrenat/godot-game-dev-studio",
+  "commit": "9e2b2beaf0bc7ba2e27a40326d058ff2c7a619a9",
+  "archive_url": "https://codeload.github.com/bgrenat/godot-game-dev-studio/tar.gz/9e2b2beaf0bc7ba2e27a40326d058ff2c7a619a9",
+  "archive_bytes": 3882320,
+  "kept_files": 3097,
+  "kept_bytes": 7088392,
+  "omitted": [
+    {
+      "path": "assets/banner_0_0_1.webp",
+      "bytes": 154272,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/banner_0_0_2.webp",
+      "bytes": 157324,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/banner_0_0_3.webp",
+      "bytes": 183390,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/banner_0_0_4.webp",
+      "bytes": 202358,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/banner_0_0_5.webp",
+      "bytes": 149572,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/banner_0_0_6.webp",
+      "bytes": 153272,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/banner_0_0_7.webp",
+      "bytes": 155970,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/banner_0_0_8.webp",
+      "bytes": 211422,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/godot-worldmap-builder/example/skill_icons1.png",
+      "bytes": 1697,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/godot-worldmap-builder/example/skilltree_borders.png",
+      "bytes": 1026,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/hero_banner.webp",
+      "bytes": 162044,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/plugin-icon.png",
+      "bytes": 9661,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "skills/godot-builder/scripts/__pycache__/base.cpython-313.pyc",
+      "bytes": 2632,
+      "reason": "binary content"
+    },
+    {
+      "path": "assets/plugin-icon.svg",
+      "bytes": 2308,
+      "reason": "image asset"
+    }
+  ]
+}

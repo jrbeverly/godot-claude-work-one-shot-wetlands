@@ -1,0 +1,242 @@
+{
+  "id": "godot-road-generator",
+  "path": "references/godot/roads/godot-road-generator",
+  "url": "https://github.com/TheDuckCow/godot-road-generator",
+  "commit": "9d144dc4a28dd6bee870895d2b77d69174356281",
+  "archive_url": "https://codeload.github.com/TheDuckCow/godot-road-generator/tar.gz/9d144dc4a28dd6bee870895d2b77d69174356281",
+  "archive_bytes": 16403688,
+  "kept_files": 139,
+  "kept_bytes": 1006588,
+  "omitted": [
+    {
+      "path": "addons/road-generator/custom_containers/3way_1x1.glb",
+      "bytes": 9240,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/custom_containers/3way_2x2.glb",
+      "bytes": 19680,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/custom_containers/4way_1x1.glb",
+      "bytes": 11360,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/custom_containers/4way_2x2.glb",
+      "bytes": 17892,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/custom_containers/highway_offramp.glb",
+      "bytes": 6100,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/custom_containers/highway_onramp.glb",
+      "bytes": 8016,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/custom_containers/roundabout_1x1.glb",
+      "bytes": 12824,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/custom_containers/roundabout_2x2.glb",
+      "bytes": 19756,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/custom_containers/splitter_1x1.glb",
+      "bytes": 5516,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/custom_containers/splitter_2x2.glb",
+      "bytes": 7132,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/custom_containers/src/intersections_source.blend",
+      "bytes": 5036793,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/resources/gizmo/roadpoint_gizmo_source.blend",
+      "bytes": 111235,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/resources/road_container.png",
+      "bytes": 666,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/resources/road_intersection.png",
+      "bytes": 794,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/resources/road_lane.png",
+      "bytes": 1079,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/resources/road_lane_agent.png",
+      "bytes": 1610,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/resources/road_lane_pointer_mesh.res",
+      "bytes": 630,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/resources/road_manager.png",
+      "bytes": 1506,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/resources/road_point.png",
+      "bytes": 582,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/resources/road_texture.material",
+      "bytes": 1064,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/road-generator/resources/road_texture.png",
+      "bytes": 5500,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/resources/road_texture@1x.png",
+      "bytes": 5509,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/resources/road_texture@2x.png",
+      "bytes": 19057,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/resources/road_texture@4x.png",
+      "bytes": 70792,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/road-generator/resources/road_texture_template.afdesign",
+      "bytes": 31269,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/road-generator/resources/road_uv.material",
+      "bytes": 1050,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/road-generator/resources/road_uv_grid.png",
+      "bytes": 186289,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "road_demos/demo_resources/actors/RoadActor_setup.png",
+      "bytes": 822041,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "road_demos/demo_resources/demo_ui.theme",
+      "bytes": 715,
+      "reason": "binary content"
+    },
+    {
+      "path": "road_demos/gifs/ai_lanes.gif",
+      "bytes": 137852,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "road_demos/gifs/click_to_draw.gif",
+      "bytes": 331941,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "road_demos/gifs/containers.gif",
+      "bytes": 590934,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "road_demos/gifs/custom_geo.gif",
+      "bytes": 1082629,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "road_demos/gifs/decorations.gif",
+      "bytes": 177441,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "road_demos/gifs/export_geo.png",
+      "bytes": 306935,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "road_demos/gifs/gdscript-only.png",
+      "bytes": 214318,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "road_demos/gifs/inspector_panel.gif",
+      "bytes": 396957,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "road_demos/gifs/intersection.gif",
+      "bytes": 291393,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "road_demos/gifs/material_swap.gif",
+      "bytes": 199660,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "road_demos/gifs/prefab_roadcontainers.gif",
+      "bytes": 589435,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "road_demos/gifs/procedural_demo.gif",
+      "bytes": 2247742,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "road_demos/gifs/roadpoint_widget.gif",
+      "bytes": 245472,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "road_demos/gifs/terrain3d-demo.gif",
+      "bytes": 1480474,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "road_demos/intersections/intersections-demo.gif",
+      "bytes": 2115005,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "road_demos/procedural_generator/ProceduralGenerator_setup.png",
+      "bytes": 635277,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "road_demos/procedural_generator/demo.gif",
+      "bytes": 3409031,
+      "reason": "asset or binary"
+    }
+  ]
+}

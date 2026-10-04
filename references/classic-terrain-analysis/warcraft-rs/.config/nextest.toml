@@ -1,0 +1,6 @@
+[profile.default]
+# Time to wait for a test to complete before timing out
+slow-timeout = { period = "60s", terminate-after = 2 }
+
+# Show output of all tests, not just failures
+failure-output = "immediate-final"

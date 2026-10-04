@@ -1,0 +1,44 @@
+# https://github.com/marketplace/actions/gdunit4-test-runner-action
+name: GdUnit4 Tests
+on:
+  push: &project_change_filter
+    branches:
+      - main
+    paths:
+      - 'Template/**/*.cs'
+      - 'Template/**/*.gd'
+      - 'Template/**/*.tscn'
+      - 'Template/**/*.tres'
+      - 'Template/**/*.import'
+      - 'Template/**/*.csproj'
+      - 'Template/**/*.sln'
+      - 'Template.OptionsGen/**/*.cs'
+      - 'Template.OptionsGen/**/*.csproj'
+      - 'Template.sln'
+      - 'Template/NuGet.config'
+      - 'Template/project.godot'
+      - '.github/workflows/build_and_test.yml'
+
+  pull_request: *project_change_filter
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          
+      - uses: godot-gdunit-labs/gdUnit4-action@v1
+        with:
+          godot-version: '4.6'
+          godot-status: 'stable'
+          godot-net: true
+          project_dir: './Template'
+          paths: |
+            res://Framework/Testing
+            res://Framework/Netcode/Testing/Tests
+          console-verbosity: 'normal'
+          publish-report: false
+          upload-report: true
+          report-name: test-report.xml

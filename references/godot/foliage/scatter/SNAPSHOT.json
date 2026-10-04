@@ -1,0 +1,462 @@
+{
+  "id": "scatter",
+  "path": "references/godot/foliage/scatter",
+  "url": "https://github.com/HungryProton/scatter",
+  "commit": "7198cc00078ebde61307578137c3f35223c6e438",
+  "archive_url": "https://codeload.github.com/HungryProton/scatter/tar.gz/7198cc00078ebde61307578137c3f35223c6e438",
+  "archive_bytes": 9962343,
+  "kept_files": 328,
+  "kept_bytes": 588911,
+  "omitted": [
+    {
+      "path": "addons/proton_scatter/demos/assets/models/brick.glb",
+      "bytes": 3776,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/models/bush.glb",
+      "bytes": 5288,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/models/dead_branch.glb",
+      "bytes": 3088,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/models/fence_planks.glb",
+      "bytes": 7364,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/models/gobot.glb",
+      "bytes": 184752,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/models/grass.glb",
+      "bytes": 1628,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/models/grass_2.glb",
+      "bytes": 1356,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/models/large_rock.glb",
+      "bytes": 11876,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/models/mushrooms.glb",
+      "bytes": 9836,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/models/pine_tree.glb",
+      "bytes": 133988,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/models/small_rock.glb",
+      "bytes": 11012,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/models/tree.glb",
+      "bytes": 233260,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/source.blend",
+      "bytes": 1913428,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/textures/grid.png",
+      "bytes": 2007,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/textures/mushroom.png",
+      "bytes": 270024,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/textures/sky_2.png",
+      "bytes": 4791166,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/textures/t_bush.png",
+      "bytes": 434490,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/textures/t_grass.png",
+      "bytes": 78085,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/textures/t_grass_2.png",
+      "bytes": 102995,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/textures/t_leaves_1.png",
+      "bytes": 1523210,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/textures/t_pine_branch.png",
+      "bytes": 122575,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/textures/t_rock.jpg",
+      "bytes": 353150,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/textures/t_rock_dirty.png",
+      "bytes": 126670,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/textures/t_sand.png",
+      "bytes": 762357,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/textures/t_tree_bark.png",
+      "bytes": 126421,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/assets/textures/t_tree_bark_rough.png",
+      "bytes": 175898,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/demos/cache_demo/cache.res",
+      "bytes": 299532,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/icons/checker.png",
+      "bytes": 572,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/masks/bars.png",
+      "bytes": 39436,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/masks/blinds.png",
+      "bytes": 35174,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/masks/checker.png",
+      "bytes": 1200,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/masks/wave.png",
+      "bytes": 26658,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/proton_scatter/icons/remove.svg",
+      "bytes": 218,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/square_handle.svg",
+      "bytes": 2088,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/arrow_down.svg",
+      "bytes": 1257,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/close.svg",
+      "bytes": 285,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/arrow_log.svg",
+      "bytes": 1747,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/load.svg",
+      "bytes": 580,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/individual_instances.svg",
+      "bytes": 4012,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/exclude_path.svg",
+      "bytes": 2685,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/arrow_right.svg",
+      "bytes": 1258,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/select_all.svg",
+      "bytes": 3512,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/shape.svg",
+      "bytes": 1905,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/curve_select.svg",
+      "bytes": 665,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/restrict_volume.svg",
+      "bytes": 2606,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/arrow_exp.svg",
+      "bytes": 1741,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/point.svg",
+      "bytes": 2627,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/clear.svg",
+      "bytes": 249,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/restrict_volume_lock.svg",
+      "bytes": 3122,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/rebuild.svg",
+      "bytes": 467,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/save.svg",
+      "bytes": 311,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/doc.svg",
+      "bytes": 822,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/item.svg",
+      "bytes": 2648,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/menu.svg",
+      "bytes": 2223,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/dice.svg",
+      "bytes": 1007,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/arrow_linear.svg",
+      "bytes": 1687,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/curve_close.svg",
+      "bytes": 556,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/local.svg",
+      "bytes": 2077,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/documentation.svg",
+      "bytes": 3608,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/duplicate.svg",
+      "bytes": 2781,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/drag_area.svg",
+      "bytes": 3537,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/cache.svg",
+      "bytes": 3177,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/link.svg",
+      "bytes": 1431,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/add.svg",
+      "bytes": 148,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/global.svg",
+      "bytes": 1930,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/group.svg",
+      "bytes": 604,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/warning.svg",
+      "bytes": 337,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/curve_delete.svg",
+      "bytes": 685,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/curve_create.svg",
+      "bytes": 605,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/scatter.svg",
+      "bytes": 3211,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/types/string.svg",
+      "bytes": 301,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/types/vector3.svg",
+      "bytes": 651,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/types/bool.svg",
+      "bytes": 546,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/types/vector3i.svg",
+      "bytes": 822,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/types/float.svg",
+      "bytes": 279,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/types/texture.svg",
+      "bytes": 461,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/types/vector2.svg",
+      "bytes": 603,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/types/vector2i.svg",
+      "bytes": 765,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/types/int.svg",
+      "bytes": 255,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/types/curve.svg",
+      "bytes": 408,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/loading/progress6.svg",
+      "bytes": 915,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/loading/progress2.svg",
+      "bytes": 913,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/loading/progress1.svg",
+      "bytes": 905,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/loading/progress3.svg",
+      "bytes": 913,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/loading/progress7.svg",
+      "bytes": 913,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/loading/progress5.svg",
+      "bytes": 913,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/loading/progress8.svg",
+      "bytes": 897,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/icons/loading/progress4.svg",
+      "bytes": 898,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/src/shapes/gizmos_plugin/icons/main_handle.svg",
+      "bytes": 204,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/proton_scatter/src/shapes/gizmos_plugin/icons/secondary_handle.svg",
+      "bytes": 258,
+      "reason": "image asset"
+    }
+  ]
+}

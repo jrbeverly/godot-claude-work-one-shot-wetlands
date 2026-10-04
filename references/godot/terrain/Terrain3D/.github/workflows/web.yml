@@ -1,0 +1,41 @@
+﻿name: 🌐 Web Builds
+on: [ workflow_call, workflow_dispatch ]
+
+jobs:
+  build:
+    name: 🌐 Web ${{ matrix.arch }} ${{ matrix.threads }} ${{ matrix.target }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - threads: nothreads
+            platform: web
+            arch: wasm32
+            target: release
+            flags: threads=no
+          - threads: threads
+            platform: web
+            arch: wasm32
+            target: release
+            flags: threads=yes
+          # Wasm64 not currently supported by godot-cpp
+          # - threads: threads
+          #   platform: web
+          #   arch: wasm64
+          #   target: release
+          #   flags: threads=yes
+
+    steps:
+      - name: Checkout Terrain3D
+        uses: actions/checkout@v7
+
+      - uses: ./.github/actions/build-artifact
+        with:
+          cache-name: ${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.threads }}-${{ matrix.target }}
+          platform: ${{ matrix.platform }}
+          arch: ${{ matrix.arch }}
+          threads: ${{ matrix.threads }}
+          target: ${{ matrix.target }}
+          flags: ${{ matrix.flags }}

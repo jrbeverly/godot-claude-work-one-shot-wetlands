@@ -1,0 +1,11 @@
+{
+  "id": "mkdevkit-godot-mcp",
+  "path": "references/godot/mcp/mkdevkit-godot-mcp",
+  "url": "https://github.com/mkdevkit/godot-mcp",
+  "commit": "328e15f7d38092371b2aca8b81c40b8188bbe747",
+  "archive_url": "https://codeload.github.com/mkdevkit/godot-mcp/tar.gz/328e15f7d38092371b2aca8b81c40b8188bbe747",
+  "archive_bytes": 59344,
+  "kept_files": 52,
+  "kept_bytes": 248143,
+  "omitted": []
+}

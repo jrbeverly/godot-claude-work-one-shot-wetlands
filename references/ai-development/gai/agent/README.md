@@ -1,0 +1,70 @@
+# gai Code Agent
+
+A minimal coding agent for Godot projects, inspired by [Pi](https://github.com/earendil-works/pi) — simple layers, four core tools, clear boundaries.
+
+## Architecture
+
+```
+agent/
+├── AgentEvents.gd      # Global event bus (like gui/WorkflowEvents)
+├── Agent.tscn          # Runnable Godot scene (F6)
+├── Agent.gd            # Main app — wiring + toolbar / workspace
+├── loop/               # Agent loop, tool registry
+├── tools/              # read, write, edit, bash, web_search
+├── session/            # AgentSession, AgentSessionManager, transcript
+└── ui/                 # Chat view, sidebar, input, theme
+```
+
+LLM calls go through **`zfoo/ai`** (`ChatMessage`, `OpenAiClient`, `OpenAiCompletion`).
+
+Dependency flow (top → bottom):
+
+```
+Agent  →  session/AgentSession  →  loop/AgentLoop  →  zfoo/ai/OpenAiClient
+                                              ↓
+                                         tools/*
+```
+
+| Layer | Responsibility |
+|-------|----------------|
+| **zfoo/ai** | HTTP chat completions, SSE streaming, tool-call parsing |
+| **agent** | Turn loop: model → tools → model until done |
+| **tools** | Pi-style tools against the project workspace |
+| **session** | Message history, system prompt, persistence |
+| **ui** | File sidebar + chat panel + streaming bubbles |
+
+## Run
+
+1. Set `OPENAI_API_KEY`, or configure the API connection from the Agent toolbar.
+2. Open `agent/Agent.tscn` in Godot and press **F6** (Run Current Scene).
+
+Or set main scene temporarily:
+
+```
+run/main_scene="res://agent/Agent.tscn"
+```
+
+## Tools
+
+| Tool | Description |
+|------|-------------|
+| `read` | Read a text file |
+| `write` | Create or overwrite a file |
+| `edit` | Replace an exact unique string |
+| `bash` | Run a shell command from project root |
+| `web_search` | Search the web (DuckDuckGo, no API key) |
+
+## UI
+
+- **Left sidebar** — session list; click to switch; **New Agent** or toolbar **New Chat**
+- **Concurrent chats** — each session runs independently; switch sessions while others are thinking
+- **Chat area** — user / assistant / tool messages with streaming
+- **Input bar** — type a task; **Ctrl+Enter** or **Send** to run
+- **Revert / Delete** — a user bubble's **Revert** drops that turn and everything after it, and restores the workspace files to the snapshot taken before that turn (see `session/AgentCheckpoint.gd`). **Delete** drops the same turns but leaves the workspace alone.
+
+## Extend
+
+- Add tools: subclass `AgentTool`, register in `AgentToolRegistry._static_init()`.
+- Change the default model or endpoint in `api/ApiSetting.gd`.
+- Customize prompt: edit `session/SystemPrompt.gd`.
+- Resolve workspace paths: `AgentWorkspace.resolve_path()`.

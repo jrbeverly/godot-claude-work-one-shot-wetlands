@@ -1,0 +1,587 @@
+{
+  "id": "Terrain3D",
+  "path": "references/godot/terrain/Terrain3D",
+  "url": "https://github.com/TokisanGames/Terrain3D",
+  "commit": "dabc3c3393083acc3b9d8c0787f9e12b0fde7f3b",
+  "archive_url": "https://codeload.github.com/TokisanGames/Terrain3D/tar.gz/dabc3c3393083acc3b9d8c0787f9e12b0fde7f3b",
+  "archive_bytes": 40522027,
+  "kept_files": 320,
+  "kept_bytes": 2445529,
+  "omitted": [
+    {
+      "path": "doc/_static/video/nav_code_demo.mp4",
+      "bytes": 2270067,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/_static/video/nav_demo.mp4",
+      "bytes": 3136549,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/_static/video/oc_demo.mp4",
+      "bytes": 1594896,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/build_artifact.png",
+      "bytes": 8737,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/build_commit_history.png",
+      "bytes": 24599,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/build_tags.png",
+      "bytes": 23283,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/build_workflow.png",
+      "bytes": 10128,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/console_exec.png",
+      "bytes": 6952,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/console_window.png",
+      "bytes": 96158,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/displacement_buffer.jpg",
+      "bytes": 48196,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/displacement_example.jpg",
+      "bytes": 57739,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/displacement_wireframe.jpg",
+      "bytes": 153244,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/gis.png",
+      "bytes": 566869,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/instancer_options.png",
+      "bytes": 42751,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/integrating_gdextension.jpg",
+      "bytes": 36562,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/io_data_directory.png",
+      "bytes": 22268,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/io_exporter.png",
+      "bytes": 5884,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/io_gimp_dds_export.png",
+      "bytes": 30932,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/io_gimp_png_export.png",
+      "bytes": 25448,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/io_importer.png",
+      "bytes": 64278,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/ios_export.png",
+      "bytes": 77430,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/mesh_asset_dock.png",
+      "bytes": 18716,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/mesh_asset_inspector.png",
+      "bytes": 33967,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/mesh_asset_lod_setup.png",
+      "bytes": 13977,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/mesh_asset_lods.jpg",
+      "bytes": 52543,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/mesh_asset_shadow_lods.jpg",
+      "bytes": 51156,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/mesh_circular_lods.png",
+      "bytes": 184146,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/mesh_lods_flat.jpg",
+      "bytes": 157203,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/monitor_calibration.jpg",
+      "bytes": 69792,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/nav_baking.png",
+      "bytes": 68558,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/nav_debugging.png",
+      "bytes": 27004,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/nav_painting.png",
+      "bytes": 527876,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/oc_oc_menu.png",
+      "bytes": 20202,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/oc_save.png",
+      "bytes": 50930,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/regions_used.jpg",
+      "bytes": 43969,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/sa_uml.png",
+      "bytes": 165777,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/sh_mirror.png",
+      "bytes": 6121,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/terrain3d.jpg",
+      "bytes": 110313,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/terrain3d_menu.png",
+      "bytes": 28278,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/tex_normalmap.png",
+      "bytes": 356928,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/ui_asset_dock_bottom.png",
+      "bytes": 41196,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/ui_asset_dock_sidebar.png",
+      "bytes": 34484,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/ui_live_info_panel.png",
+      "bytes": 38352,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/ui_tool_settings.jpg",
+      "bytes": 64071,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/ui_tools.png",
+      "bytes": 101127,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/vertex_normals_3d.jpg",
+      "bytes": 147565,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "doc/docs/images/vertex_normals_photo.jpg",
+      "bytes": 156893,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/acrylic1.exr",
+      "bytes": 12881,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/circle0.exr",
+      "bytes": 214156,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/circle1.exr",
+      "bytes": 11022,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/circle2.exr",
+      "bytes": 17380,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/circle3.exr",
+      "bytes": 10895,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/circle4.exr",
+      "bytes": 8906,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/hill1.exr",
+      "bytes": 198208,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/hill2.exr",
+      "bytes": 266517,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/mountain1.exr",
+      "bytes": 266517,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/mountain2.exr",
+      "bytes": 266517,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/mountain3.exr",
+      "bytes": 266517,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/mountain4.exr",
+      "bytes": 181277,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/peak1.exr",
+      "bytes": 25254,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/peak2.exr",
+      "bytes": 280242,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/peak3.exr",
+      "bytes": 290239,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/ring1.exr",
+      "bytes": 82316,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/smoke.exr",
+      "bytes": 10348,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/square1.exr",
+      "bytes": 2321,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/square2.exr",
+      "bytes": 2973,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/square3.exr",
+      "bytes": 4264,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/square4.exr",
+      "bytes": 7498,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/square5.exr",
+      "bytes": 11564,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/stones.exr",
+      "bytes": 1581369,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/terrain1.exr",
+      "bytes": 303941,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/terrain2.exr",
+      "bytes": 339271,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/terrain3.exr",
+      "bytes": 314338,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/terrain4.exr",
+      "bytes": 341265,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/terrain5.exr",
+      "bytes": 302296,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/terrain6.exr",
+      "bytes": 236240,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/texture1.exr",
+      "bytes": 17201,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/texture2.exr",
+      "bytes": 872793,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/texture3.exr",
+      "bytes": 1581369,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/texture4.exr",
+      "bytes": 1581369,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/texture5.exr",
+      "bytes": 1581369,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/brushes/vegetation1.exr",
+      "bytes": 12597,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/demo/assets/models/RockA.glb",
+      "bytes": 8544,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/demo/assets/models/RockB.glb",
+      "bytes": 9628,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/demo/assets/models/RockC.glb",
+      "bytes": 8344,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/demo/assets/models/Tunnel.glb",
+      "bytes": 301776,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/demo/assets/textures/ground037_alb_ht.png",
+      "bytes": 3339714,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/demo/assets/textures/ground037_nrm_rgh.png",
+      "bytes": 3425588,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/demo/assets/textures/rock023_alb_ht.png",
+      "bytes": 2691666,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/demo/assets/textures/rock023_nrm_rgh.png",
+      "bytes": 2575727,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/demo/data/nav_mesh.res",
+      "bytes": 296755,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/demo/data/terrain3d_00-01.res",
+      "bytes": 4020639,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/demo/data/terrain3d_00-02.res",
+      "bytes": 4092003,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/demo/data/terrain3d_00_00.res",
+      "bytes": 3894994,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/icon.png",
+      "bytes": 48827,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "project/addons/terrain_3d/icons/layers.svg",
+      "bytes": 3639,
+      "reason": "image asset"
+    },
+    {
+      "path": "project/addons/terrain_3d/icons/height_slope.svg",
+      "bytes": 3204,
+      "reason": "image asset"
+    },
+    {
+      "path": "project/addons/terrain_3d/icons/terrain3d.svg",
+      "bytes": 4860,
+      "reason": "image asset"
+    },
+    {
+      "path": "project/addons/terrain_3d/icons/holes.svg",
+      "bytes": 1105,
+      "reason": "image asset"
+    },
+    {
+      "path": "project/addons/terrain_3d/icons/region_remove.svg",
+      "bytes": 3704,
+      "reason": "image asset"
+    },
+    {
+      "path": "project/addons/terrain_3d/icons/region_add.svg",
+      "bytes": 3637,
+      "reason": "image asset"
+    },
+    {
+      "path": "project/addons/terrain_3d/icons/height_flat.svg",
+      "bytes": 3228,
+      "reason": "image asset"
+    },
+    {
+      "path": "project/addons/terrain_3d/icons/height_add.svg",
+      "bytes": 3210,
+      "reason": "image asset"
+    },
+    {
+      "path": "project/addons/terrain_3d/icons/height_mul.svg",
+      "bytes": 6628,
+      "reason": "image asset"
+    },
+    {
+      "path": "project/addons/terrain_3d/icons/texture_spray.svg",
+      "bytes": 5832,
+      "reason": "image asset"
+    },
+    {
+      "path": "project/addons/terrain_3d/icons/multimesh.svg",
+      "bytes": 1785,
+      "reason": "image asset"
+    },
+    {
+      "path": "project/addons/terrain_3d/icons/texture_paint.svg",
+      "bytes": 5559,
+      "reason": "image asset"
+    },
+    {
+      "path": "project/addons/terrain_3d/icons/color_paint.svg",
+      "bytes": 5914,
+      "reason": "image asset"
+    },
+    {
+      "path": "project/addons/terrain_3d/icons/height_sub.svg",
+      "bytes": 3242,
+      "reason": "image asset"
+    },
+    {
+      "path": "project/addons/terrain_3d/icons/height_smooth.svg",
+      "bytes": 1716,
+      "reason": "image asset"
+    },
+    {
+      "path": "project/addons/terrain_3d/icons/height_div.svg",
+      "bytes": 6477,
+      "reason": "image asset"
+    },
+    {
+      "path": "project/addons/terrain_3d/icons/autoshader.svg",
+      "bytes": 6187,
+      "reason": "image asset"
+    },
+    {
+      "path": "project/addons/terrain_3d/icons/picker_checked.svg",
+      "bytes": 1580,
+      "reason": "image asset"
+    },
+    {
+      "path": "project/addons/terrain_3d/icons/wetness.svg",
+      "bytes": 4666,
+      "reason": "image asset"
+    },
+    {
+      "path": "project/addons/terrain_3d/icons/navigation.svg",
+      "bytes": 3003,
+      "reason": "image asset"
+    }
+  ]
+}

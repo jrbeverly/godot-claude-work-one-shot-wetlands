@@ -36,6 +36,10 @@ fail=0
 while IFS='|' read -r id path url commit; do
   wanted "$id" || continue
   dest="$ROOT/$path"
+  if [[ -f "$dest/SNAPSHOT.json" ]]; then
+    echo "snapshot $id (committed source; archive URL and omitted files in SNAPSHOT.json)"
+    continue
+  fi
   # Safety net: never let `git add -A` pick up a clone as an embedded repo.
   if [[ -d "$ROOT/.git/info" ]] && ! grep -qxF "/$path/" "$ROOT/.git/info/exclude" 2>/dev/null; then
     echo "/$path/" >> "$ROOT/.git/info/exclude"

@@ -9,8 +9,8 @@ None. (`scenes/Main.tscn` uses built-in primitives; `icon.svg` is project-author
 ## 3. Addons integrated into the Godot project
 None. (`addons/` is empty.)
 
-## 4. Reference material only (`references/`, NOT committed, NOT runtime dependencies)
-Fetched by `tools/fetch-references.sh` at the commits in `references/references.yaml`. Storing a reference does not grant permission to reuse it: check the licence (and bundled-asset licences) before importing anything, then move the entry to sections 1-3.
+## 4. Reference material only (`references/`, committed source snapshots, NOT runtime dependencies)
+Source snapshots downloaded from upstream archives at the commits in `references/references.yaml`. Upstream licence/notice files are retained. `SNAPSHOT.json` records omitted assets and binaries; the unlicensed `godot-skill` contains metadata only. Full archives are local in `.git/reference-archives/` for later review. Storing a reference does not grant permission to reuse it: check the licence (and bundled-asset licences) before importing anything, then move the entry to sections 1-3.
 
 | Reference | Licence | Reuse notes |
 |---|---|---|
@@ -33,7 +33,7 @@ Fetched by `tools/fetch-references.sh` at the commits in `references/references.
 | godot_heightmap_plugin (HTerrain), gaea, GodotGrass, SimpleGrassTextured, godot-imposter, waterways-net, godot_spatial_gardener, func_godot_plugin | MIT each | Reference/candidate only; not integrated. |
 | phantom-camera, GameDemo (Chickensoft), GodotOceanWaves, boujie_water_shader, Sky3D, GodotWeatherSystem | MIT each | Not integrated. GameDemo targets Godot 4.7 and Chickensoft infrastructure. Sky3D's GitHub licence field says NOASSERTION but the LICENSE text is MIT. |
 | godot-4-stylized-sky | Code MIT; **art CC-BY-NC-SA** | Shader ideas only; never import its art (non-commercial). |
-| KayKit Medieval Hexagon Pack 1.0 (Kay Lousberg) | CC0-1.0 | Candidate asset source; stored locally, not imported. |
+| KayKit Medieval Hexagon Pack 1.0 (Kay Lousberg) | CC0-1.0 | Candidate asset source; source metadata committed; asset files omitted, not imported. |
 | skelerealms | MIT | Future RPG reference only. |
 
 ## 5. Candidate asset sources (links only, nothing downloaded)

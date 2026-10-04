@@ -1,0 +1,57 @@
+{
+  "id": "CSharpGodotTools-Template",
+  "path": "references/starters/CSharpGodotTools-Template",
+  "url": "https://github.com/CSharpGodotTools/Template",
+  "commit": "df0f493c74371d7f081131aed937439fa9de035a",
+  "archive_url": "https://codeload.github.com/CSharpGodotTools/Template/tar.gz/df0f493c74371d7f081131aed937439fa9de035a",
+  "archive_bytes": 460549,
+  "kept_files": 960,
+  "kept_bytes": 2034528,
+  "omitted": [
+    {
+      "path": "Template/Framework/Localisation/text.en.translation",
+      "bytes": 2596,
+      "reason": "binary content"
+    },
+    {
+      "path": "Template/Framework/Localisation/text.fr.translation",
+      "bytes": 2723,
+      "reason": "binary content"
+    },
+    {
+      "path": "Template/Framework/Localisation/text.ja.translation",
+      "bytes": 2915,
+      "reason": "binary content"
+    },
+    {
+      "path": "Template/Framework/Scenes/MenuUI/Console/Gear.png",
+      "bytes": 3269,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "Template/Framework/Theme/CornerDashOutline.png",
+      "bytes": 238,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "Template/MainScenes/3D/FPS/Models/Stairs.glb",
+      "bytes": 4632,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "Template/Mods/Example Mod/Mod.dll",
+      "bytes": 4096,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "Template/Icon.svg",
+      "bytes": 994,
+      "reason": "image asset"
+    },
+    {
+      "path": "Template.Visualize/Icon.svg",
+      "bytes": 995,
+      "reason": "image asset"
+    }
+  ]
+}

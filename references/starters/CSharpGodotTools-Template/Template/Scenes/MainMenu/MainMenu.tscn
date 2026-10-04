@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://d4a5xfmaulku1"]
+
+[ext_resource type="Script" uid="uid://sq60pmlm3n01" path="res://Scenes/MainMenu/MainMenu.cs" id="1_cdkru"]
+
+[node name="Main Menu" type="PanelContainer" unique_id=1465991970]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_lock_ = true
+
+[node name="Nav" type="VBoxContainer" parent="." unique_id=1441414086]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+alignment = 1
+script = ExtResource("1_cdkru")
+
+[node name="Play" type="Button" parent="Nav" unique_id=1153500087]
+custom_minimum_size = Vector2(175, 60)
+layout_mode = 2
+text = "PLAY"
+
+[node name="Mods" type="Button" parent="Nav" unique_id=1939930958]
+visible = false
+custom_minimum_size = Vector2(175, 60)
+layout_mode = 2
+text = "MODS"
+
+[node name="Options" type="Button" parent="Nav" unique_id=346448010]
+custom_minimum_size = Vector2(175, 60)
+layout_mode = 2
+text = "OPTIONS"
+
+[node name="Credits" type="Button" parent="Nav" unique_id=2101763633]
+custom_minimum_size = Vector2(175, 60)
+layout_mode = 2
+text = "CREDITS"
+
+[node name="Quit" type="Button" parent="Nav" unique_id=1110099527]
+custom_minimum_size = Vector2(175, 60)
+layout_mode = 2
+text = "QUIT"
+
+[connection signal="pressed" from="Nav/Play" to="Nav" method="OnPlayPressed"]
+[connection signal="pressed" from="Nav/Mods" to="Nav" method="OnModsPressed"]
+[connection signal="pressed" from="Nav/Options" to="Nav" method="OnOptionsPressed"]
+[connection signal="pressed" from="Nav/Credits" to="Nav" method="OnCreditsPressed"]
+[connection signal="pressed" from="Nav/Quit" to="Nav" method="OnQuitPressed"]

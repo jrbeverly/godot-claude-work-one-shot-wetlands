@@ -1,0 +1,182 @@
+{
+  "id": "gaea",
+  "path": "references/godot/terrain/gaea",
+  "url": "https://github.com/gaea-godot/gaea",
+  "commit": "ee2cdc3e1f87f067c376fe5e64f9a5a9793a1280",
+  "archive_url": "https://codeload.github.com/gaea-godot/gaea/tar.gz/ee2cdc3e1f87f067c376fe5e64f9a5a9793a1280",
+  "archive_bytes": 135641,
+  "kept_files": 328,
+  "kept_bytes": 540518,
+  "omitted": [
+    {
+      "path": "addons/gaea/assets/renderer.svg",
+      "bytes": 535,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/generator.svg",
+      "bytes": 848,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/check.svg",
+      "bytes": 187,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/chunk_loader.svg",
+      "bytes": 743,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/node_resource.svg",
+      "bytes": 923,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/layer.svg",
+      "bytes": 213,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/generation_pouch.svg",
+      "bytes": 833,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/grid.svg",
+      "bytes": 462,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/argument_editor.svg",
+      "bytes": 177,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/cross.svg",
+      "bytes": 171,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/graph.svg",
+      "bytes": 453,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/logo.svg",
+      "bytes": 11662,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/generation_settings.svg",
+      "bytes": 441,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/slots/triangle.svg",
+      "bytes": 202,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/slots/square.svg",
+      "bytes": 210,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/slots/rounded_square.svg",
+      "bytes": 298,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/slots/hourglass.svg",
+      "bytes": 260,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/slots/rhombus.svg",
+      "bytes": 211,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/slots/ring.svg",
+      "bytes": 593,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/slots/circle.svg",
+      "bytes": 198,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/slots/diamond.svg",
+      "bytes": 216,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/slots/tag.svg",
+      "bytes": 262,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/types/map.svg",
+      "bytes": 384,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/types/vec3i.svg",
+      "bytes": 394,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/types/bool.svg",
+      "bytes": 339,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/types/float.svg",
+      "bytes": 247,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/types/sample.svg",
+      "bytes": 213,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/types/vec2i.svg",
+      "bytes": 352,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/types/vec3.svg",
+      "bytes": 391,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/types/int.svg",
+      "bytes": 235,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/types/range.svg",
+      "bytes": 201,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/types/vec2.svg",
+      "bytes": 349,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/types/material.svg",
+      "bytes": 681,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/gaea/assets/types/num.svg",
+      "bytes": 1870,
+      "reason": "image asset"
+    }
+  ]
+}

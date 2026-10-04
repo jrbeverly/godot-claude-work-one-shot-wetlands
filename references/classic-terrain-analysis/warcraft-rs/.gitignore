@@ -1,0 +1,48 @@
+# Add directories, files, and symbolic links which should not be stored within
+# the repository here.
+
+# Helper files requiring special attention
+!.gitignore
+!.gitattributes
+
+# Added by cargo
+/target/
+
+# Test data
+*.mpq
+*.adt
+*.wdl
+*.wdt
+*.m2
+*.wmo
+
+__pycache__
+.ruff-cache
+
+# Rust build artifacts
+*.rs.bk
+*.rlib
+*.so
+*.dylib
+*.dll
+debug/
+release/
+
+# Python environments
+.venv/
+venv/
+*.pyc
+*.egg-info/
+dist/
+.pytest_cache/
+
+# Development
+*.log
+*.prof
+.env
+.env.*
+!.env.example
+perf.data
+
+# mdbook build output
+docs/book/

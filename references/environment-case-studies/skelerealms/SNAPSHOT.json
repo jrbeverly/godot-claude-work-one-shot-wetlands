@@ -1,0 +1,32 @@
+{
+  "id": "skelerealms",
+  "path": "references/environment-case-studies/skelerealms",
+  "url": "https://github.com/SlashScreen/skelerealms",
+  "commit": "293dfd0b68541066bc505eadf03255d85218b4bf",
+  "archive_url": "https://codeload.github.com/SlashScreen/skelerealms/tar.gz/293dfd0b68541066bc505eadf03255d85218b4bf",
+  "archive_bytes": 169078,
+  "kept_files": 174,
+  "kept_bytes": 294767,
+  "omitted": [
+    {
+      "path": "octa.mtl",
+      "bytes": 233,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "octa.obj",
+      "bytes": 955,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "skelerealms_logo.png",
+      "bytes": 73953,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "skelerealms_logo.svg",
+      "bytes": 5547,
+      "reason": "image asset"
+    }
+  ]
+}

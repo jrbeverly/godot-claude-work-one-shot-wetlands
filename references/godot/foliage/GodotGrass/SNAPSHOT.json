@@ -1,0 +1,112 @@
+{
+  "id": "GodotGrass",
+  "path": "references/godot/foliage/GodotGrass",
+  "url": "https://github.com/2Retr0/GodotGrass",
+  "commit": "3785bec8e2567f57faf3b9a6c0e617af710d090a",
+  "archive_url": "https://codeload.github.com/2Retr0/GodotGrass/tar.gz/3785bec8e2567f57faf3b9a6c0e617af710d090a",
+  "archive_bytes": 25630794,
+  "kept_files": 71,
+  "kept_bytes": 281125,
+  "omitted": [
+    {
+      "path": "addons/imgui-godot/bin/libimgui-godot-native.linux.debug.x86_64.so",
+      "bytes": 5825720,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/imgui-godot/bin/libimgui-godot-native.linux.release.x86_64.so",
+      "bytes": 5418168,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/imgui-godot/bin/libimgui-godot-native.macos.debug.framework/libimgui-godot-native.macos.debug",
+      "bytes": 9308232,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "addons/imgui-godot/bin/libimgui-godot-native.macos.release.framework/libimgui-godot-native.macos.release",
+      "bytes": 8731704,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "addons/imgui-godot/bin/libimgui-godot-native.windows.debug.x86_64.dll",
+      "bytes": 4194816,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/imgui-godot/bin/libimgui-godot-native.windows.release.x86_64.dll",
+      "bytes": 3322368,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/grass/grass_high.obj",
+      "bytes": 791,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/grass/grass_low.obj",
+      "bytes": 250,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/grass_loop.wav",
+      "bytes": 595202,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/grass_step.wav",
+      "bytes": 51180,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/insects_loop.wav",
+      "bytes": 811092,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/player/reisen/resources/reisen.glb",
+      "bytes": 501596,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/player/reisen/resources/reisen_body.png",
+      "bytes": 21015,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/player/reisen/resources/reisen_face.png",
+      "bytes": 45956,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/player/reisen/resources/run_cycle.res",
+      "bytes": 23744,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/skybox.png",
+      "bytes": 5943750,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/wind_loop.wav",
+      "bytes": 3599198,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "main.tscn",
+      "bytes": 2631133,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "icon.svg",
+      "bytes": 949,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/jigglebones/icon.svg",
+      "bytes": 10012,
+      "reason": "image asset"
+    }
+  ]
+}

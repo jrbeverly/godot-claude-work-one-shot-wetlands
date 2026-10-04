@@ -1,0 +1,34 @@
+﻿name: 🐧 Linux Builds
+on: [ workflow_call, workflow_dispatch ]
+
+jobs:
+  build:
+    name: 🐧 Linux ${{ matrix.arch }} ${{ matrix.target }}
+    # Keep previous LTS for lower GLIBC to increase portability of Linux builds.
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x86_64]
+        target: [debug, release]
+        include:
+          - platform: linux
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - uses: ./.github/actions/build-artifact
+        with:
+          cache-name: ${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.target }}
+          platform: ${{ matrix.platform }}
+          arch: ${{ matrix.arch }}
+          target: ${{ matrix.target }}
+          flags: ""
+
+
+# Note: To do multiple jobs, the only working choices are:
+# * >1 size arrays, last include applies to all (eg linux)
+# * >1 size arrays + config, include makes separate runners (eg windows)
+# * no arrays, include makes separate runners (eg web)

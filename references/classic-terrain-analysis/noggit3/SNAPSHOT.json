@@ -1,0 +1,47 @@
+{
+  "id": "noggit3",
+  "path": "references/classic-terrain-analysis/noggit3",
+  "url": "https://github.com/wowdev/noggit3",
+  "commit": "59e58add868608339fe292970196985d4ce050ff",
+  "archive_url": "https://codeload.github.com/wowdev/noggit3/tar.gz/59e58add868608339fe292970196985d4ce050ff",
+  "archive_bytes": 1335157,
+  "kept_files": 373,
+  "kept_bytes": 2178348,
+  "omitted": [
+    {
+      "path": "media/noggit.icns",
+      "bytes": 347060,
+      "reason": "binary content"
+    },
+    {
+      "path": "media/noggit.ico",
+      "bytes": 225239,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "media/noggit.png",
+      "bytes": 215889,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "media/noggit_icon.png",
+      "bytes": 21604,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "resources/fa-solid-900.ttf",
+      "bytes": 191832,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "resources/noggit_font.ttf",
+      "bytes": 14584,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/external/qt-color-widgets/src/alphaback.png",
+      "bytes": 208,
+      "reason": "asset or binary"
+    }
+  ]
+}

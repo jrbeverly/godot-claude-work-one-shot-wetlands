@@ -11,7 +11,7 @@ Nothing game-specific exists yet. Do not add gameplay, RPG, streaming, or world-
 - Once visual work begins, run the project and look at it frequently; do not rely on code review alone.
 
 ## Reference library: look here before relevant decisions
-These materials ground the project. Index: `references/README.md`. Fetch code refs once with `tools/fetch-references.sh` (pinned; ~3.1 GB; not committed). Docs, catalogues and visual notes below are committed and available immediately.
+These materials ground the project. Index: `references/README.md`. Fetch code refs once with `tools/fetch-references.sh` (pinned; committed source snapshots, assets omitted). Docs, catalogues and visual notes below are committed and available immediately.
 
 | If you are… | Consult first | What it is for |
 |---|---|---|

@@ -1,0 +1,328 @@
+using __TEMPLATE__.Netcode.Client;
+using __TEMPLATE__.Netcode.Server;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace __TEMPLATE__.Netcode;
+
+/// <summary>
+/// Top-level network coordinator. Owns a single server and client pair, manages
+/// ENet initialisation/deinitialisation, and exposes lifecycle events for both.
+/// </summary>
+/// <typeparam name="TGameClient">Concrete Godot client facade type.</typeparam>
+/// <typeparam name="TGameServer">Concrete Godot server facade type.</typeparam>
+public class Net<TGameClient, TGameServer> : IDisposable
+    where TGameClient : GodotClient, new()
+    where TGameServer : GodotServer, new()
+{
+    private const int ShutdownPollIntervalMs = 50;
+    private const int DefaultMaxClients = 500;
+    private const int ENetMaximumPeers = 4096;
+
+    private static readonly ENetOptions _defaultOptions = new()
+    {
+        PrintPacketByteSize = false,
+        PrintPacketData = false,
+        PrintPacketReceived = false,
+        PrintPacketSent = false
+    };
+
+    private readonly bool _enetInitialized;
+    private readonly ILoggerService _loggerService;
+    private readonly IApplicationLifetime _applicationLifetime;
+    private readonly IBackgroundTaskTracker _backgroundTasks;
+    private readonly bool _ownsBackgroundTaskTracker;
+    private long _shutdownStarted;
+    private int _disposed;
+
+    /// <summary>Raised when a new server instance is created.</summary>
+    public event Action<GodotServer>? ServerCreated;
+
+    /// <summary>Raised when a new client instance is created.</summary>
+    public event Action<GodotClient>? ClientCreated;
+
+    /// <summary>Raised when a client instance is stopped and destroyed.</summary>
+    public event Action<GodotClient>? ClientDestroyed;
+
+    /// <summary>
+    /// Byte offset within a packet reserved for the heartbeat sequence number.
+    /// </summary>
+    public static int HeartbeatPosition { get; } = 20;
+
+    /// <summary>The active server instance.</summary>
+    public GodotServer Server { get; private set; }
+
+    /// <summary>The active client instance.</summary>
+    public GodotClient Client { get; private set; }
+
+    /// <summary>Port the current server is listening on.</summary>
+    public ushort ServerPort { get; private set; }
+
+    /// <summary>Maximum concurrent clients for the current server.</summary>
+    public int ServerMaxClients { get; private set; }
+
+    /// <summary>
+    /// Creates a network coordinator that owns the active server and client instances.
+    /// </summary>
+    /// <param name="loggerService">Logger service shared by server and client transports.</param>
+    /// <param name="applicationLifetime">Application lifetime hooks used for coordinated shutdown.</param>
+    /// <param name="backgroundTasks">Optional background task tracker for async network operations.</param>
+    public Net(
+        ILoggerService loggerService,
+        IApplicationLifetime applicationLifetime,
+        IBackgroundTaskTracker? backgroundTasks = null)
+    {
+        _loggerService = loggerService;
+        _applicationLifetime = applicationLifetime;
+        _backgroundTasks = backgroundTasks ?? new BackgroundTaskTracker(loggerService);
+        _ownsBackgroundTaskTracker = backgroundTasks == null;
+
+        _enetInitialized = TryInitializeEnet();
+
+        _applicationLifetime.PreQuit += StopThreads;
+
+        Client = new TGameClient();
+        Client.ConfigureLoggerService(_loggerService);
+        Server = new TGameServer();
+        Server.ConfigureLoggerService(_loggerService);
+    }
+
+    /// <summary>
+    /// Creates and starts a new server instance.
+    /// </summary>
+    /// <param name="port">UDP port to bind.</param>
+    /// <param name="maxClients">Maximum concurrent clients.</param>
+    /// <param name="options">Optional ENet runtime options.</param>
+    public void StartServer(ushort port, int maxClients = DefaultMaxClients, ENetOptions? options = null)
+    {
+        // Guard against ENet peer-limit overflow before creating server resources.
+        if (maxClients >= ENetMaximumPeers)
+            throw new ArgumentException($"ENet only supports a maximum of {ENetMaximumPeers - 1} clients");
+
+        options ??= _defaultOptions;
+
+        // Skip start request when ENet initialization failed.
+        if (!CanUseENet())
+            return;
+
+        // Ignore duplicate start requests while server is already running.
+        if (Server.IsRunning)
+        {
+            Server.Log("Server is running already");
+            return;
+        }
+
+        ServerPort = port;
+        ServerMaxClients = maxClients;
+
+        Server = new TGameServer();
+        Server.ConfigureLoggerService(_loggerService);
+        ServerCreated?.Invoke(Server);
+        Server.Start(port, maxClients, options);
+    }
+
+    /// <summary>
+    /// Requests the current server instance to stop.
+    /// </summary>
+    public void StopServer()
+    {
+        Server.Stop();
+    }
+
+    /// <summary>
+    /// Creates and connects a new client instance.
+    /// </summary>
+    /// <param name="ip">Server IP or host name.</param>
+    /// <param name="port">Server UDP port.</param>
+    public void StartClient(string ip, ushort port)
+    {
+        // Skip connect request when ENet initialization failed.
+        if (!CanUseENet())
+            return;
+
+        // Ignore duplicate start requests while client is already running.
+        if (Client.IsRunning)
+        {
+            Client.Log("Client is running already");
+            return;
+        }
+
+        Client = new TGameClient();
+        Client.ConfigureLoggerService(_loggerService);
+        ClientCreated?.Invoke(Client);
+
+        _backgroundTasks.Run(_ => Client.Connect(ip, port, CloneDefaultOptions()), "Net.StartClient.Connect");
+    }
+
+    /// <summary>
+    /// Requests the current client instance to stop.
+    /// </summary>
+    public void StopClient()
+    {
+        // Treat repeated stop requests as a no-op with diagnostic logging.
+        if (!Client.IsRunning)
+        {
+            Client.Log("Client was stopped already");
+            return;
+        }
+
+        Client.Stop();
+        ClientDestroyed?.Invoke(Client);
+    }
+
+    /// <summary>
+    /// Attempts to initialize the ENet native library. Returns <c>false</c> if the DLL is missing.
+    /// </summary>
+    /// <returns><see langword="true"/> when ENet initialization succeeds.</returns>
+    private bool TryInitializeEnet()
+    {
+        try
+        {
+            ENet.Library.Initialize();
+            return true;
+        }
+        catch (DllNotFoundException exception)
+        {
+            _loggerService.LogErr(exception);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Gracefully stops both server and client workers, then deinitializes ENet.
+    /// </summary>
+    /// <returns>A task that completes when workers are stopped and logs are drained.</returns>
+    private async Task StopThreads()
+    {
+        // Ensure shutdown pipeline runs once even when called from multiple paths.
+        if (Interlocked.CompareExchange(ref _shutdownStarted, 1, 0) != 0)
+            return;
+
+        try
+        {
+            // Stop workers and deinitialize ENet only when ENet is active.
+            if (_enetInitialized)
+            {
+                await StopServerIfRunning();
+                await StopClientIfRunning();
+                ENet.Library.Deinitialize();
+            }
+
+            while (_loggerService.StillWorking())
+                await Task.Delay(ShutdownPollIntervalMs);
+        }
+        finally
+        {
+            Interlocked.Exchange(ref _shutdownStarted, 0);
+        }
+    }
+
+    /// <summary>
+    /// Returns <c>true</c> when ENet is initialized; logs a warning and returns <c>false</c> otherwise.
+    /// </summary>
+    /// <returns><see langword="true"/> when ENet can be used.</returns>
+    private bool CanUseENet()
+    {
+        // Fast path when ENet initialization has completed successfully.
+        if (_enetInitialized)
+            return true;
+
+        _loggerService.LogWarning("ENet is not initialized. Network operation was ignored.");
+        return false;
+    }
+
+    /// <summary>
+    /// Creates a copy of the default ENet logging options.
+    /// </summary>
+    /// <returns>Cloned ENet options instance.</returns>
+    private static ENetOptions CloneDefaultOptions()
+    {
+        return new ENetOptions
+        {
+            PrintPacketByteSize = _defaultOptions.PrintPacketByteSize,
+            PrintPacketData = _defaultOptions.PrintPacketData,
+            PrintPacketReceived = _defaultOptions.PrintPacketReceived,
+            PrintPacketSent = _defaultOptions.PrintPacketSent,
+            ShowLogTimestamps = _defaultOptions.ShowLogTimestamps,
+            MaxCommandQueueDepth = _defaultOptions.MaxCommandQueueDepth,
+            MaxIncomingQueueDepth = _defaultOptions.MaxIncomingQueueDepth,
+            MaxOutgoingQueueDepth = _defaultOptions.MaxOutgoingQueueDepth,
+            CommandQueueOverflowPolicy = _defaultOptions.CommandQueueOverflowPolicy,
+            IncomingQueueOverflowPolicy = _defaultOptions.IncomingQueueOverflowPolicy,
+            OutgoingQueueOverflowPolicy = _defaultOptions.OutgoingQueueOverflowPolicy,
+            MaxFragmentsPerPacket = _defaultOptions.MaxFragmentsPerPacket,
+            MalformedFragmentLogIntervalMs = _defaultOptions.MalformedFragmentLogIntervalMs,
+            QueueOverflowLogIntervalMs = _defaultOptions.QueueOverflowLogIntervalMs
+        };
+    }
+
+    /// <summary>
+    /// Stops the server and polls until the worker thread has fully exited.
+    /// </summary>
+    /// <returns>A task that completes when the server worker has stopped.</returns>
+    private async Task StopServerIfRunning()
+    {
+        // Skip shutdown polling when server is already stopped.
+        if (!Server.IsRunning)
+            return;
+
+        Server.Stop();
+
+        while (Server.IsRunning)
+            await Task.Delay(ShutdownPollIntervalMs);
+    }
+
+    /// <summary>
+    /// Stops the client and polls until the worker thread has fully exited.
+    /// </summary>
+    /// <returns>A task that completes when the client worker has stopped.</returns>
+    private async Task StopClientIfRunning()
+    {
+        // Skip shutdown polling when client is already stopped.
+        if (!Client.IsRunning)
+            return;
+
+        Client.Stop();
+
+        while (Client.IsRunning)
+            await Task.Delay(ShutdownPollIntervalMs);
+    }
+
+    /// <summary>
+    /// Request to shutdown the server and client.
+    /// </summary>
+    public void RequestShutdown()
+    {
+        QueueStopThreads("Net.RequestShutdown");
+    }
+
+    /// <summary>
+    /// Unsubscribes lifecycle handlers and requests shutdown of active network workers.
+    /// </summary>
+    public void Dispose()
+    {
+        // Prevent duplicate disposal from issuing repeated shutdown requests.
+        if (Interlocked.Exchange(ref _disposed, 1) == 1)
+            return;
+
+        _applicationLifetime.PreQuit -= StopThreads;
+
+        // Queue shutdown only when no shutdown pipeline is currently active.
+        if (Interlocked.Read(ref _shutdownStarted) == 0)
+            QueueStopThreads("Net.Dispose.StopThreads");
+
+        // Dispose task tracker only when this Net instance created it.
+        if (_ownsBackgroundTaskTracker)
+            _backgroundTasks.Dispose();
+    }
+
+    /// <summary>
+    /// Queues coordinated network shutdown work on the background task tracker.
+    /// </summary>
+    /// <param name="operationName">Diagnostic operation name for tracking.</param>
+    private void QueueStopThreads(string operationName)
+    {
+        _backgroundTasks.Track(StopThreads(), operationName);
+    }
+}

@@ -1,0 +1,27 @@
+{
+  "id": "slangwald-godot-mcp",
+  "path": "references/godot/mcp/slangwald-godot-mcp",
+  "url": "https://github.com/slangwald/godot-mcp",
+  "commit": "95532c4eb632d61c9a3c7a281f1a8a2925042345",
+  "archive_url": "https://codeload.github.com/slangwald/godot-mcp/tar.gz/95532c4eb632d61c9a3c7a281f1a8a2925042345",
+  "archive_bytes": 216128,
+  "kept_files": 43,
+  "kept_bytes": 95693,
+  "omitted": [
+    {
+      "path": "demo.mp4",
+      "bytes": 184172,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "screenshot.png",
+      "bytes": 17491,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "icon.svg",
+      "bytes": 995,
+      "reason": "image asset"
+    }
+  ]
+}

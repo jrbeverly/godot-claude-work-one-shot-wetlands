@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# ------------------------------------------------------------
+# Pre-commit configuration toggles.
+# Local package build/copy work is handled by MSBuild now, not this hook.
+# ------------------------------------------------------------
+# true: sync root .editorconfig to known subprojects when .editorconfig is staged.
+: "${PRECOMMIT_ENABLE_EDITORCONFIG_SYNC:=true}"
+
+# true: sync root .vscode config files to Template/.vscode when staged.
+: "${PRECOMMIT_ENABLE_VSCODE_SYNC:=true}"
+
+is_enabled() {
+    [ "${1,,}" = "true" ]
+}
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+SCRIPTS_DIR="$REPO_ROOT/.githooks/scripts"
+
+mapfile -t STAGED_PATHS < <(git diff --cached --name-only --diff-filter=ACMR)
+STAGED="$(printf '%s\n' "${STAGED_PATHS[@]}")"
+
+# ------------------------------------------------------------
+# Sync .editorconfig
+# ------------------------------------------------------------
+if echo "$STAGED" | grep -q "^\.editorconfig$"; then
+    if is_enabled "$PRECOMMIT_ENABLE_EDITORCONFIG_SYNC"; then
+        "$SCRIPTS_DIR/sync-editorconfig" "$REPO_ROOT"
+    else
+        echo "[pre-commit] .editorconfig sync disabled by PRECOMMIT_ENABLE_EDITORCONFIG_SYNC=false"
+    fi
+fi
+
+# ------------------------------------------------------------
+# Sync root .vscode configs to Template/.vscode
+# ------------------------------------------------------------
+if echo "$STAGED" | grep -Eq "^\.vscode/(extensions|settings|tasks)\.json$"; then
+    if is_enabled "$PRECOMMIT_ENABLE_VSCODE_SYNC"; then
+        echo "[pre-commit] Syncing .vscode configs to Template/.vscode..."
+        "$SCRIPTS_DIR/sync-vscode-configs" --stage
+    else
+        echo "[pre-commit] .vscode sync disabled by PRECOMMIT_ENABLE_VSCODE_SYNC=false"
+    fi
+fi
+
+exit 0

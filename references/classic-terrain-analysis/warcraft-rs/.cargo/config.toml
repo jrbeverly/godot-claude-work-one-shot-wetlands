@@ -1,0 +1,19 @@
+# Cargo configuration for warcraft-rs workspace
+# https://doc.rust-lang.org/cargo/reference/config.html
+
+[build]
+# Treat all warnings as errors in CI and development
+# rustflags = ["-D", "warnings"]
+# rustdocflags = ["-D", "warnings"]
+
+# Use all available CPU cores for parallel compilation
+jobs = -1
+
+[term]
+# Always show colors in terminal output
+color = "always"
+
+
+[env]
+# Enable backtraces for better error messages during development
+RUST_BACKTRACE = "1"

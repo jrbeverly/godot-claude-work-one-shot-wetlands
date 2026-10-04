@@ -1,0 +1,65 @@
+# Godot 4+ specific ignores
+.godot/
+agentchattr*/
+tmp/
+inspos/
+.claude/
+.claude-flow/
+openmw-master/
+lapalma_map/
+lapalma_processed/
+lapalma_terrain/
+godotoceanbuoyancy/
+GodotOceanWaves/
+assets/animations/
+assets/characters/
+*.fbx
+# Godot-specific ignores
+*.translation
+
+# Generated/sample import metadata is noisy in this repo, but non-default
+# importer settings that affect runtime types must be versioned explicitly.
+*.import
+!addons/SunshineClouds2/NoiseTextures/bluenoise_Dither.png.import
+!addons/SunshineClouds2/NoiseTextures/curl_noise_varied.tga.import
+
+# Mono-specific ignores
+.mono/
+data_*/
+mono_crash.*.json
+
+# Editor settings and backups
+*.swp
+*.swo
+*~
+*.bak
+
+# Debug/log files
+*.log
+*_debug.txt
+
+# Generated gdUnit HTML/XML report directories. Keep durable evidence in
+# docs/audit summaries or explicitly named smoke logs, not numbered reports.
+reports/report_*/
+reports/performance_observatory_scan.*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE specific
+.vscode/
+.idea/
+
+# Export templates and builds
+/export/
+/build/
+*.exe
+*.x86_64
+*.pck
+addons/terrain_3d.backup-*/
+
+# Prebaked test data (binary, generated)
+tests/data/*.scn
+tests/data/*.res

@@ -1,0 +1,17 @@
+{
+  "id": "godot-mcp-toolkit",
+  "path": "references/ai-development/godot-mcp-toolkit",
+  "url": "https://github.com/NPGameDev/godot-mcp-toolkit",
+  "commit": "4df1b80423fa5ff51f3716beed68f50f7a98cc77",
+  "archive_url": "https://codeload.github.com/NPGameDev/godot-mcp-toolkit/tar.gz/4df1b80423fa5ff51f3716beed68f50f7a98cc77",
+  "archive_bytes": 499062,
+  "kept_files": 275,
+  "kept_bytes": 1431357,
+  "omitted": [
+    {
+      "path": "addons/godot_mcp_toolkit/icon.svg",
+      "bytes": 183576,
+      "reason": "image asset"
+    }
+  ]
+}

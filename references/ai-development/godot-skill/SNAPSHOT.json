@@ -1,0 +1,82 @@
+{
+  "id": "godot-skill",
+  "path": "references/ai-development/godot-skill",
+  "url": "https://github.com/BangRocket/godot-skill",
+  "commit": "2306f66e32c336ffb3fe90bee26eb104cb879e78",
+  "archive_url": "https://codeload.github.com/BangRocket/godot-skill/tar.gz/2306f66e32c336ffb3fe90bee26eb104cb879e78",
+  "archive_bytes": 134487,
+  "kept_files": 0,
+  "kept_bytes": 0,
+  "omitted": [
+    {
+      "path": ".gitignore",
+      "bytes": 35,
+      "reason": "no redistribution licence"
+    },
+    {
+      "path": "docs/plans/2026-04-20-godot-skill-design.md",
+      "bytes": 6457,
+      "reason": "no redistribution licence"
+    },
+    {
+      "path": "docs/plans/2026-04-20-godot-skill.md",
+      "bytes": 23108,
+      "reason": "no redistribution licence"
+    },
+    {
+      "path": "godot/2d-reference.md",
+      "bytes": 32711,
+      "reason": "no redistribution licence"
+    },
+    {
+      "path": "godot/3d-reference.md",
+      "bytes": 31362,
+      "reason": "no redistribution licence"
+    },
+    {
+      "path": "godot/SKILL.md",
+      "bytes": 19812,
+      "reason": "no redistribution licence"
+    },
+    {
+      "path": "godot/csharp-reference.md",
+      "bytes": 30635,
+      "reason": "no redistribution licence"
+    },
+    {
+      "path": "godot/game-design-patterns.md",
+      "bytes": 50766,
+      "reason": "no redistribution licence"
+    },
+    {
+      "path": "godot/gdscript-reference.md",
+      "bytes": 32105,
+      "reason": "no redistribution licence"
+    },
+    {
+      "path": "godot/nodes-and-scenes.md",
+      "bytes": 24280,
+      "reason": "no redistribution licence"
+    },
+    {
+      "path": "godot/porting-3-to-4.md",
+      "bytes": 48134,
+      "reason": "no redistribution licence"
+    },
+    {
+      "path": "godot/resources-and-optimization.md",
+      "bytes": 33101,
+      "reason": "no redistribution licence"
+    },
+    {
+      "path": "godot/signals-and-patterns.md",
+      "bytes": 32115,
+      "reason": "no redistribution licence"
+    },
+    {
+      "path": "research/godot4-best-practices.md",
+      "bytes": 13121,
+      "reason": "no redistribution licence"
+    }
+  ]
+}

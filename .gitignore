@@ -13,44 +13,8 @@ obj/
 *.user
 .vs/
 
-# Reference library: clones are fetched by tools/fetch-references.sh (pinned in references/references.yaml).
-# Docs, the manifest and notes are tracked; the clones themselves are not. Regenerate this block when adding manifest entries
-# (the fetch script also adds clones to .git/info/exclude as a safety net).
-/references/starters/GoDotNet.BlankTemplate/
-/references/starters/GodotGame/
-/references/starters/CSharpGodotTools-Template/
-/references/ai-development/godot-game-dev-studio/
-/references/ai-development/godot-mcp-toolkit/
-/references/ai-development/godot-skill/
-/references/ai-development/gai/
-/references/godot/terrain/Terrain3D/
-/references/godot/foliage/scatter/
-/references/godot/roads/godot-road-generator/
-/references/godot/foliage/godot-forest-demo/
-/references/godot/mcp/mkdevkit-godot-mcp/
-/references/godot/mcp/slangwald-godot-mcp/
-/references/godot/mcp/claudot-pub/
-/references/classic-terrain-analysis/wow-1121-client-internals/
-/references/classic-terrain-analysis/warcraft-rs/
-/references/classic-terrain-analysis/noggit3/
-/references/environment-case-studies/godotwind/
-/references/environment-case-studies/skelerealms/
-/references/godot/terrain/godot_heightmap_plugin/
-/references/godot/terrain/gaea/
-/references/godot/foliage/GodotGrass/
-/references/godot/foliage/SimpleGrassTextured/
-/references/godot/foliage/godot-imposter/
-/references/godot/roads/waterways-net/
-/references/godot/editing/godot_spatial_gardener/
-/references/godot/editing/func_godot_plugin/
-/references/assets/KayKit-Medieval-Hexagon-Pack/
-/references/godot/controllers/phantom-camera/
-/references/godot/controllers/GameDemo/
-/references/godot/water/GodotOceanWaves/
-/references/godot/water/boujie_water_shader/
-/references/godot/atmosphere/Sky3D/
-/references/godot/atmosphere/godot-4-stylized-sky/
-/references/godot/atmosphere/GodotWeatherSystem/
+# Reference snapshots are tracked; upstream Git metadata is not.
+/references/**/.git/
 
 # OS / editor
 .DS_Store

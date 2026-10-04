@@ -1,0 +1,17 @@
+{
+  "id": "GoDotNet.BlankTemplate",
+  "path": "references/starters/GoDotNet.BlankTemplate",
+  "url": "https://github.com/Mikeware/GoDotNet.BlankTemplate",
+  "commit": "c86953dc46b880fde37d3a4576260166d4fb1738",
+  "archive_url": "https://codeload.github.com/Mikeware/GoDotNet.BlankTemplate/tar.gz/c86953dc46b880fde37d3a4576260166d4fb1738",
+  "archive_bytes": 9872,
+  "kept_files": 19,
+  "kept_bytes": 22483,
+  "omitted": [
+    {
+      "path": "content/icon.svg",
+      "bytes": 950,
+      "reason": "image asset"
+    }
+  ]
+}
