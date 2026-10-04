@@ -41,18 +41,20 @@ public static class TerrainBuilder
             float x = f.WorldX(i), z = f.WorldZ(j);
             float h = L.Terrain.BaseHeight + broad.GetNoise2D(x, z) * 4.5f + medium.GetNoise2D(x, z) * 1.2f;
 
-            // Rim: squircle distance so corners are not oddly high; cubic ramp with low-frequency roughness.
+            // Rim: squircle distance so corners are not oddly high. Broad massive forms (very low frequency
+            // ridged noise) rather than spiky peaks: Classic mountains are a few big readable shapes.
             float dEuclid = MathF.Sqrt(x * x + z * z);
             float dBox = MathF.Max(MathF.Abs(x), MathF.Abs(z));
             float d = Mathf.Lerp(dEuclid, dBox, 0.55f);
             float t = Mathf.Clamp((d - rim.StartRadius) / MathF.Max(half * 1.05f - rim.StartRadius, 1f), 0f, 1f);
             if (t > 0f)
             {
-                float rough = 1f + rim.Roughness * rimNoise.GetNoise2D(x * 1.3f, z * 1.3f);
-                // Steps make banded, chunky mountains instead of a smooth cone.
-                float ramp = t * t * (3f - 2f * t);
-                float banded = ramp + 0.08f * MathF.Sin(ramp * 18f) * t;
-                h += rim.EdgeHeight * banded * rough;
+                float m1 = rimNoise.GetNoise2D(x * 0.33f, z * 0.33f);          // ~270 m features
+                float ridged = MathF.Pow(1f - MathF.Abs(m1), 1.6f);             // soft crests and saddles
+                float mass = (1f - rim.Roughness * 0.9f) + rim.Roughness * 0.9f * ridged;
+                float ramp = MathF.Pow(t * t * (3f - 2f * t), 1.25f);
+                float shoulder = 0.12f * rim.EdgeHeight * Smooth(t * 2.2f) * (0.5f + 0.5f * medium.GetNoise2D(x * 0.5f, z * 0.5f));
+                h += rim.EdgeHeight * ramp * mass + shoulder;
             }
             f.Heights[f.Index(i, j)] = h;
         }
@@ -70,6 +72,9 @@ public static class TerrainBuilder
                 return h + ridge.Height * Cosine(MathF.Min(dn / 1.6f, 1f)) * along;
             });
         }
+
+        // 2b. Banded rock: steep ground steps softly into terraces (reads as painted strata, not noise).
+        Terrace(f, 7f, 0.55f);
 
         // 3. Lake: bowl with the shoreline exactly at water level.
         if (L.Lake is { } lake)
@@ -195,6 +200,28 @@ public static class TerrainBuilder
     }
 
     // ---- helpers -------------------------------------------------------------------------------
+
+    /// <summary>Blend steep slopes toward soft height steps so cliffs and mountains read as banded strata.</summary>
+    private static void Terrace(HeightField f, float step, float strength)
+    {
+        var src = (float[])f.Heights.Clone();
+        for (int j = 1; j < f.Size - 1; j++)
+        for (int i = 1; i < f.Size - 1; i++)
+        {
+            int k = f.Index(i, j);
+            float hl = src[f.Index(i - 1, j)], hr = src[f.Index(i + 1, j)];
+            float hd = src[f.Index(i, j - 1)], hu = src[f.Index(i, j + 1)];
+            float gx = (hr - hl) / (2f * f.CellSize), gz = (hu - hd) / (2f * f.CellSize);
+            float slopeDeg = Mathf.RadToDeg(MathF.Atan(MathF.Sqrt(gx * gx + gz * gz)));
+            float w = Smooth((slopeDeg - 26f) / 22f) * strength;
+            if (w <= 0f) continue;
+            float h = src[k];
+            float q = MathF.Floor(h / step) * step;
+            float fr = (h - q) / step;
+            float terr = q + step * Smooth((fr - 0.25f) / 0.5f);
+            f.Heights[k] = Mathf.Lerp(h, terr, w);
+        }
+    }
 
     private static float Smooth(float t) { t = Mathf.Clamp(t, 0f, 1f); return t * t * (3f - 2f * t); }
     private static float Cosine(float dn) => dn >= 1f ? 0f : 0.5f + 0.5f * MathF.Cos(MathF.PI * dn);

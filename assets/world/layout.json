@@ -256,6 +256,22 @@
    "fovDeg": 60,
    "fromAboveGround": 1.7,
    "lookAtAboveGround": 0.5
+  },
+  {
+   "name": "top",
+   "from": [
+    -120,
+    0,
+    62
+   ],
+   "lookAt": [
+    -120,
+    0,
+    61
+   ],
+   "fovDeg": 70,
+   "fromAboveGround": 300,
+   "lookAtAboveGround": 0
   }
  ]
 }

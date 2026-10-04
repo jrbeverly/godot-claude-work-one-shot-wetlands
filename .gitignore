@@ -24,3 +24,6 @@ Thumbs.db
 
 # Rendered shots (regenerate with tools/screenshot.sh); curated ones live in docs/screenshots
 screenshots/
+
+# Agent worktrees
+.claude/worktrees/

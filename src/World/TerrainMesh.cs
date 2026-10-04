@@ -69,15 +69,16 @@ public static class TerrainMesh
         {
             int a = j * n + i, b = a + 1, c = a + n, d = c + 1;
             // Alternate the diagonal so slopes read evenly (classic chunky look, no directional ridging).
+            // Godot front faces are clockwise when seen from the front (here: from above, +Y).
             if (((i + j) & 1) == 0)
             {
-                indices[idx++] = a; indices[idx++] = c; indices[idx++] = b;
-                indices[idx++] = b; indices[idx++] = c; indices[idx++] = d;
+                indices[idx++] = a; indices[idx++] = b; indices[idx++] = c;
+                indices[idx++] = b; indices[idx++] = d; indices[idx++] = c;
             }
             else
             {
-                indices[idx++] = a; indices[idx++] = c; indices[idx++] = d;
-                indices[idx++] = a; indices[idx++] = d; indices[idx++] = b;
+                indices[idx++] = a; indices[idx++] = d; indices[idx++] = c;
+                indices[idx++] = a; indices[idx++] = b; indices[idx++] = d;
             }
         }
 
