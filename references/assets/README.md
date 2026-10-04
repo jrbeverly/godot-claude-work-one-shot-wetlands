@@ -5,6 +5,7 @@ Selected reference assets are committed under `selected/`; Godot ignores this li
 | Selection / previews | glTF scenes | Stored size | Classic use | Licence |
 |---|---|---|---|---|
 | [Quaternius Stylized Nature](selected/quaternius-stylized-nature/README.md) | 37 | 18.64 MiB | Broadleaf/pine/dead trees, bushes, tufts, ferns, flowers, mushrooms and rocks. Red twisted-tree/bush defaults are palette references; recolour for Elwynn. | CC0; Quaternius |
+| [Quaternius Medieval Village](selected/quaternius-medieval-village/README.md) | 51 | 15.31 MiB | Timber/plaster cottage kit, roofs, stone walls, stairs, windows, fences, chimneys and wagon. | CC0; Quaternius |
 
 ## Notes
 

@@ -4,11 +4,12 @@ Use the Decision cells to write **include selected paths**, **reference only**, 
 
 ## Selected and pushed assets
 
-This pass selects 37 glTF scenes, 18.64 MiB including previews, with one model format per selection. Full archives and unused formats/colourways remain local.
+This pass selects 88 glTF scenes, 33.95 MiB including previews, with one model format per selection. Full archives and unused formats/colourways remain local.
 
 | Selection / preview sheets | Scenes | Stored size | Choice |
 |---|---|---|---|
 | [Quaternius Stylized Nature](references/assets/selected/quaternius-stylized-nature/README.md) | 37 | 18.64 MiB | Broadleaf/pine/dead trees, bushes, tufts, ferns, flowers, mushrooms and rocks. Red twisted-tree/bush defaults are palette references; recolour for Elwynn. |
+| [Quaternius Medieval Village](references/assets/selected/quaternius-medieval-village/README.md) | 51 | 15.31 MiB | Timber/plaster cottage kit, roofs, stone walls, stairs, windows, fences, chimneys and wagon. |
 
 Selected models were imported and rendered in Godot 4.5.1. Dependencies and retained-file hashes were checked. Quaternius textures are capped at 1024 px; other selections are unchanged. These are reference assets, with application integration left for world work.
 
@@ -73,13 +74,13 @@ These archives mainly contain tooling, editor images, test fixtures or documenta
 
 ## Asset pages only — not downloaded
 
-These links come from the existing asset catalogue. Selected downloads are now noted in their Decision cells. Licence notes are recorded claims, not a new verification of current download terms. Check the actual pack/version you choose.
+These links come from the existing asset catalogue. Selected downloads are now noted in their Decision cells. Selected downloads are now noted in their Decision cells. Licence notes are recorded claims, not a new verification of current download terms. Check the actual pack/version you choose.
 
 | Asset page | What to judge | Recorded licence notes | Decision |
 |---|---|---|---|
 | [Quaternius Stylized Nature MegaKit](https://quaternius.com/packs/stylizednaturemegakit.html) · [itch.io](https://quaternius.itch.io/stylized-nature-megakit) · [Godot store](https://store.godotengine.org/asset/quaternius/stylized-nature-megakit/) | Trees, plants, rocks and bushes; select a small foliage set. | CC0 recorded; check download tier/version. | Selected 37 glTF models + dependencies; PNG cap 1024 px. |
 | [Quaternius Ultimate Stylized Nature](https://quaternius.com/packs/ultimatestylizednature.html) | Alternative nature set. | Verify pack terms. | Pending |
-| [Quaternius Medieval Village Pack](https://quaternius.com/packs/medievalvillage.html) · [MegaKit](https://quaternius.com/packs/medievalvillagemegakit.html) | Cottages, modular buildings and props. | Pack recorded as CC0; verify MegaKit/version terms separately. | Pending |
+| [Quaternius Medieval Village Pack](https://quaternius.com/packs/medievalvillage.html) · [MegaKit](https://quaternius.com/packs/medievalvillagemegakit.html) | Cottages, modular buildings and props. | Pack recorded as CC0; verify MegaKit/version terms separately. | Selected 51 MegaKit glTF pieces + dependencies; older Pack download quota-blocked. User ZIP matches official archive. |
 | [Quaternius Ultimate Fantasy RTS](https://quaternius.com/packs/ultimatefantasyrts.html) | Buildings and nature; choose useful environment pieces. | CC0 recorded. | Pending |
 | [Kenney Nature Kit](https://kenney.nl/assets/nature-kit) | Simple trees, rocks and terrain pieces. | CC0 recorded. | Pending |
 | [Kenney asset catalogue](https://kenney.nl/assets) | Find the Fantasy Town Kit or other building packs; no specific additional download chosen. | Verify the selected pack. | Pending |

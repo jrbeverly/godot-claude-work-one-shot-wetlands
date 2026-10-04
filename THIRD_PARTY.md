@@ -50,5 +50,6 @@ Godot Engine 4.5.1 .NET (MIT), .NET SDK 8.
 | Selection | Licence / attribution | Stored changes |
 |---|---|---|
 | [Quaternius Stylized Nature](references/assets/selected/quaternius-stylized-nature/README.md) | CC0; Quaternius; notice retained in selection. | PNG textures capped at 1024 px; glTF geometry/materials unchanged. |
+| [Quaternius Medieval Village](references/assets/selected/quaternius-medieval-village/README.md) | CC0; Quaternius; notice retained in selection. | PNG textures capped at 1024 px; glTF geometry/materials unchanged. |
 
 Source download paths, archive hashes and individual file hashes are recorded in each `selection.json`. Selection previews were rendered in Godot 4.5.1; the same asset attribution applies to these images. Application code/assets/addons in sections 1–3 remain unchanged.
