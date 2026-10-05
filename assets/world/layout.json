@@ -1,0 +1,3155 @@
+{
+ "name": "Fallowmere",
+ "mapSize": 1024,
+ "cellSize": 2,
+ "sun": {
+  "azimuthDeg": 250,
+  "elevationDeg": 28,
+  "color": "#FFE3B4",
+  "energy": 1.2
+ },
+ "palette": {
+  "grass": "#6F9A3F",
+  "meadow": "#94AE52",
+  "forestFloor": "#4D5530",
+  "road": "#A88A5C",
+  "rock": "#857C70",
+  "snow": "#D8DFE6",
+  "water": "#4A7E90",
+  "waterDeep": "#345F6F",
+  "skyTop": "#5E8EC4",
+  "skyHorizon": "#BCC9CF",
+  "fog": "#BCC9CF",
+  "ambient": "#9AA8B8",
+  "shadowTint": "#5A6A8C",
+  "roofTile": "#5E7079",
+  "timber": "#7E5A3A",
+  "plaster": "#E6D9B8",
+  "stone": "#8C8A80",
+  "leafWarm": "#7FA448",
+  "leafCool": "#4D7A3C",
+  "pine": "#35543E"
+ },
+ "fog": {
+  "startM": 130,
+  "endM": 620,
+  "density": 0.0022,
+  "heightFogEnabled": true,
+  "heightFogLevel": 7
+ },
+ "terrain": {
+  "baseHeight": 6.0,
+  "rim": {
+   "startRadius": 400,
+   "edgeHeight": 155,
+   "roughness": 0.35,
+   "edgeHeightNorth": 215,
+   "edgeHeightSouth": 130,
+   "edgeHeightEast": 145,
+   "edgeHeightWest": 150
+  },
+  "hills": [
+   {
+    "name": "Hoarfells (north rim mass)",
+    "x": -40,
+    "z": -560,
+    "radius": 340,
+    "height": 55,
+    "shape": "dome"
+   },
+   {
+    "name": "Greyhame Shoulder",
+    "x": -170,
+    "z": -300,
+    "radius": 140,
+    "height": 36,
+    "shape": "dome"
+   },
+   {
+    "name": "Sawyer's Rise",
+    "x": -20,
+    "z": -225,
+    "radius": 110,
+    "height": 5,
+    "shape": "dome"
+   },
+   {
+    "name": "Hob's Rise",
+    "x": -225,
+    "z": 50,
+    "radius": 115,
+    "height": 18,
+    "shape": "dome"
+   },
+   {
+    "name": "Harrowfold Head",
+    "x": 165,
+    "z": 20,
+    "radius": 48,
+    "height": 22,
+    "shape": "dome"
+   },
+   {
+    "name": "Candlehill",
+    "x": 300,
+    "z": 150,
+    "radius": 130,
+    "height": 50,
+    "shape": "dome"
+   },
+   {
+    "name": "Rook Knoll",
+    "x": 90,
+    "z": 300,
+    "radius": 110,
+    "height": 18,
+    "shape": "dome"
+   }
+  ],
+  "basins": [
+   {
+    "name": "Pilgrim's Gap (west notch)",
+    "x": -512,
+    "z": 125,
+    "radius": 125,
+    "depth": 90
+   },
+   {
+    "name": "The Throat (south-east notch)",
+    "x": 400,
+    "z": 470,
+    "radius": 140,
+    "depth": 80
+   }
+  ],
+  "ridges": [
+   {
+    "name": "Shepherd's Bank",
+    "points": [
+     [
+      -200,
+      200
+     ],
+     [
+      -90,
+      255
+     ],
+     [
+      20,
+      310
+     ]
+    ],
+    "width": 55,
+    "height": 12
+   }
+  ],
+  "flats": [
+   {
+    "name": "Pilgrim's Gap apron",
+    "x": -432,
+    "z": 122,
+    "radius": 12,
+    "height": 9.5
+   },
+   {
+    "name": "Hob's Mill",
+    "x": -225,
+    "z": 50,
+    "radius": 18,
+    "height": 24
+   },
+   {
+    "name": "Thistlebury",
+    "x": -105,
+    "z": 75,
+    "radius": 45,
+    "height": 7.5
+   },
+   {
+    "name": "Church terrace",
+    "x": -60,
+    "z": 15,
+    "radius": 18,
+    "height": 7.5
+   },
+   {
+    "name": "Ladyholm islet",
+    "x": 40,
+    "z": -50,
+    "radius": 10,
+    "height": 6.5
+   },
+   {
+    "name": "Sawyer's Reach",
+    "x": -38,
+    "z": -160,
+    "radius": 10,
+    "height": 9
+   },
+   {
+    "name": "Greyhame Delve apron",
+    "x": -120,
+    "z": -215,
+    "radius": 13,
+    "height": 13.5
+   },
+   {
+    "name": "Harrowfold Hall",
+    "x": 165,
+    "z": 20,
+    "radius": 20,
+    "height": 20
+   },
+   {
+    "name": "Nine Sisters clearing",
+    "x": 215,
+    "z": 160,
+    "radius": 30,
+    "height": 14
+   },
+   {
+    "name": "The Candle",
+    "x": 300,
+    "z": 150,
+    "radius": 18,
+    "height": 56
+   },
+   {
+    "name": "Rook Fold",
+    "x": 90,
+    "z": 300,
+    "radius": 24,
+    "height": 23.5
+   }
+  ]
+ },
+ "lake": {
+  "name": "The Mere",
+  "x": 25,
+  "z": -35,
+  "radiusX": 100,
+  "radiusZ": 85,
+  "waterLevel": 4.0,
+  "depth": 7.0
+ },
+ "rivers": [
+  {
+   "name": "Fallow Beck (the Whitestep cascade)",
+   "points": [
+    [
+     -75,
+     -405
+    ],
+    [
+     -66,
+     -370
+    ],
+    [
+     -58,
+     -335
+    ],
+    [
+     -48,
+     -290
+    ]
+   ],
+   "width": 5,
+   "depth": 1.5,
+   "waterLevelStart": 34,
+   "waterLevelEnd": 12
+  },
+  {
+   "name": "The Fallow (upper)",
+   "points": [
+    [
+     -48,
+     -290
+    ],
+    [
+     -42,
+     -262
+    ],
+    [
+     -36,
+     -230
+    ],
+    [
+     -28,
+     -195
+    ],
+    [
+     -14,
+     -155
+    ],
+    [
+     5,
+     -122
+    ]
+   ],
+   "width": 7,
+   "depth": 1.6,
+   "waterLevelStart": 12,
+   "waterLevelEnd": 4
+  },
+  {
+   "name": "The Fallow (lower, to the Throat)",
+   "points": [
+    [
+     100,
+     25
+    ],
+    [
+     140,
+     80
+    ],
+    [
+     175,
+     150
+    ],
+    [
+     215,
+     235
+    ],
+    [
+     255,
+     320
+    ],
+    [
+     310,
+     400
+    ],
+    [
+     380,
+     470
+    ],
+    [
+     440,
+     512
+    ]
+   ],
+   "width": 10,
+   "depth": 1.4,
+   "waterLevelStart": 4,
+   "waterLevelEnd": -6
+  }
+ ],
+ "roads": [
+  {
+   "name": "Fallow Road",
+   "points": [
+    [
+     -472,
+     135
+    ],
+    [
+     -455,
+     130
+    ],
+    [
+     -432,
+     122
+    ],
+    [
+     -410,
+     116
+    ],
+    [
+     -385,
+     112
+    ],
+    [
+     -372,
+     110
+    ],
+    [
+     -348,
+     104
+    ],
+    [
+     -326,
+     99
+    ],
+    [
+     -330,
+     66
+    ],
+    [
+     -316,
+     34
+    ],
+    [
+     -270,
+     -4
+    ],
+    [
+     -225,
+     2
+    ],
+    [
+     -205,
+     21
+    ],
+    [
+     -199,
+     35
+    ],
+    [
+     -184,
+     57
+    ],
+    [
+     -181,
+     87
+    ],
+    [
+     -187,
+     116
+    ],
+    [
+     -160,
+     110
+    ],
+    [
+     -140,
+     96
+    ],
+    [
+     -105,
+     80
+    ],
+    [
+     -65,
+     72
+    ],
+    [
+     -20,
+     84
+    ],
+    [
+     40,
+     92
+    ],
+    [
+     90,
+     92
+    ],
+    [
+     140,
+     80
+    ],
+    [
+     182,
+     98
+    ],
+    [
+     215,
+     78
+    ],
+    [
+     244.9,
+     61.8
+    ],
+    [
+     294.7,
+     61.2
+    ],
+    [
+     332.3,
+     77.9
+    ],
+    [
+     358.8,
+     113.8
+    ],
+    [
+     358.3,
+     159.2
+    ],
+    [
+     327.9,
+     190.3
+    ],
+    [
+     288.9,
+     187.4
+    ],
+    [
+     276.3,
+     146.2
+    ],
+    [
+     297.4,
+     138.3
+    ]
+   ],
+   "width": 4,
+   "kind": "main"
+  },
+  {
+   "name": "Throat Road",
+   "points": [
+    [
+     332.3,
+     77.9
+    ],
+    [
+     368,
+     92
+    ],
+    [
+     392,
+     122
+    ],
+    [
+     394,
+     165
+    ],
+    [
+     378,
+     210
+    ],
+    [
+     352,
+     255
+    ],
+    [
+     322,
+     295
+    ],
+    [
+     290.4,
+     350.3
+    ],
+    [
+     315.9,
+     387.4
+    ],
+    [
+     345.3,
+     418.3
+    ],
+    [
+     377.1,
+     450.1
+    ],
+    [
+     410.6,
+     476.8
+    ],
+    [
+     440.9,
+     498.0
+    ],
+    [
+     452,
+     512
+    ]
+   ],
+   "width": 4,
+   "kind": "main"
+  },
+  {
+   "name": "Sawyer's Path",
+   "points": [
+    [
+     -95,
+     42
+    ],
+    [
+     -104,
+     -15
+    ],
+    [
+     -92,
+     -78
+    ],
+    [
+     -66,
+     -128
+    ],
+    [
+     -52,
+     -150
+    ],
+    [
+     -60,
+     -176
+    ],
+    [
+     -84,
+     -196
+    ],
+    [
+     -108,
+     -208
+    ],
+    [
+     -120,
+     -215
+    ]
+   ],
+   "width": 2.5,
+   "kind": "path"
+  },
+  {
+   "name": "Rook Track",
+   "points": [
+    [
+     40,
+     92
+    ],
+    [
+     48,
+     140
+    ],
+    [
+     62.0,
+     195.7
+    ],
+    [
+     92.5,
+     222.0
+    ],
+    [
+     122.6,
+     252.1
+    ],
+    [
+     130.3,
+     285.1
+    ],
+    [
+     109.0,
+     312.9
+    ]
+   ],
+   "width": 2.5,
+   "kind": "path"
+  },
+  {
+   "name": "Sisters' Spur",
+   "points": [
+    [
+     222,
+     84
+    ],
+    [
+     213,
+     108
+    ],
+    [
+     221,
+     132
+    ],
+    [
+     216,
+     143
+    ]
+   ],
+   "width": 2.5,
+   "kind": "path"
+  },
+  {
+   "name": "Hall Path",
+   "points": [
+    [
+     160,
+     88
+    ],
+    [
+     165.0,
+     78.0
+    ],
+    [
+     186.0,
+     57.5
+    ],
+    [
+     197.8,
+     24.0
+    ],
+    [
+     171.7,
+     -2.0
+    ],
+    [
+     152.1,
+     18.2
+    ]
+   ],
+   "width": 2.5,
+   "kind": "path"
+  }
+ ],
+ "biomes": [
+  {
+   "name": "Hoarfell Pines",
+   "x": -40,
+   "z": -430,
+   "radius": 240,
+   "priority": 3,
+   "treeDensity": 0.45,
+   "clumpiness": 0.5,
+   "trees": [
+    {
+     "model": "Pine_1",
+     "weight": 1.0,
+     "scale": 1.2
+    },
+    {
+     "model": "Pine_2",
+     "weight": 1.0,
+     "scale": 1.2
+    },
+    {
+     "model": "Pine_3",
+     "weight": 1.0,
+     "scale": 1.2
+    },
+    {
+     "model": "Pine_4",
+     "weight": 1.0,
+     "scale": 1.2
+    },
+    {
+     "model": "Pine_5",
+     "weight": 1.0,
+     "scale": 1.2
+    }
+   ],
+   "undergrowth": [
+    {
+     "model": "Rock_Medium_1",
+     "weight": 1.0,
+     "density": 0.02
+    },
+    {
+     "model": "Rock_Medium_3",
+     "weight": 1.0,
+     "density": 0.02
+    },
+    {
+     "model": "Grass_Wispy_Short",
+     "weight": 1.0,
+     "density": 0.15
+    },
+    {
+     "model": "Mushroom_Laetiporus",
+     "weight": 1.0,
+     "density": 0.02
+    }
+   ],
+   "groundTexture": "grass",
+   "leafTint": "#35543E"
+  },
+  {
+   "name": "Greyhame Pines",
+   "x": -190,
+   "z": -300,
+   "radius": 160,
+   "priority": 3,
+   "treeDensity": 0.5,
+   "clumpiness": 0.5,
+   "trees": [
+    {
+     "model": "Pine_1",
+     "weight": 1.0,
+     "scale": 1.2
+    },
+    {
+     "model": "Pine_2",
+     "weight": 1.0,
+     "scale": 1.2
+    },
+    {
+     "model": "Pine_3",
+     "weight": 1.0,
+     "scale": 1.2
+    },
+    {
+     "model": "Pine_4",
+     "weight": 1.0,
+     "scale": 1.2
+    },
+    {
+     "model": "Pine_5",
+     "weight": 1.0,
+     "scale": 1.2
+    },
+    {
+     "model": "DeadTree_1",
+     "weight": 0.3,
+     "scale": 0.55
+    }
+   ],
+   "undergrowth": [
+    {
+     "model": "Rock_Medium_2",
+     "weight": 1.0,
+     "density": 0.03
+    },
+    {
+     "model": "Grass_Wispy_Short",
+     "weight": 1.0,
+     "density": 0.12
+    }
+   ],
+   "groundTexture": "grass",
+   "leafTint": "#35543E"
+  },
+  {
+   "name": "Eastfell Pines",
+   "x": 300,
+   "z": -320,
+   "radius": 210,
+   "priority": 3,
+   "treeDensity": 0.3,
+   "clumpiness": 0.6,
+   "trees": [
+    {
+     "model": "Pine_1",
+     "weight": 1.0,
+     "scale": 1.2
+    },
+    {
+     "model": "Pine_2",
+     "weight": 1.0,
+     "scale": 1.2
+    },
+    {
+     "model": "Pine_3",
+     "weight": 1.0,
+     "scale": 1.2
+    },
+    {
+     "model": "Pine_4",
+     "weight": 1.0,
+     "scale": 1.2
+    },
+    {
+     "model": "Pine_5",
+     "weight": 1.0,
+     "scale": 1.2
+    },
+    {
+     "model": "CommonTree_2",
+     "weight": 0.7,
+     "scale": 1.15
+    },
+    {
+     "model": "CommonTree_4",
+     "weight": 0.7,
+     "scale": 1.15
+    }
+   ],
+   "undergrowth": [
+    {
+     "model": "Rock_Medium_1",
+     "weight": 1.0,
+     "density": 0.02
+    },
+    {
+     "model": "Grass_Wispy_Short",
+     "weight": 1.0,
+     "density": 0.12
+    }
+   ],
+   "groundTexture": "grass",
+   "leafTint": "#3B5A3E"
+  },
+  {
+   "name": "North Shore",
+   "x": -30,
+   "z": -190,
+   "radius": 110,
+   "priority": 4,
+   "treeDensity": 0.2,
+   "clumpiness": 0.9,
+   "trees": [
+    {
+     "model": "CommonTree_1",
+     "weight": 1.0,
+     "scale": 1.15
+    },
+    {
+     "model": "CommonTree_3",
+     "weight": 1.0,
+     "scale": 1.15
+    },
+    {
+     "model": "CommonTree_5",
+     "weight": 1.0,
+     "scale": 1.15
+    },
+    {
+     "model": "Pine_2",
+     "weight": 0.7,
+     "scale": 1.2
+    },
+    {
+     "model": "Pine_4",
+     "weight": 0.7,
+     "scale": 1.2
+    }
+   ],
+   "undergrowth": [
+    {
+     "model": "Clover_1",
+     "weight": 1.0,
+     "density": 0.08
+    },
+    {
+     "model": "Grass_Wispy_Short",
+     "weight": 1.0,
+     "density": 0.2
+    },
+    {
+     "model": "Pebble_Round_1",
+     "weight": 1.0,
+     "density": 0.04
+    }
+   ],
+   "groundTexture": "grass",
+   "leafTint": "#6F9A3F"
+  },
+  {
+   "name": "Hollin Wood",
+   "x": 205,
+   "z": 100,
+   "radius": 125,
+   "priority": 5,
+   "treeDensity": 1.0,
+   "clumpiness": 0.0,
+   "trees": [
+    {
+     "model": "CommonTree_1",
+     "weight": 1.0,
+     "scale": 1.5
+    },
+    {
+     "model": "CommonTree_2",
+     "weight": 1.0,
+     "scale": 1.5
+    },
+    {
+     "model": "CommonTree_3",
+     "weight": 1.0,
+     "scale": 1.5
+    },
+    {
+     "model": "CommonTree_4",
+     "weight": 1.0,
+     "scale": 1.5
+    },
+    {
+     "model": "CommonTree_5",
+     "weight": 1.0,
+     "scale": 1.5
+    },
+    {
+     "model": "DeadTree_3",
+     "weight": 0.25,
+     "scale": 0.72
+    }
+   ],
+   "undergrowth": [
+    {
+     "model": "Fern_1",
+     "weight": 1.0,
+     "density": 0.7
+    },
+    {
+     "model": "Mushroom_Common",
+     "weight": 1.0,
+     "density": 0.08
+    },
+    {
+     "model": "Mushroom_Laetiporus",
+     "weight": 1.0,
+     "density": 0.02
+    },
+    {
+     "model": "Bush_Common",
+     "weight": 1.0,
+     "density": 0.1
+    }
+   ],
+   "groundTexture": "forestFloor",
+   "leafTint": "#2E4F2C"
+  },
+  {
+   "name": "Candlehill Flank",
+   "x": 300,
+   "z": 150,
+   "radius": 135,
+   "priority": 4,
+   "treeDensity": 0.22,
+   "clumpiness": 0.7,
+   "trees": [
+    {
+     "model": "Pine_1",
+     "weight": 1.0,
+     "scale": 1.15
+    },
+    {
+     "model": "Pine_3",
+     "weight": 1.0,
+     "scale": 1.15
+    },
+    {
+     "model": "Pine_5",
+     "weight": 1.0,
+     "scale": 1.15
+    },
+    {
+     "model": "CommonTree_2",
+     "weight": 0.7,
+     "scale": 1.1
+    },
+    {
+     "model": "CommonTree_4",
+     "weight": 0.7,
+     "scale": 1.1
+    }
+   ],
+   "undergrowth": [
+    {
+     "model": "Grass_Wispy_Short",
+     "weight": 1.0,
+     "density": 0.15
+    },
+    {
+     "model": "Rock_Medium_2",
+     "weight": 1.0,
+     "density": 0.02
+    }
+   ],
+   "groundTexture": "grass",
+   "leafTint": "#4F7A3C"
+  },
+  {
+   "name": "Candlehill Top (bald)",
+   "x": 300,
+   "z": 150,
+   "radius": 72,
+   "priority": 7,
+   "treeDensity": 0.0,
+   "clumpiness": 0.5,
+   "trees": [],
+   "undergrowth": [
+    {
+     "model": "Grass_Wispy_Tall",
+     "weight": 1.0,
+     "density": 0.2
+    },
+    {
+     "model": "Rock_Medium_1",
+     "weight": 1.0,
+     "density": 0.02
+    }
+   ],
+   "groundTexture": "grass",
+   "leafTint": "#7FA448"
+  },
+  {
+   "name": "Harrowfold Head",
+   "x": 165,
+   "z": 20,
+   "radius": 62,
+   "priority": 6,
+   "treeDensity": 0.1,
+   "clumpiness": 0.5,
+   "trees": [
+    {
+     "model": "CommonTree_4",
+     "weight": 1,
+     "scale": 1.1
+    },
+    {
+     "model": "DeadTree_5",
+     "weight": 0.5,
+     "scale": 0.6
+    }
+   ],
+   "undergrowth": [
+    {
+     "model": "Rock_Medium_1",
+     "weight": 1.0,
+     "density": 0.012
+    },
+    {
+     "model": "Grass_Wispy_Tall",
+     "weight": 1.0,
+     "density": 0.2
+    }
+   ],
+   "groundTexture": "grass",
+   "leafTint": "#6F9A3F"
+  },
+  {
+   "name": "Gap Meadow",
+   "x": -385,
+   "z": 130,
+   "radius": 95,
+   "priority": 3,
+   "treeDensity": 0.07,
+   "clumpiness": 0.85,
+   "trees": [
+    {
+     "model": "CommonTree_1",
+     "weight": 1.0,
+     "scale": 1.35
+    },
+    {
+     "model": "CommonTree_2",
+     "weight": 1.0,
+     "scale": 1.35
+    },
+    {
+     "model": "CommonTree_3",
+     "weight": 1.0,
+     "scale": 1.35
+    },
+    {
+     "model": "CommonTree_4",
+     "weight": 1.0,
+     "scale": 1.35
+    },
+    {
+     "model": "CommonTree_5",
+     "weight": 1.0,
+     "scale": 1.35
+    }
+   ],
+   "undergrowth": [
+    {
+     "model": "Flower_3_Group",
+     "weight": 1.0,
+     "density": 0.12
+    },
+    {
+     "model": "Flower_4_Group",
+     "weight": 1.0,
+     "density": 0.12
+    },
+    {
+     "model": "Bush_Common_Flowers",
+     "weight": 1.0,
+     "density": 0.015
+    },
+    {
+     "model": "Grass_Common_Tall",
+     "weight": 1.0,
+     "density": 0.12
+    }
+   ],
+   "groundTexture": "meadow",
+   "leafTint": "#7FA448"
+  },
+  {
+   "name": "Hob's Rise (bald crest)",
+   "x": -225,
+   "z": 50,
+   "radius": 115,
+   "priority": 3,
+   "treeDensity": 0.04,
+   "clumpiness": 0.9,
+   "trees": [
+    {
+     "model": "CommonTree_3",
+     "weight": 1.0,
+     "scale": 1.3
+    },
+    {
+     "model": "CommonTree_4",
+     "weight": 1.0,
+     "scale": 1.3
+    }
+   ],
+   "undergrowth": [
+    {
+     "model": "Grass_Wispy_Short",
+     "weight": 1.0,
+     "density": 0.25
+    },
+    {
+     "model": "Grass_Wispy_Tall",
+     "weight": 1.0,
+     "density": 0.1
+    }
+   ],
+   "groundTexture": "grass",
+   "leafTint": "#7FA448"
+  },
+  {
+   "name": "Mere Parkland",
+   "x": 25,
+   "z": -35,
+   "radius": 230,
+   "priority": 2,
+   "treeDensity": 0.2,
+   "clumpiness": 0.9,
+   "trees": [
+    {
+     "model": "CommonTree_1",
+     "weight": 1.0,
+     "scale": 1.2
+    },
+    {
+     "model": "CommonTree_2",
+     "weight": 1.0,
+     "scale": 1.2
+    },
+    {
+     "model": "CommonTree_3",
+     "weight": 1.0,
+     "scale": 1.2
+    },
+    {
+     "model": "CommonTree_4",
+     "weight": 1.0,
+     "scale": 1.2
+    },
+    {
+     "model": "CommonTree_5",
+     "weight": 1.0,
+     "scale": 1.2
+    }
+   ],
+   "undergrowth": [
+    {
+     "model": "Grass_Common_Short",
+     "weight": 1.0,
+     "density": 0.3
+    },
+    {
+     "model": "Clover_1",
+     "weight": 1.0,
+     "density": 0.06
+    },
+    {
+     "model": "Bush_Common",
+     "weight": 1.0,
+     "density": 0.05
+    },
+    {
+     "model": "Flower_4_Group",
+     "weight": 1.0,
+     "density": 0.04
+    },
+    {
+     "model": "Pebble_Round_1",
+     "weight": 1.0,
+     "density": 0.05
+    }
+   ],
+   "groundTexture": "grass",
+   "leafTint": "#6F9A3F"
+  },
+  {
+   "name": "Thistle Moor",
+   "x": -70,
+   "z": 250,
+   "radius": 210,
+   "priority": 2,
+   "treeDensity": 0.035,
+   "clumpiness": 0.9,
+   "trees": [
+    {
+     "model": "CommonTree_3",
+     "weight": 1,
+     "scale": 1.45
+    },
+    {
+     "model": "CommonTree_5",
+     "weight": 0.7,
+     "scale": 1.4
+    },
+    {
+     "model": "DeadTree_1",
+     "weight": 0.2,
+     "scale": 0.6
+    }
+   ],
+   "undergrowth": [
+    {
+     "model": "Grass_Wispy_Tall",
+     "weight": 1.0,
+     "density": 0.25
+    },
+    {
+     "model": "Grass_Wispy_Short",
+     "weight": 1.0,
+     "density": 0.2
+    },
+    {
+     "model": "Rock_Medium_3",
+     "weight": 1.0,
+     "density": 0.012
+    }
+   ],
+   "groundTexture": "meadow",
+   "leafTint": "#8FAE4C"
+  },
+  {
+   "name": "The Throat",
+   "x": 390,
+   "z": 440,
+   "radius": 180,
+   "priority": 5,
+   "treeDensity": 0.08,
+   "clumpiness": 0.6,
+   "trees": [
+    {
+     "model": "DeadTree_1",
+     "weight": 1,
+     "scale": 1.1
+    },
+    {
+     "model": "DeadTree_3",
+     "weight": 1,
+     "scale": 1.1
+    },
+    {
+     "model": "DeadTree_5",
+     "weight": 0.6,
+     "scale": 1.1
+    },
+    {
+     "model": "Pine_2",
+     "weight": 0.8,
+     "scale": 1.3
+    },
+    {
+     "model": "Pine_4",
+     "weight": 0.8,
+     "scale": 1.3
+    }
+   ],
+   "undergrowth": [
+    {
+     "model": "Rock_Medium_1",
+     "weight": 1.0,
+     "density": 0.02
+    },
+    {
+     "model": "Rock_Medium_2",
+     "weight": 1.0,
+     "density": 0.02
+    },
+    {
+     "model": "Rock_Medium_3",
+     "weight": 1.0,
+     "density": 0.02
+    },
+    {
+     "model": "Pebble_Square_1",
+     "weight": 1.0,
+     "density": 0.04
+    }
+   ],
+   "groundTexture": "rock",
+   "leafTint": "#35503E"
+  },
+  {
+   "name": "Southfell",
+   "x": 0,
+   "z": 440,
+   "radius": 220,
+   "priority": 2,
+   "treeDensity": 0.2,
+   "clumpiness": 0.7,
+   "trees": [
+    {
+     "model": "Pine_1",
+     "weight": 1.0,
+     "scale": 1.15
+    },
+    {
+     "model": "Pine_3",
+     "weight": 1.0,
+     "scale": 1.15
+    },
+    {
+     "model": "Pine_5",
+     "weight": 1.0,
+     "scale": 1.15
+    },
+    {
+     "model": "CommonTree_1",
+     "weight": 1.0,
+     "scale": 1.1
+    },
+    {
+     "model": "CommonTree_3",
+     "weight": 1.0,
+     "scale": 1.1
+    }
+   ],
+   "undergrowth": [
+    {
+     "model": "Rock_Medium_2",
+     "weight": 1.0,
+     "density": 0.02
+    },
+    {
+     "model": "Grass_Wispy_Short",
+     "weight": 1.0,
+     "density": 0.1
+    }
+   ],
+   "groundTexture": "grass",
+   "leafTint": "#5F8E3C"
+  },
+  {
+   "name": "Westfell",
+   "x": -440,
+   "z": -130,
+   "radius": 180,
+   "priority": 2,
+   "treeDensity": 0.18,
+   "clumpiness": 0.7,
+   "trees": [
+    {
+     "model": "Pine_2",
+     "weight": 1.0,
+     "scale": 1.15
+    },
+    {
+     "model": "Pine_4",
+     "weight": 1.0,
+     "scale": 1.15
+    },
+    {
+     "model": "CommonTree_2",
+     "weight": 1.0,
+     "scale": 1.1
+    },
+    {
+     "model": "CommonTree_4",
+     "weight": 1.0,
+     "scale": 1.1
+    }
+   ],
+   "undergrowth": [
+    {
+     "model": "Rock_Medium_1",
+     "weight": 1.0,
+     "density": 0.02
+    },
+    {
+     "model": "Grass_Wispy_Short",
+     "weight": 1.0,
+     "density": 0.1
+    }
+   ],
+   "groundTexture": "grass",
+   "leafTint": "#5F8E3C"
+  },
+  {
+   "name": "Eastfell",
+   "x": 455,
+   "z": 40,
+   "radius": 160,
+   "priority": 2,
+   "treeDensity": 0.18,
+   "clumpiness": 0.7,
+   "trees": [
+    {
+     "model": "Pine_1",
+     "weight": 1.0,
+     "scale": 1.15
+    },
+    {
+     "model": "Pine_4",
+     "weight": 1.0,
+     "scale": 1.15
+    },
+    {
+     "model": "CommonTree_1",
+     "weight": 1.0,
+     "scale": 1.1
+    },
+    {
+     "model": "CommonTree_5",
+     "weight": 1.0,
+     "scale": 1.1
+    }
+   ],
+   "undergrowth": [
+    {
+     "model": "Rock_Medium_3",
+     "weight": 1.0,
+     "density": 0.02
+    },
+    {
+     "model": "Grass_Wispy_Short",
+     "weight": 1.0,
+     "density": 0.1
+    }
+   ],
+   "groundTexture": "grass",
+   "leafTint": "#5F8E3C"
+  }
+ ],
+ "sites": [
+  {
+   "name": "Pilgrim's Gap",
+   "type": "landmark",
+   "x": -440,
+   "z": 124,
+   "rotationDeg": 0,
+   "clearRadius": 15,
+   "pieces": [
+    {
+     "kind": "standingStone",
+     "x": -5,
+     "z": -6,
+     "rotationDeg": 20,
+     "heightM": 3.6
+    },
+    {
+     "kind": "standingStone",
+     "x": -8,
+     "z": 0,
+     "rotationDeg": -5,
+     "heightM": 3.4
+    },
+    {
+     "kind": "standingStone",
+     "x": -5,
+     "z": 6,
+     "rotationDeg": -25,
+     "heightM": 3.5
+    },
+    {
+     "kind": "prop",
+     "model": "RockPath_Square_Thin",
+     "x": 0,
+     "z": -1.5,
+     "rotationDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "RockPath_Square_Thin",
+     "x": 0,
+     "z": 1.5,
+     "rotationDeg": 90,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "RockPath_Square_Thin",
+     "x": 2,
+     "z": 0,
+     "rotationDeg": 15,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "crate",
+     "x": 3,
+     "z": 5,
+     "rotationDeg": 30,
+     "scale": 1.0
+    },
+    {
+     "kind": "standingStone",
+     "x": 9,
+     "z": -9,
+     "rotationDeg": 40,
+     "heightM": 1.6
+    },
+    {
+     "kind": "standingStone",
+     "x": -12,
+     "z": 12,
+     "rotationDeg": 70,
+     "heightM": 1.4
+    }
+   ]
+  },
+  {
+   "name": "The Hollow Oak",
+   "type": "grove",
+   "x": -372,
+   "z": 142,
+   "rotationDeg": 0,
+   "clearRadius": 22,
+   "pieces": [
+    {
+     "kind": "tree",
+     "model": "TwistedTree_1",
+     "x": 0,
+     "z": 0,
+     "scale": 1.0,
+     "leafTint": "#5E7A3A"
+    },
+    {
+     "kind": "fence",
+     "points": [
+      [
+       -6,
+       -9
+      ],
+      [
+       -2,
+       -9
+      ]
+     ]
+    },
+    {
+     "kind": "prop",
+     "model": "crate",
+     "x": -4,
+     "z": -7.5,
+     "rotationDeg": 10,
+     "scale": 1.0
+    },
+    {
+     "kind": "standingStone",
+     "x": 7,
+     "z": 4,
+     "rotationDeg": 0,
+     "heightM": 1.3
+    }
+   ]
+  },
+  {
+   "name": "Hob's Mill",
+   "type": "farm",
+   "x": -225,
+   "z": 50,
+   "rotationDeg": 0,
+   "clearRadius": 30,
+   "pieces": [
+    {
+     "kind": "landmark",
+     "model": "windmill",
+     "x": -4,
+     "z": -5,
+     "rotationDeg": 250,
+     "scale": 10.0
+    },
+    {
+     "kind": "cottage",
+     "x": 13,
+     "z": 9,
+     "rotationDeg": 0,
+     "footprint": [
+      2,
+      2
+     ],
+     "style": "plaster",
+     "chimney": true,
+     "storeys": 1
+    },
+    {
+     "kind": "fence",
+     "points": [
+      [
+       20,
+       -14
+      ],
+      [
+       24,
+       -4
+      ],
+      [
+       23,
+       8
+      ],
+      [
+       19,
+       16
+      ]
+     ]
+    },
+    {
+     "kind": "prop",
+     "model": "wagon",
+     "x": 15,
+     "z": -2,
+     "rotationDeg": 110,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "crate",
+     "x": 9,
+     "z": 4,
+     "rotationDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "crate",
+     "x": 10,
+     "z": 5.2,
+     "rotationDeg": 35,
+     "scale": 1.0
+    },
+    {
+     "kind": "standingStone",
+     "x": -16,
+     "z": 10,
+     "rotationDeg": 0,
+     "heightM": 1.5
+    },
+    {
+     "kind": "standingStone",
+     "x": -13,
+     "z": -14,
+     "rotationDeg": 50,
+     "heightM": 1.3
+    }
+   ]
+  },
+  {
+   "name": "Thistlebury",
+   "type": "village",
+   "x": -105,
+   "z": 75,
+   "rotationDeg": 0,
+   "clearRadius": 62,
+   "pieces": [
+    {
+     "kind": "landmark",
+     "model": "church",
+     "x": 45,
+     "z": -60,
+     "rotationDeg": 90,
+     "scale": 8.0
+    },
+    {
+     "kind": "pier",
+     "x": 61,
+     "z": -60,
+     "rotationDeg": 0,
+     "lengthM": 16,
+     "widthM": 2.4,
+     "heightM": 1.4
+    },
+    {
+     "kind": "cottage",
+     "x": 23,
+     "z": 17,
+     "rotationDeg": 180,
+     "footprint": [
+      3,
+      4
+     ],
+     "style": "timber",
+     "chimney": true,
+     "storeys": 2
+    },
+    {
+     "kind": "cottage",
+     "x": -23,
+     "z": 21,
+     "rotationDeg": 0,
+     "footprint": [
+      2,
+      4
+     ],
+     "style": "stone",
+     "chimney": true,
+     "storeys": 1
+    },
+    {
+     "kind": "landmark",
+     "model": "well",
+     "x": 2,
+     "z": -7,
+     "rotationDeg": 0,
+     "scale": 8.0
+    },
+    {
+     "kind": "cottage",
+     "x": -25,
+     "z": -20,
+     "rotationDeg": 90,
+     "footprint": [
+      2,
+      4
+     ],
+     "style": "timber",
+     "chimney": true,
+     "storeys": 2
+    },
+    {
+     "kind": "cottage",
+     "x": 17,
+     "z": 35,
+     "rotationDeg": 0,
+     "footprint": [
+      2,
+      2
+     ],
+     "style": "plaster",
+     "chimney": true,
+     "storeys": 1
+    },
+    {
+     "kind": "cottage",
+     "x": 43,
+     "z": 23,
+     "rotationDeg": 270,
+     "footprint": [
+      3,
+      4
+     ],
+     "style": "stone",
+     "chimney": true,
+     "storeys": 2
+    },
+    {
+     "kind": "cottage",
+     "x": 25,
+     "z": -30,
+     "rotationDeg": 0,
+     "footprint": [
+      2,
+      2
+     ],
+     "style": "stone",
+     "chimney": true,
+     "storeys": 1
+    },
+    {
+     "kind": "tree",
+     "model": "CommonTree_2",
+     "x": 55,
+     "z": 31,
+     "scale": 0.7,
+     "leafTint": "#D08C3C"
+    },
+    {
+     "kind": "tree",
+     "model": "CommonTree_2",
+     "x": 55,
+     "z": 37,
+     "scale": 0.7,
+     "leafTint": "#D08C3C"
+    },
+    {
+     "kind": "tree",
+     "model": "CommonTree_2",
+     "x": 55,
+     "z": 43,
+     "scale": 0.7,
+     "leafTint": "#D08C3C"
+    },
+    {
+     "kind": "tree",
+     "model": "CommonTree_2",
+     "x": 61,
+     "z": 31,
+     "scale": 0.7,
+     "leafTint": "#D08C3C"
+    },
+    {
+     "kind": "tree",
+     "model": "CommonTree_2",
+     "x": 61,
+     "z": 37,
+     "scale": 0.7,
+     "leafTint": "#D08C3C"
+    },
+    {
+     "kind": "tree",
+     "model": "CommonTree_2",
+     "x": 61,
+     "z": 43,
+     "scale": 0.7,
+     "leafTint": "#D08C3C"
+    },
+    {
+     "kind": "tree",
+     "model": "CommonTree_2",
+     "x": 67,
+     "z": 31,
+     "scale": 0.7,
+     "leafTint": "#D08C3C"
+    },
+    {
+     "kind": "tree",
+     "model": "CommonTree_2",
+     "x": 67,
+     "z": 37,
+     "scale": 0.7,
+     "leafTint": "#D08C3C"
+    },
+    {
+     "kind": "tree",
+     "model": "CommonTree_2",
+     "x": 67,
+     "z": 43,
+     "scale": 0.7,
+     "leafTint": "#D08C3C"
+    },
+    {
+     "kind": "tree",
+     "model": "CommonTree_2",
+     "x": 73,
+     "z": 31,
+     "scale": 0.7,
+     "leafTint": "#D08C3C"
+    },
+    {
+     "kind": "tree",
+     "model": "CommonTree_2",
+     "x": 73,
+     "z": 37,
+     "scale": 0.7,
+     "leafTint": "#D08C3C"
+    },
+    {
+     "kind": "tree",
+     "model": "CommonTree_2",
+     "x": 73,
+     "z": 43,
+     "scale": 0.7,
+     "leafTint": "#D08C3C"
+    },
+    {
+     "kind": "fence",
+     "points": [
+      [
+       -57,
+       22
+      ],
+      [
+       -35,
+       18
+      ],
+      [
+       -15,
+       13
+      ]
+     ]
+    },
+    {
+     "kind": "fence",
+     "points": [
+      [
+       -37,
+       -27
+      ],
+      [
+       -37,
+       -11
+      ],
+      [
+       -19,
+       -9
+      ]
+     ]
+    },
+    {
+     "kind": "fence",
+     "points": [
+      [
+       51,
+       26
+      ],
+      [
+       75,
+       26
+      ],
+      [
+       75,
+       43
+      ]
+     ]
+    },
+    {
+     "kind": "fence",
+     "points": [
+      [
+       -27,
+       51
+      ],
+      [
+       -3,
+       53
+      ]
+     ]
+    },
+    {
+     "kind": "field",
+     "x": -15,
+     "z": 61,
+     "rotationDeg": 10,
+     "widthM": 26,
+     "depthM": 16,
+     "crop": "wheat"
+    },
+    {
+     "kind": "field",
+     "x": 19,
+     "z": 65,
+     "rotationDeg": 5,
+     "widthM": 22,
+     "depthM": 14,
+     "crop": "fallow"
+    },
+    {
+     "kind": "prop",
+     "model": "wagon",
+     "x": -13,
+     "z": 9,
+     "rotationDeg": 20,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "wagon",
+     "x": 35,
+     "z": 5,
+     "rotationDeg": 100,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "crate",
+     "x": 29,
+     "z": 11,
+     "rotationDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "crate",
+     "x": 30,
+     "z": 12.2,
+     "rotationDeg": 40,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "crate",
+     "x": 59,
+     "z": -61,
+     "rotationDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "crate",
+     "x": 60,
+     "z": -59,
+     "rotationDeg": 30,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "RockPath_Round_Thin",
+     "x": 5.2,
+     "z": -7.0,
+     "rotationDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "RockPath_Round_Thin",
+     "x": 3.6,
+     "z": -4.2,
+     "rotationDeg": 60,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "RockPath_Round_Thin",
+     "x": 0.4,
+     "z": -4.2,
+     "rotationDeg": 120,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "RockPath_Round_Thin",
+     "x": -1.2,
+     "z": -7.0,
+     "rotationDeg": 180,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "RockPath_Round_Thin",
+     "x": 0.4,
+     "z": -9.8,
+     "rotationDeg": 240,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "RockPath_Round_Thin",
+     "x": 3.6,
+     "z": -9.8,
+     "rotationDeg": 300,
+     "scale": 1.0
+    },
+    {
+     "kind": "tree",
+     "model": "CommonTree_4",
+     "x": -11,
+     "z": -15,
+     "scale": 1.4,
+     "leafTint": "#D08C3C"
+    },
+    {
+     "kind": "tree",
+     "model": "CommonTree_1",
+     "x": 9,
+     "z": 21,
+     "scale": 1.3,
+     "leafTint": "#D08C3C"
+    }
+   ]
+  },
+  {
+   "name": "Ladyholm",
+   "type": "grove",
+   "x": 40,
+   "z": -50,
+   "rotationDeg": 0,
+   "clearRadius": 12,
+   "pieces": [
+    {
+     "kind": "tree",
+     "model": "TwistedTree_3",
+     "x": 0,
+     "z": 0,
+     "scale": 1.0,
+     "leafTint": "#45603A"
+    },
+    {
+     "kind": "standingStone",
+     "x": 7,
+     "z": -3,
+     "rotationDeg": 10,
+     "heightM": 1.4
+    },
+    {
+     "kind": "standingStone",
+     "x": -6,
+     "z": 5,
+     "rotationDeg": 60,
+     "heightM": 1.2
+    },
+    {
+     "kind": "standingStone",
+     "x": 2,
+     "z": 8,
+     "rotationDeg": 120,
+     "heightM": 1.1
+    },
+    {
+     "kind": "standingStone",
+     "x": -7,
+     "z": -5,
+     "rotationDeg": 200,
+     "heightM": 1.0
+    }
+   ]
+  },
+  {
+   "name": "Thistle Cross",
+   "type": "landmark",
+   "x": 40,
+   "z": 92,
+   "rotationDeg": 0,
+   "clearRadius": 8,
+   "pieces": [
+    {
+     "kind": "standingStone",
+     "x": 0,
+     "z": -5,
+     "rotationDeg": 15,
+     "heightM": 2.6
+    },
+    {
+     "kind": "prop",
+     "model": "RockPath_Square_Thin",
+     "x": 0,
+     "z": -2.5,
+     "rotationDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "RockPath_Round_Thin",
+     "x": 2,
+     "z": -4,
+     "rotationDeg": 30,
+     "scale": 1.0
+    }
+   ]
+  },
+  {
+   "name": "The Fallen Span",
+   "type": "ruin",
+   "x": 140,
+   "z": 80,
+   "rotationDeg": -36,
+   "clearRadius": 16,
+   "pieces": [
+    {
+     "kind": "ruinWall",
+     "x": -8,
+     "z": 8,
+     "rotationDeg": 0,
+     "lengthM": 4,
+     "heightM": 3.2
+    },
+    {
+     "kind": "ruinWall",
+     "x": 8,
+     "z": 8,
+     "rotationDeg": 0,
+     "lengthM": 4,
+     "heightM": 3.2
+    },
+    {
+     "kind": "ruinWall",
+     "x": 0,
+     "z": 8,
+     "rotationDeg": 0,
+     "lengthM": 2.5,
+     "heightM": 2.4
+    },
+    {
+     "kind": "ruinWall",
+     "x": 4,
+     "z": 13,
+     "rotationDeg": 30,
+     "lengthM": 5,
+     "heightM": 1.1
+    },
+    {
+     "kind": "prop",
+     "model": "RockPath_Square_Thin",
+     "x": -6,
+     "z": 0,
+     "rotationDeg": -36,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "RockPath_Square_Thin",
+     "x": -3.6,
+     "z": 0,
+     "rotationDeg": -36,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "RockPath_Square_Thin",
+     "x": -1.2,
+     "z": 0,
+     "rotationDeg": -36,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "RockPath_Square_Thin",
+     "x": 1.2,
+     "z": 0,
+     "rotationDeg": -36,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "RockPath_Square_Thin",
+     "x": 3.6,
+     "z": 0,
+     "rotationDeg": -36,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "RockPath_Square_Thin",
+     "x": 6,
+     "z": 0,
+     "rotationDeg": -36,
+     "scale": 1.0
+    },
+    {
+     "kind": "standingStone",
+     "x": -11,
+     "z": 3,
+     "rotationDeg": 0,
+     "heightM": 1.5
+    },
+    {
+     "kind": "standingStone",
+     "x": 12,
+     "z": -3,
+     "rotationDeg": 70,
+     "heightM": 1.3
+    },
+    {
+     "kind": "fence",
+     "points": [
+      [
+       -9,
+       -3
+      ],
+      [
+       -9,
+       3
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "The Nine Sisters",
+   "type": "landmark",
+   "x": 215,
+   "z": 160,
+   "rotationDeg": 0,
+   "clearRadius": 20,
+   "pieces": [
+    {
+     "kind": "standingStone",
+     "x": 10.8,
+     "z": 1.9,
+     "rotationDeg": 0,
+     "heightM": 4.2
+    },
+    {
+     "kind": "standingStone",
+     "x": 7.1,
+     "z": 8.4,
+     "rotationDeg": 40,
+     "heightM": 4.3
+    },
+    {
+     "kind": "standingStone",
+     "x": 0.0,
+     "z": 11.0,
+     "rotationDeg": 80,
+     "heightM": 4.4
+    },
+    {
+     "kind": "standingStone",
+     "x": -7.1,
+     "z": 8.4,
+     "rotationDeg": 120,
+     "heightM": 4.5
+    },
+    {
+     "kind": "standingStone",
+     "x": -10.8,
+     "z": 1.9,
+     "rotationDeg": 160,
+     "heightM": 4.2
+    },
+    {
+     "kind": "standingStone",
+     "x": -9.5,
+     "z": -5.5,
+     "rotationDeg": 20,
+     "heightM": 4.3
+    },
+    {
+     "kind": "standingStone",
+     "x": 3.8,
+     "z": -10.3,
+     "rotationDeg": 60,
+     "heightM": 4.4
+    },
+    {
+     "kind": "standingStone",
+     "x": 9.5,
+     "z": -5.5,
+     "rotationDeg": 100,
+     "heightM": 4.5
+    },
+    {
+     "kind": "standingStone",
+     "x": -3.8,
+     "z": -10.3,
+     "rotationDeg": 340,
+     "heightM": 4.4,
+     "fallen": true
+    },
+    {
+     "kind": "prop",
+     "model": "RockPath_Round_Thin",
+     "x": 0,
+     "z": 0,
+     "rotationDeg": 0,
+     "scale": 2.5
+    },
+    {
+     "kind": "tree",
+     "model": "TwistedTree_1",
+     "x": 21.7,
+     "z": 12.5,
+     "scale": 1.3,
+     "leafTint": "#3F6A38"
+    },
+    {
+     "kind": "tree",
+     "model": "TwistedTree_3",
+     "x": -12.5,
+     "z": 21.7,
+     "scale": 1.3,
+     "leafTint": "#3F6A38"
+    },
+    {
+     "kind": "tree",
+     "model": "TwistedTree_5",
+     "x": -21.7,
+     "z": -12.5,
+     "scale": 1.3,
+     "leafTint": "#3F6A38"
+    },
+    {
+     "kind": "tree",
+     "model": "TwistedTree_1",
+     "x": 12.5,
+     "z": -21.7,
+     "scale": 1.3,
+     "leafTint": "#3F6A38"
+    }
+   ]
+  },
+  {
+   "name": "The Warden",
+   "type": "grove",
+   "x": 226,
+   "z": 90,
+   "rotationDeg": 0,
+   "clearRadius": 9,
+   "pieces": [
+    {
+     "kind": "tree",
+     "model": "TwistedTree_5",
+     "x": 0,
+     "z": 0,
+     "scale": 1.0,
+     "leafTint": "#3F6A38"
+    }
+   ]
+  },
+  {
+   "name": "Harrowfold Hall",
+   "type": "ruin",
+   "x": 165,
+   "z": 20,
+   "rotationDeg": 15,
+   "clearRadius": 34,
+   "pieces": [
+    {
+     "kind": "ruinWall",
+     "x": -6,
+     "z": -7,
+     "rotationDeg": 0,
+     "lengthM": 10,
+     "heightM": 7.2
+    },
+    {
+     "kind": "ruinWall",
+     "x": 7,
+     "z": -7,
+     "rotationDeg": 0,
+     "lengthM": 6,
+     "heightM": 3.9
+    },
+    {
+     "kind": "ruinWall",
+     "x": 0,
+     "z": 7,
+     "rotationDeg": 0,
+     "lengthM": 14,
+     "heightM": 5.2
+    },
+    {
+     "kind": "ruinWall",
+     "x": -12,
+     "z": 0,
+     "rotationDeg": 90,
+     "lengthM": 14,
+     "heightM": 7.8
+    },
+    {
+     "kind": "ruinWall",
+     "x": 12,
+     "z": -3,
+     "rotationDeg": 90,
+     "lengthM": 6,
+     "heightM": 3.2
+    },
+    {
+     "kind": "landmark",
+     "model": "tower",
+     "x": -15,
+     "z": -10,
+     "rotationDeg": 0,
+     "scale": 7.0
+    },
+    {
+     "kind": "tree",
+     "model": "TwistedTree_1",
+     "x": -3,
+     "z": -15,
+     "scale": 1.35,
+     "leafTint": "#D08C3C"
+    },
+    {
+     "kind": "tree",
+     "model": "TwistedTree_3",
+     "x": 10,
+     "z": 12,
+     "scale": 1.35,
+     "leafTint": "#D08C3C"
+    },
+    {
+     "kind": "tree",
+     "model": "TwistedTree_5",
+     "x": -17,
+     "z": 10,
+     "scale": 1.35,
+     "leafTint": "#D08C3C"
+    },
+    {
+     "kind": "tree",
+     "model": "DeadTree_5",
+     "x": -24,
+     "z": -2,
+     "scale": 1.35,
+     "leafTint": "#D08C3C"
+    },
+    {
+     "kind": "tree",
+     "model": "DeadTree_3",
+     "x": -22,
+     "z": -13,
+     "scale": 1.35,
+     "leafTint": "#D08C3C"
+    },
+    {
+     "kind": "prop",
+     "model": "RockPath_Square_Thin",
+     "x": -3,
+     "z": -2,
+     "rotationDeg": 15,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "RockPath_Square_Thin",
+     "x": 2,
+     "z": 1,
+     "rotationDeg": 105,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "RockPath_Square_Thin",
+     "x": -1,
+     "z": 4,
+     "rotationDeg": 60,
+     "scale": 1.0
+    },
+    {
+     "kind": "standingStone",
+     "x": 16,
+     "z": 6,
+     "rotationDeg": 20,
+     "heightM": 1.4
+    },
+    {
+     "kind": "standingStone",
+     "x": -9,
+     "z": 11,
+     "rotationDeg": 80,
+     "heightM": 1.2
+    }
+   ]
+  },
+  {
+   "name": "The Candle",
+   "type": "landmark",
+   "x": 300,
+   "z": 150,
+   "rotationDeg": 0,
+   "clearRadius": 22,
+   "pieces": [
+    {
+     "kind": "landmark",
+     "model": "tower",
+     "x": 0,
+     "z": 0,
+     "rotationDeg": 0,
+     "scale": 9.0
+    },
+    {
+     "kind": "ruinWall",
+     "x": 0,
+     "z": -6.5,
+     "rotationDeg": 0,
+     "lengthM": 12,
+     "heightM": 1.4
+    },
+    {
+     "kind": "ruinWall",
+     "x": 0,
+     "z": 6.5,
+     "rotationDeg": 0,
+     "lengthM": 12,
+     "heightM": 1.4
+    },
+    {
+     "kind": "ruinWall",
+     "x": -6.5,
+     "z": 0,
+     "rotationDeg": 90,
+     "lengthM": 12,
+     "heightM": 1.4
+    },
+    {
+     "kind": "ruinWall",
+     "x": 6.5,
+     "z": 0,
+     "rotationDeg": 90,
+     "lengthM": 12,
+     "heightM": 1.4
+    },
+    {
+     "kind": "standingStone",
+     "x": 12.2,
+     "z": 4.4,
+     "rotationDeg": 0,
+     "heightM": 1.6
+    },
+    {
+     "kind": "standingStone",
+     "x": 2.3,
+     "z": 12.8,
+     "rotationDeg": 50,
+     "heightM": 1.8
+    },
+    {
+     "kind": "standingStone",
+     "x": -10.0,
+     "z": 8.4,
+     "rotationDeg": 100,
+     "heightM": 2.0
+    },
+    {
+     "kind": "standingStone",
+     "x": -12.2,
+     "z": -4.4,
+     "rotationDeg": 150,
+     "heightM": 1.6
+    },
+    {
+     "kind": "standingStone",
+     "x": -2.3,
+     "z": -12.8,
+     "rotationDeg": 200,
+     "heightM": 1.8
+    },
+    {
+     "kind": "standingStone",
+     "x": 10.0,
+     "z": -8.4,
+     "rotationDeg": 250,
+     "heightM": 2.0
+    },
+    {
+     "kind": "prop",
+     "model": "crate",
+     "x": 4,
+     "z": -4,
+     "rotationDeg": 20,
+     "scale": 1.0
+    },
+    {
+     "kind": "brazier",
+     "x": 0,
+     "z": 0,
+     "rotationDeg": 0,
+     "heightM": 20.2
+    }
+   ]
+  },
+  {
+   "name": "Rook Fold",
+   "type": "camp",
+   "x": 90,
+   "z": 300,
+   "rotationDeg": 20,
+   "clearRadius": 30,
+   "pieces": [
+    {
+     "kind": "ruinWall",
+     "x": 0,
+     "z": -7,
+     "rotationDeg": 0,
+     "lengthM": 14,
+     "heightM": 1.0
+    },
+    {
+     "kind": "ruinWall",
+     "x": 0,
+     "z": 7,
+     "rotationDeg": 0,
+     "lengthM": 14,
+     "heightM": 1.0
+    },
+    {
+     "kind": "ruinWall",
+     "x": -7,
+     "z": 0,
+     "rotationDeg": 90,
+     "lengthM": 14,
+     "heightM": 1.0
+    },
+    {
+     "kind": "ruinWall",
+     "x": 7,
+     "z": 2,
+     "rotationDeg": 90,
+     "lengthM": 10,
+     "heightM": 1.0
+    },
+    {
+     "kind": "tree",
+     "model": "CommonTree_3",
+     "x": 16,
+     "z": -10,
+     "scale": 1.6,
+     "leafTint": "#8FAE4C"
+    },
+    {
+     "kind": "fence",
+     "points": [
+      [
+       -6,
+       -16
+      ],
+      [
+       -14,
+       -32
+      ],
+      [
+       -22,
+       -48
+      ]
+     ]
+    },
+    {
+     "kind": "standingStone",
+     "x": -12,
+     "z": 10,
+     "rotationDeg": 0,
+     "heightM": 1.4
+    },
+    {
+     "kind": "standingStone",
+     "x": 10,
+     "z": 14,
+     "rotationDeg": 60,
+     "heightM": 1.2
+    },
+    {
+     "kind": "standingStone",
+     "x": -16,
+     "z": -4,
+     "rotationDeg": 120,
+     "heightM": 1.0
+    }
+   ]
+  },
+  {
+   "name": "Sawyer's Reach",
+   "type": "landmark",
+   "x": -36,
+   "z": -162,
+   "rotationDeg": 0,
+   "clearRadius": 18,
+   "pieces": [
+    {
+     "kind": "landmark",
+     "model": "lumbermill",
+     "x": 3,
+     "z": -2,
+     "rotationDeg": 90,
+     "scale": 8.0
+    },
+    {
+     "kind": "prop",
+     "model": "wagon",
+     "x": -8,
+     "z": 6,
+     "rotationDeg": 80,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "crate",
+     "x": -6,
+     "z": -8,
+     "rotationDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "crate",
+     "x": -4.8,
+     "z": -8,
+     "rotationDeg": 30,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "crate",
+     "x": -5.4,
+     "z": -6.8,
+     "rotationDeg": 60,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "crate",
+     "x": -7,
+     "z": 10,
+     "rotationDeg": 0,
+     "scale": 1.0
+    },
+    {
+     "kind": "fence",
+     "points": [
+      [
+       -12,
+       9
+      ],
+      [
+       -12,
+       -8
+      ],
+      [
+       0,
+       -12
+      ]
+     ]
+    },
+    {
+     "kind": "tree",
+     "model": "Pine_2",
+     "x": -15,
+     "z": 3,
+     "scale": 1.2
+    },
+    {
+     "kind": "tree",
+     "model": "Pine_4",
+     "x": -13,
+     "z": -14,
+     "scale": 1.2
+    }
+   ]
+  },
+  {
+   "name": "Greyhame Delve",
+   "type": "landmark",
+   "x": -120,
+   "z": -215,
+   "rotationDeg": 0,
+   "clearRadius": 18,
+   "pieces": [
+    {
+     "kind": "landmark",
+     "model": "mine",
+     "x": 0,
+     "z": 0,
+     "rotationDeg": 135,
+     "scale": 8.0
+    },
+    {
+     "kind": "prop",
+     "model": "wagon",
+     "x": 7,
+     "z": 7,
+     "rotationDeg": 20,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "crate",
+     "x": 6.2,
+     "z": 9.5,
+     "rotationDeg": 10,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "crate",
+     "x": 7.6,
+     "z": 9.6,
+     "rotationDeg": 50,
+     "scale": 1.0
+    },
+    {
+     "kind": "prop",
+     "model": "crate",
+     "x": 6.9,
+     "z": 10.7,
+     "rotationDeg": 30,
+     "scale": 1.0
+    },
+    {
+     "kind": "fence",
+     "points": [
+      [
+       11,
+       -4
+      ],
+      [
+       13,
+       6
+      ],
+      [
+       9,
+       14
+      ]
+     ]
+    },
+    {
+     "kind": "tree",
+     "model": "DeadTree_3",
+     "x": -9,
+     "z": 9,
+     "scale": 0.6
+    },
+    {
+     "kind": "standingStone",
+     "x": -6,
+     "z": -10,
+     "rotationDeg": 30,
+     "heightM": 1.6
+    },
+    {
+     "kind": "standingStone",
+     "x": 12,
+     "z": -10,
+     "rotationDeg": 90,
+     "heightM": 1.4
+    },
+    {
+     "kind": "standingStone",
+     "x": -13,
+     "z": 2,
+     "rotationDeg": 0,
+     "heightM": 1.2
+    }
+   ]
+  }
+ ],
+ "spawn": {
+  "x": -432,
+  "z": 122,
+  "yawDeg": 100
+ },
+ "shots": [
+  {
+   "name": "spawn",
+   "from": [
+    -436,
+    0,
+    131
+   ],
+   "lookAt": [
+    -225,
+    0,
+    50
+   ],
+   "fovDeg": 62,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 22
+  },
+  {
+   "name": "reveal",
+   "from": [
+    -178,
+    0,
+    52
+   ],
+   "lookAt": [
+    40,
+    0,
+    10
+   ],
+   "fovDeg": 56,
+   "fromAboveGround": 6,
+   "lookAtAboveGround": 4
+  },
+  {
+   "name": "village",
+   "from": [
+    -122,
+    0,
+    92
+   ],
+   "lookAt": [
+    -96,
+    0,
+    66
+   ],
+   "fovDeg": 55,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 3
+  },
+  {
+   "name": "hall",
+   "from": [
+    -44,
+    0,
+    8
+   ],
+   "lookAt": [
+    165,
+    0,
+    20
+   ],
+   "fovDeg": 58,
+   "fromAboveGround": 2.4,
+   "lookAtAboveGround": 14
+  },
+  {
+   "name": "candle",
+   "from": [
+    292,
+    0,
+    153
+   ],
+   "lookAt": [
+    -20,
+    0,
+    0
+   ],
+   "fovDeg": 62,
+   "fromAboveGround": 15,
+   "lookAtAboveGround": 6
+  },
+  {
+   "name": "wood",
+   "from": [
+    232,
+    0,
+    92
+   ],
+   "lookAt": [
+    260,
+    0,
+    70
+   ],
+   "fovDeg": 62,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 3
+  },
+  {
+   "name": "throat",
+   "from": [
+    352,
+    0,
+    255
+   ],
+   "lookAt": [
+    330,
+    0,
+    380
+   ],
+   "fovDeg": 60,
+   "fromAboveGround": 2.5,
+   "lookAtAboveGround": 12
+  },
+  {
+   "name": "postcard",
+   "from": [
+    -86,
+    0,
+    -12
+   ],
+   "lookAt": [
+    -42,
+    0,
+    -200
+   ],
+   "fovDeg": 52,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 10
+  },
+  {
+   "name": "harrowfold",
+   "from": [
+    130,
+    0,
+    50
+   ],
+   "lookAt": [
+    165,
+    0,
+    20
+   ],
+   "fovDeg": 58,
+   "fromAboveGround": 5,
+   "lookAtAboveGround": 10
+  },
+  {
+   "name": "sisters",
+   "from": [
+    214,
+    0,
+    149
+   ],
+   "lookAt": [
+    215,
+    0,
+    161
+   ],
+   "fovDeg": 66,
+   "fromAboveGround": 3.2,
+   "lookAtAboveGround": 0.5
+  },
+  {
+   "name": "candle_tower",
+   "from": [
+    318,
+    0,
+    162
+   ],
+   "lookAt": [
+    300,
+    0,
+    150
+   ],
+   "fovDeg": 55,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 9
+  },
+  {
+   "name": "gap",
+   "from": [
+    -454,
+    0,
+    129
+   ],
+   "lookAt": [
+    -428,
+    0,
+    121
+   ],
+   "fovDeg": 62,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 2
+  }
+ ]
+}
