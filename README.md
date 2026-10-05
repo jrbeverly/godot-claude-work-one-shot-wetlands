@@ -8,6 +8,7 @@ An original single-player fantasy zone built in Godot 4.5 .NET (C#) that chases 
 |---|---|---|
 | ![Dawn keep: Greywatch on the pale east wall over Dawn Pool](docs/screenshots/dawn_keep.jpg) | ![Giant: the Channel Oak against the low sun](docs/screenshots/giant.jpg) | ![Road: the track through the reeds past the Road Oak](docs/screenshots/road.jpg) |
 | ![The Hythe: Thistlebury's boardwalk and brazier](docs/screenshots/hythe.jpg) | ![The causeway at the Fallen Span](docs/screenshots/causeway.jpg) | ![Look-back from the Candle](docs/screenshots/candle.jpg) |
+| ![The reed road under the night overlay](docs/screenshots/road_night.jpg) | ![The Channel Oak at night](docs/screenshots/giant_night.jpg) | ![The Hythe at night](docs/screenshots/hythe_night.jpg) |
 
 More in `docs/screenshots/` (curated from a `screenshots/<run>/` render with `tools/curate_screenshots.py`; rendered with `tools/screenshot.sh`, software Vulkan, so a GPU will look crisper).
 
