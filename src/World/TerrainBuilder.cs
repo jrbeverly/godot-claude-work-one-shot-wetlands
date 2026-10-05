@@ -76,7 +76,7 @@ public static class TerrainBuilder
         }
 
         // 2b. Banded rock: steep ground steps softly into terraces (reads as painted strata, not noise).
-        Terrace(f, 10f, 0.34f, rimNoise);
+        Terrace(f, 10f, 0.25f, rimNoise);
 
         // 3. Lake: bowl with the shoreline exactly at water level.
         if (L.Lake is { } lake)
@@ -159,7 +159,7 @@ public static class TerrainBuilder
             {
                 float dn = dist / w;
                 f.RoadDistance[k] = MathF.Min(f.RoadDistance[k], dist);
-                float edge = road.Kind == "path" ? 0.55f : 0.75f;
+                float edge = road.Kind == "path" ? 0.45f : 0.6f;
                 float jitter = 0.18f * splatNoise.GetNoise2D(f.WorldX(k % size) * 2f, f.WorldZ(k / size) * 2f);
                 float paint = 1f - Smooth(Mathf.Clamp((dn - edge + jitter) / 0.6f, 0f, 1f));
                 if (road.Kind == "path") paint *= 0.8f;
@@ -181,10 +181,12 @@ public static class TerrainBuilder
             float sn = splatNoise.GetNoise2D(x, z);
 
             float rock = Smooth(Mathf.Clamp((slopeDeg - 36f + sn * 5f) / 12f, 0f, 1f));
+            // High fells are bare rock whatever their slope (the snow line sits above them on all but the north rim).
+            rock = MathF.Max(rock, Smooth((h - 90f + sn * 10f) / 45f));
             foreach (var b in rockBiomes) rock = MathF.Max(rock, BiomeWeight(b, x, z, sn));
             float forest = 0f;
             foreach (var b in forestBiomes) forest = MathF.Max(forest, BiomeWeight(b, x, z, sn));
-            float road = f.SplatRoad[k];
+            float road = f.SplatRoad[k] * (1f - 0.22f * forest);   // the road darkens into the wood
             // Lake/river beds read as muddy forest floor + rock.
             float wet = Mathf.Clamp(f.WaterDepth[k] / 1.5f, 0f, 1f);
             forest = MathF.Max(forest, wet * 0.7f);
@@ -225,7 +227,7 @@ public static class TerrainBuilder
         {
             int k = f.Index(i, j);
             // Tilt the strata a little so bands are not dead level contour lines.
-            float shift = phase.GetNoise2D(f.WorldX(i) * 0.6f, f.WorldZ(j) * 0.6f) * step * 0.45f;
+            float shift = phase.GetNoise2D(f.WorldX(i) * 0.6f, f.WorldZ(j) * 0.6f) * step * 0.7f;
             float hl = src[f.Index(i - 1, j)], hr = src[f.Index(i + 1, j)];
             float hd = src[f.Index(i, j - 1)], hu = src[f.Index(i, j + 1)];
             float gx = (hr - hl) / (2f * f.CellSize), gz = (hu - hd) / (2f * f.CellSize);

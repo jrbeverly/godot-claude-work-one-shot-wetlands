@@ -31,8 +31,9 @@ public partial class WorldRoot : Node3D
 
         var mat = GD.Load<ShaderMaterial>("res://assets/materials/terrain.tres");
         // Snow starts about two thirds of the way up the rim; the palette may steer layer tints (default white).
-        mat.SetShaderParameter("snow_line", Layout.Terrain.BaseHeight + Layout.Terrain.Rim.EdgeHeight * 0.62f);
-        mat.SetShaderParameter("snow_blend", MathF.Max(12f, Layout.Terrain.Rim.EdgeHeight * 0.12f));
+        // Snow only on the tallest (north) rim: the other fells read as rock, as the bible wants.
+        mat.SetShaderParameter("snow_line", Layout.Terrain.BaseHeight + Layout.Terrain.Rim.EdgeHeight * 0.92f);
+        mat.SetShaderParameter("snow_blend", MathF.Max(12f, Layout.Terrain.Rim.EdgeHeight * 0.10f));
         foreach (var (key, uniform) in new[] { ("tintGrass", "tint_grass"), ("tintForest", "tint_forest"), ("tintRoad", "tint_road"), ("tintRock", "tint_rock"), ("tintSnow", "tint_snow"), ("tintMeadow", "tint_meadow") })
             if (Layout.Palette.TryGetValue(key, out var hex) && !string.IsNullOrWhiteSpace(hex)) mat.SetShaderParameter(uniform, new Color(hex));
         AddChild(TerrainMesh.Build(Field, mat));

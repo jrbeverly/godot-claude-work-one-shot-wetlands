@@ -150,7 +150,12 @@ Codas: Sawyer's Path north to the wheel, the cascade and the loaded wagon at the
 10. **Restraint:** nine landmarks on 1 km², ≤ 4 prop types per view, an empty moor and parkland, a lake with a single tree in it, ten hero trees, dead trees only where they mean something.
 11. **Zone identity:** Elwynn-register pastoral cosiness (lake village, mill, church, fences, fields) with a Dun Morogh cold rim as accent, one Wetlands-grade dark passage and a fogged exit gorge; the quiet story of a lordship that ended and a village that stayed makes it Fallowmere, not a generic stylised forest.
 
-## 10. Build status
+## 10. Renders
+Hero shots as built (`docs/screenshots/`, 960x540 from `tools/curate_screenshots.py`): `spawn`, `gap`, `reveal`, `village`, `hall`, `harrowfold`, `postcard`, `candle`, `candle_tower`, `wood`, `sisters`, `throat`, `wanderer`.
+
+![Reveal](screenshots/reveal.jpg) ![Hall](screenshots/hall.jpg) ![Candle](screenshots/candle.jpg) ![Wood](screenshots/wood.jpg)
+
+## 11. Build status
 Implemented against this bible (all generated at startup from `assets/world/layout.json`):
 - Terrain: rolling base, per-side rim heights (north 215 m), hills/ridges/basins, lake bowl with dry islets (water depth recomputed after flats), river trenches, flattened painted roads, settlement flats, soft banded strata on steep slopes, five painted ground layers (grass, forest floor, road, rock, dry meadow) plus altitude snow.
 - Water: lake disc at 4.0 m and three river ribbons with a painted depth-coloured shader; the lower Fallow starts inside the lake as an outlet.

@@ -233,6 +233,8 @@ public sealed class PieceSpec
     public float DepthM { get; set; } = 20f;
     /// <summary>wheat | pumpkin | fallow</summary>
     public string? Crop { get; set; }
+    /// <summary>standingStone only: lying on its side.</summary>
+    public bool Fallen { get; set; }
     public string? LeafTint { get; set; }
 }
 

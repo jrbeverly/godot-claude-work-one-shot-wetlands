@@ -6,20 +6,20 @@
   "azimuthDeg": 250,
   "elevationDeg": 28,
   "color": "#FFE3B4",
-  "energy": 1.1
+  "energy": 1.2
  },
  "palette": {
   "grass": "#6F9A3F",
   "meadow": "#94AE52",
   "forestFloor": "#4D5530",
-  "road": "#B99862",
+  "road": "#A88A5C",
   "rock": "#857C70",
-  "snow": "#E4EAEE",
+  "snow": "#D8DFE6",
   "water": "#4A7E90",
   "waterDeep": "#345F6F",
   "skyTop": "#5E8EC4",
-  "skyHorizon": "#C6D1D6",
-  "fog": "#C6D1D6",
+  "skyHorizon": "#BCC9CF",
+  "fog": "#BCC9CF",
   "ambient": "#9AA8B8",
   "shadowTint": "#5A6A8C",
   "roofTile": "#5E7079",
@@ -32,7 +32,7 @@
  },
  "fog": {
   "startM": 130,
-  "endM": 820,
+  "endM": 620,
   "density": 0.0022,
   "heightFogEnabled": true,
   "heightFogLevel": 7
@@ -85,8 +85,8 @@
     "name": "Harrowfold Head",
     "x": 165,
     "z": 20,
-    "radius": 60,
-    "height": 14,
+    "radius": 48,
+    "height": 22,
     "shape": "dome"
    },
    {
@@ -204,7 +204,7 @@
     "name": "Nine Sisters clearing",
     "x": 215,
     "z": 160,
-    "radius": 24,
+    "radius": 30,
     "height": 14
    },
    {
@@ -482,7 +482,7 @@
      138.3
     ]
    ],
-   "width": 5,
+   "width": 4,
    "kind": "main"
   },
   {
@@ -545,7 +545,7 @@
      512
     ]
    ],
-   "width": 5,
+   "width": 4,
    "kind": "main"
   },
   {
@@ -588,7 +588,7 @@
      -215
     ]
    ],
-   "width": 4,
+   "width": 2.5,
    "kind": "path"
   },
   {
@@ -623,7 +623,7 @@
      312.9
     ]
    ],
-   "width": 3,
+   "width": 2.5,
    "kind": "path"
   },
   {
@@ -646,7 +646,7 @@
      143
     ]
    ],
-   "width": 3,
+   "width": 2.5,
    "kind": "path"
   },
   {
@@ -677,7 +677,7 @@
      18.2
     ]
    ],
-   "width": 3,
+   "width": 2.5,
    "kind": "path"
   }
  ],
@@ -863,8 +863,8 @@
    "z": -190,
    "radius": 110,
    "priority": 4,
-   "treeDensity": 0.15,
-   "clumpiness": 0.7,
+   "treeDensity": 0.2,
+   "clumpiness": 0.9,
    "trees": [
     {
      "model": "CommonTree_1",
@@ -916,47 +916,47 @@
    "name": "Hollin Wood",
    "x": 205,
    "z": 100,
-   "radius": 110,
+   "radius": 125,
    "priority": 5,
    "treeDensity": 1.0,
-   "clumpiness": 0.12,
+   "clumpiness": 0.0,
    "trees": [
     {
      "model": "CommonTree_1",
      "weight": 1.0,
-     "scale": 1.25
+     "scale": 1.5
     },
     {
      "model": "CommonTree_2",
      "weight": 1.0,
-     "scale": 1.25
+     "scale": 1.5
     },
     {
      "model": "CommonTree_3",
      "weight": 1.0,
-     "scale": 1.25
+     "scale": 1.5
     },
     {
      "model": "CommonTree_4",
      "weight": 1.0,
-     "scale": 1.25
+     "scale": 1.5
     },
     {
      "model": "CommonTree_5",
      "weight": 1.0,
-     "scale": 1.25
+     "scale": 1.5
     },
     {
      "model": "DeadTree_3",
      "weight": 0.25,
-     "scale": 0.6
+     "scale": 0.72
     }
    ],
    "undergrowth": [
     {
      "model": "Fern_1",
      "weight": 1.0,
-     "density": 0.3
+     "density": 0.7
     },
     {
      "model": "Mushroom_Common",
@@ -971,11 +971,11 @@
     {
      "model": "Bush_Common",
      "weight": 1.0,
-     "density": 0.04
+     "density": 0.1
     }
    ],
    "groundTexture": "forestFloor",
-   "leafTint": "#3F6A38"
+   "leafTint": "#2E4F2C"
   },
   {
    "name": "Candlehill Flank",
@@ -1075,7 +1075,7 @@
     {
      "model": "Rock_Medium_1",
      "weight": 1.0,
-     "density": 0.04
+     "density": 0.012
     },
     {
      "model": "Grass_Wispy_Tall",
@@ -1135,12 +1135,12 @@
     {
      "model": "Bush_Common_Flowers",
      "weight": 1.0,
-     "density": 0.04
+     "density": 0.015
     },
     {
      "model": "Grass_Common_Tall",
      "weight": 1.0,
-     "density": 0.25
+     "density": 0.12
     }
    ],
    "groundTexture": "meadow",
@@ -1187,8 +1187,8 @@
    "z": -35,
    "radius": 230,
    "priority": 2,
-   "treeDensity": 0.12,
-   "clumpiness": 0.75,
+   "treeDensity": 0.2,
+   "clumpiness": 0.9,
    "trees": [
     {
      "model": "CommonTree_1",
@@ -1295,7 +1295,7 @@
    "name": "The Throat",
    "x": 390,
    "z": 440,
-   "radius": 150,
+   "radius": 180,
    "priority": 5,
    "treeDensity": 0.08,
    "clumpiness": 0.6,
@@ -1303,44 +1303,44 @@
     {
      "model": "DeadTree_1",
      "weight": 1,
-     "scale": 0.6
+     "scale": 1.1
     },
     {
      "model": "DeadTree_3",
      "weight": 1,
-     "scale": 0.6
+     "scale": 1.1
     },
     {
      "model": "DeadTree_5",
      "weight": 0.6,
-     "scale": 0.55
+     "scale": 1.1
     },
     {
      "model": "Pine_2",
      "weight": 0.8,
-     "scale": 1.1
+     "scale": 1.3
     },
     {
      "model": "Pine_4",
      "weight": 0.8,
-     "scale": 1.1
+     "scale": 1.3
     }
    ],
    "undergrowth": [
     {
      "model": "Rock_Medium_1",
      "weight": 1.0,
-     "density": 0.06
+     "density": 0.02
     },
     {
      "model": "Rock_Medium_2",
      "weight": 1.0,
-     "density": 0.06
+     "density": 0.02
     },
     {
      "model": "Rock_Medium_3",
      "weight": 1.0,
-     "density": 0.06
+     "density": 0.02
     },
     {
      "model": "Pebble_Square_1",
@@ -1629,8 +1629,8 @@
      "model": "windmill",
      "x": -4,
      "z": -5,
-     "rotationDeg": 160,
-     "scale": 8.0
+     "rotationDeg": 250,
+     "scale": 10.0
     },
     {
      "kind": "cottage",
@@ -1823,7 +1823,7 @@
      "x": 55,
      "z": 31,
      "scale": 0.7,
-     "leafTint": "#B5783A"
+     "leafTint": "#D08C3C"
     },
     {
      "kind": "tree",
@@ -1831,7 +1831,7 @@
      "x": 55,
      "z": 37,
      "scale": 0.7,
-     "leafTint": "#B5783A"
+     "leafTint": "#D08C3C"
     },
     {
      "kind": "tree",
@@ -1839,7 +1839,7 @@
      "x": 55,
      "z": 43,
      "scale": 0.7,
-     "leafTint": "#B5783A"
+     "leafTint": "#D08C3C"
     },
     {
      "kind": "tree",
@@ -1847,7 +1847,7 @@
      "x": 61,
      "z": 31,
      "scale": 0.7,
-     "leafTint": "#B5783A"
+     "leafTint": "#D08C3C"
     },
     {
      "kind": "tree",
@@ -1855,7 +1855,7 @@
      "x": 61,
      "z": 37,
      "scale": 0.7,
-     "leafTint": "#B5783A"
+     "leafTint": "#D08C3C"
     },
     {
      "kind": "tree",
@@ -1863,7 +1863,7 @@
      "x": 61,
      "z": 43,
      "scale": 0.7,
-     "leafTint": "#B5783A"
+     "leafTint": "#D08C3C"
     },
     {
      "kind": "tree",
@@ -1871,7 +1871,7 @@
      "x": 67,
      "z": 31,
      "scale": 0.7,
-     "leafTint": "#B5783A"
+     "leafTint": "#D08C3C"
     },
     {
      "kind": "tree",
@@ -1879,7 +1879,7 @@
      "x": 67,
      "z": 37,
      "scale": 0.7,
-     "leafTint": "#B5783A"
+     "leafTint": "#D08C3C"
     },
     {
      "kind": "tree",
@@ -1887,7 +1887,7 @@
      "x": 67,
      "z": 43,
      "scale": 0.7,
-     "leafTint": "#B5783A"
+     "leafTint": "#D08C3C"
     },
     {
      "kind": "tree",
@@ -1895,7 +1895,7 @@
      "x": 73,
      "z": 31,
      "scale": 0.7,
-     "leafTint": "#B5783A"
+     "leafTint": "#D08C3C"
     },
     {
      "kind": "tree",
@@ -1903,7 +1903,7 @@
      "x": 73,
      "z": 37,
      "scale": 0.7,
-     "leafTint": "#B5783A"
+     "leafTint": "#D08C3C"
     },
     {
      "kind": "tree",
@@ -1911,7 +1911,7 @@
      "x": 73,
      "z": 43,
      "scale": 0.7,
-     "leafTint": "#B5783A"
+     "leafTint": "#D08C3C"
     },
     {
      "kind": "fence",
@@ -2097,7 +2097,7 @@
      "x": -11,
      "z": -15,
      "scale": 1.4,
-     "leafTint": "#6F9A3F"
+     "leafTint": "#D08C3C"
     },
     {
      "kind": "tree",
@@ -2105,7 +2105,7 @@
      "x": 9,
      "z": 21,
      "scale": 1.3,
-     "leafTint": "#6F9A3F"
+     "leafTint": "#D08C3C"
     }
    ]
   },
@@ -2370,12 +2370,12 @@
      "heightM": 4.5
     },
     {
-     "kind": "ruinWall",
+     "kind": "standingStone",
      "x": -3.8,
      "z": -10.3,
      "rotationDeg": 340,
-     "lengthM": 4.4,
-     "heightM": 0.8
+     "heightM": 4.4,
+     "fallen": true
     },
     {
      "kind": "prop",
@@ -2383,14 +2383,14 @@
      "x": 0,
      "z": 0,
      "rotationDeg": 0,
-     "scale": 1.0
+     "scale": 2.5
     },
     {
      "kind": "tree",
      "model": "TwistedTree_1",
      "x": 21.7,
      "z": 12.5,
-     "scale": 1.0,
+     "scale": 1.3,
      "leafTint": "#3F6A38"
     },
     {
@@ -2398,7 +2398,7 @@
      "model": "TwistedTree_3",
      "x": -12.5,
      "z": 21.7,
-     "scale": 1.0,
+     "scale": 1.3,
      "leafTint": "#3F6A38"
     },
     {
@@ -2406,7 +2406,7 @@
      "model": "TwistedTree_5",
      "x": -21.7,
      "z": -12.5,
-     "scale": 1.0,
+     "scale": 1.3,
      "leafTint": "#3F6A38"
     },
     {
@@ -2414,7 +2414,7 @@
      "model": "TwistedTree_1",
      "x": 12.5,
      "z": -21.7,
-     "scale": 1.0,
+     "scale": 1.3,
      "leafTint": "#3F6A38"
     }
    ]
@@ -2451,7 +2451,7 @@
      "z": -7,
      "rotationDeg": 0,
      "lengthM": 10,
-     "heightM": 5.5
+     "heightM": 7.2
     },
     {
      "kind": "ruinWall",
@@ -2459,7 +2459,7 @@
      "z": -7,
      "rotationDeg": 0,
      "lengthM": 6,
-     "heightM": 3.0
+     "heightM": 3.9
     },
     {
      "kind": "ruinWall",
@@ -2467,7 +2467,7 @@
      "z": 7,
      "rotationDeg": 0,
      "lengthM": 14,
-     "heightM": 4.0
+     "heightM": 5.2
     },
     {
      "kind": "ruinWall",
@@ -2475,7 +2475,7 @@
      "z": 0,
      "rotationDeg": 90,
      "lengthM": 14,
-     "heightM": 6.0
+     "heightM": 7.8
     },
     {
      "kind": "ruinWall",
@@ -2483,7 +2483,7 @@
      "z": -3,
      "rotationDeg": 90,
      "lengthM": 6,
-     "heightM": 2.5
+     "heightM": 3.2
     },
     {
      "kind": "landmark",
@@ -2498,38 +2498,40 @@
      "model": "TwistedTree_1",
      "x": -3,
      "z": -15,
-     "scale": 1.0,
-     "leafTint": "#B5783A"
+     "scale": 1.35,
+     "leafTint": "#D08C3C"
     },
     {
      "kind": "tree",
      "model": "TwistedTree_3",
      "x": 10,
      "z": 12,
-     "scale": 1.0,
-     "leafTint": "#B5783A"
+     "scale": 1.35,
+     "leafTint": "#D08C3C"
     },
     {
      "kind": "tree",
      "model": "TwistedTree_5",
      "x": -17,
      "z": 10,
-     "scale": 1.0,
-     "leafTint": "#B5783A"
+     "scale": 1.35,
+     "leafTint": "#D08C3C"
     },
     {
      "kind": "tree",
      "model": "DeadTree_5",
      "x": -24,
      "z": -2,
-     "scale": 0.6
+     "scale": 1.35,
+     "leafTint": "#D08C3C"
     },
     {
      "kind": "tree",
      "model": "DeadTree_3",
      "x": -22,
      "z": -13,
-     "scale": 0.6
+     "scale": 1.35,
+     "leafTint": "#D08C3C"
     },
     {
      "kind": "prop",
@@ -2593,7 +2595,7 @@
      "z": -6.5,
      "rotationDeg": 0,
      "lengthM": 12,
-     "heightM": 1.0
+     "heightM": 1.4
     },
     {
      "kind": "ruinWall",
@@ -2601,7 +2603,7 @@
      "z": 6.5,
      "rotationDeg": 0,
      "lengthM": 12,
-     "heightM": 1.0
+     "heightM": 1.4
     },
     {
      "kind": "ruinWall",
@@ -2609,7 +2611,7 @@
      "z": 0,
      "rotationDeg": 90,
      "lengthM": 12,
-     "heightM": 1.0
+     "heightM": 1.4
     },
     {
      "kind": "ruinWall",
@@ -2617,7 +2619,7 @@
      "z": 0,
      "rotationDeg": 90,
      "lengthM": 12,
-     "heightM": 1.0
+     "heightM": 1.4
     },
     {
      "kind": "standingStone",
@@ -2960,50 +2962,50 @@
   {
    "name": "spawn",
    "from": [
-    -428,
-    11.2,
-    121
+    -436,
+    0,
+    131
    ],
    "lookAt": [
     -225,
-    34,
+    0,
     50
    ],
    "fovDeg": 62,
    "fromAboveGround": 1.7,
-   "lookAtAboveGround": 10
+   "lookAtAboveGround": 22
   },
   {
    "name": "reveal",
    "from": [
-    -184,
-    21.8,
-    57
+    -178,
+    0,
+    52
    ],
    "lookAt": [
-    60,
-    12,
-    30
+    40,
+    0,
+    10
    ],
-   "fovDeg": 68,
-   "fromAboveGround": 1.7,
-   "lookAtAboveGround": 6
+   "fovDeg": 56,
+   "fromAboveGround": 6,
+   "lookAtAboveGround": 4
   },
   {
    "name": "village",
    "from": [
-    -150,
+    -122,
     0,
-    118
+    92
    ],
    "lookAt": [
-    -85,
+    -96,
     0,
-    70
+    66
    ],
-   "fovDeg": 60,
+   "fovDeg": 55,
    "fromAboveGround": 1.7,
-   "lookAtAboveGround": 4
+   "lookAtAboveGround": 3
   },
   {
    "name": "hall",
@@ -3024,9 +3026,9 @@
   {
    "name": "candle",
    "from": [
-    286,
+    292,
     0,
-    160
+    153
    ],
    "lookAt": [
     -20,
@@ -3034,20 +3036,20 @@
     0
    ],
    "fovDeg": 62,
-   "fromAboveGround": 4.5,
+   "fromAboveGround": 15,
    "lookAtAboveGround": 6
   },
   {
    "name": "wood",
    "from": [
-    190,
-    0,
-    96
-   ],
-   "lookAt": [
     232,
     0,
-    84
+    92
+   ],
+   "lookAt": [
+    260,
+    0,
+    70
    ],
    "fovDeg": 62,
    "fromAboveGround": 1.7,
@@ -3057,40 +3059,40 @@
    "name": "throat",
    "from": [
     352,
-    7.7,
+    0,
     255
    ],
    "lookAt": [
-    318,
-    24,
-    400
+    330,
+    0,
+    380
    ],
    "fovDeg": 60,
-   "fromAboveGround": 1.7,
-   "lookAtAboveGround": 26
+   "fromAboveGround": 2.5,
+   "lookAtAboveGround": 12
   },
   {
    "name": "postcard",
    "from": [
-    -82,
+    -86,
     0,
-    -8
+    -12
    ],
    "lookAt": [
-    -45,
+    -42,
     0,
-    -290
+    -200
    ],
-   "fovDeg": 58,
+   "fovDeg": 52,
    "fromAboveGround": 1.7,
-   "lookAtAboveGround": 14
+   "lookAtAboveGround": 10
   },
   {
    "name": "harrowfold",
    "from": [
-    118,
+    130,
     0,
-    62
+    50
    ],
    "lookAt": [
     165,
@@ -3098,40 +3100,40 @@
     20
    ],
    "fovDeg": 58,
-   "fromAboveGround": 1.7,
-   "lookAtAboveGround": 14
+   "fromAboveGround": 5,
+   "lookAtAboveGround": 10
   },
   {
    "name": "sisters",
    "from": [
-    216,
+    214,
     0,
-    143
+    149
    ],
    "lookAt": [
     215,
     0,
-    160
+    161
    ],
-   "fovDeg": 64,
-   "fromAboveGround": 1.7,
-   "lookAtAboveGround": 2.5
+   "fovDeg": 66,
+   "fromAboveGround": 3.2,
+   "lookAtAboveGround": 0.5
   },
   {
    "name": "candle_tower",
    "from": [
-    324,
+    318,
     0,
-    152
+    162
    ],
    "lookAt": [
     300,
     0,
     150
    ],
-   "fovDeg": 60,
+   "fovDeg": 55,
    "fromAboveGround": 1.7,
-   "lookAtAboveGround": 11
+   "lookAtAboveGround": 9
   },
   {
    "name": "gap",

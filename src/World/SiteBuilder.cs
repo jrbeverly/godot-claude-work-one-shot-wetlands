@@ -241,22 +241,39 @@ public static class SiteBuilder
         var node = new Node3D { Name = "Brazier", Position = new Vector3(pos.X, groundY + p.HeightM, pos.Y) };
         var bowl = new MeshInstance3D
         {
-            Mesh = new BoxMesh { Size = new Vector3(2.2f, 0.8f, 2.2f) },
+            Mesh = new BoxMesh { Size = new Vector3(2.0f, 0.7f, 2.0f) },
             MaterialOverride = new StandardMaterial3D { AlbedoColor = new Color("#3A3330"), Roughness = 1f, MetallicSpecular = 0f },
         };
         var fire = new MeshInstance3D
         {
-            Position = new Vector3(0, 1.0f, 0),
-            Mesh = new BoxMesh { Size = new Vector3(1.6f, 1.4f, 1.6f) },
+            Position = new Vector3(0, 0.95f, 0),
+            Mesh = new BoxMesh { Size = new Vector3(1.4f, 1.3f, 1.4f) },
             MaterialOverride = new StandardMaterial3D
             {
-                AlbedoColor = glow, EmissionEnabled = true, Emission = glow, EmissionEnergyMultiplier = 3.5f,
+                AlbedoColor = new Color("#FFB060"), EmissionEnabled = true, Emission = new Color("#FFB060"), EmissionEnergyMultiplier = 8f,
                 ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded,
             },
             CastShadow = GeometryInstance3D.ShadowCastingSetting.Off,
         };
-        var light = new OmniLight3D { Position = new Vector3(0, 2.0f, 0), LightColor = glow, LightEnergy = 3.0f, OmniRange = 18f, ShadowEnabled = false };
-        node.AddChild(bowl); node.AddChild(fire); node.AddChild(light);
+        // Soft additive glow card so the beacon reads from across the vale without bloom.
+        var halo = new MeshInstance3D
+        {
+            Position = new Vector3(0, 1.6f, 0),
+            Mesh = new QuadMesh { Size = new Vector2(5.5f, 5.5f) },
+            MaterialOverride = new StandardMaterial3D
+            {
+                AlbedoColor = new Color(glow.R, glow.G, glow.B, 0.45f),
+                Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
+                BlendMode = BaseMaterial3D.BlendModeEnum.Add,
+                ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded,
+                BillboardMode = BaseMaterial3D.BillboardModeEnum.Enabled,
+                AlbedoTexture = GlowTexture(),
+                NoDepthTest = false,
+            },
+            CastShadow = GeometryInstance3D.ShadowCastingSetting.Off,
+        };
+        var light = new OmniLight3D { Position = new Vector3(0, 2.0f, 0), LightColor = glow, LightEnergy = 3.5f, OmniRange = 24f, ShadowEnabled = false };
+        node.AddChild(bowl); node.AddChild(fire); node.AddChild(halo); node.AddChild(light);
         parent.AddChild(node);
     }
 
@@ -272,6 +289,16 @@ public static class SiteBuilder
         float w = h >= 2.5f ? h * rng.RandfRange(0.24f, 0.32f) : h * rng.RandfRange(0.9f, 1.3f);
         var inst = kit.Instance(rocks[pick], new Color("#8E8D86"), recolour: true);
         inst.Scale = new Vector3(w / rockW[pick], (h + 0.4f) / rockH[pick], w * 0.8f / rockW[pick]);
+        if (p.Fallen)
+        {
+            // Toppled: lies along local Z, half sunk into the turf.
+            var holder = new Node3D();
+            inst.Position = new Vector3(0, -0.2f, h * 0.5f);
+            inst.RotationDegrees = new Vector3(85f, 0, 0);
+            holder.AddChild(inst);
+            Place(parent, holder, pos, world.GroundHeight(pos.X, pos.Y) - 0.3f + w * 0.35f, yaw);
+            return;
+        }
         Place(parent, inst, pos, world.GroundHeight(pos.X, pos.Y) - 0.4f, yaw + rng.RandfRange(-8f, 8f));
     }
 
@@ -280,6 +307,19 @@ public static class SiteBuilder
         Color? tint = string.IsNullOrEmpty(p.LeafTint) ? null : new Color(p.LeafTint);
         var inst = kit.Instance(p.Model ?? "CommonTree_1", tint, name => name.Contains("Leaves", StringComparison.OrdinalIgnoreCase), recolour: true);
         inst.Scale = Vector3.One * p.Scale;
+        // Hero tints (copper elders) carry a little self-light so the accent survives fog and shade.
+        if (tint is { } accent)
+            foreach (var mi in inst.FindChildren("*", "MeshInstance3D", true, false))
+                if (mi is MeshInstance3D m && m.Mesh != null)
+                    for (int si = 0; si < m.Mesh.GetSurfaceCount(); si++)
+                        if ((m.GetActiveMaterial(si) ?? m.Mesh.SurfaceGetMaterial(si)) is StandardMaterial3D std
+                            && (std.ResourceName ?? "").Contains("Leaves", StringComparison.OrdinalIgnoreCase)
+                            && !std.EmissionEnabled)
+                        {
+                            std.EmissionEnabled = true;
+                            std.Emission = accent * 0.9f;
+                            std.EmissionEnergyMultiplier = 0.35f;
+                        }
         Place(parent, inst, pos, world.GroundHeight(pos.X, pos.Y) - 0.1f, yaw);
     }
 
@@ -323,6 +363,25 @@ public static class SiteBuilder
             MaterialOverride = kit.Tinted(part.Materials[0], tint, recolour: crop == "pumpkin"),
             CastShadow = GeometryInstance3D.ShadowCastingSetting.Off,
         });
+    }
+
+    private static Texture2D? _glowTex;
+    /// <summary>Radial falloff sprite for additive glow cards.</summary>
+    private static Texture2D GlowTexture()
+    {
+        if (_glowTex != null) return _glowTex;
+        const int n = 64;
+        var img = Image.CreateEmpty(n, n, false, Image.Format.Rgba8);
+        for (int y = 0; y < n; y++)
+        for (int x = 0; x < n; x++)
+        {
+            float dx = (x + 0.5f) / n - 0.5f, dz = (y + 0.5f) / n - 0.5f;
+            float r = MathF.Sqrt(dx * dx + dz * dz) * 2f;
+            float a = MathF.Pow(Mathf.Clamp(1f - r, 0f, 1f), 2.2f);
+            img.SetPixel(x, y, new Color(1f, 1f, 1f, a));
+        }
+        _glowTex = ImageTexture.CreateFromImage(img);
+        return _glowTex;
     }
 
     // ---- helpers ------------------------------------------------------------------------------------

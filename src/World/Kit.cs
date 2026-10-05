@@ -25,7 +25,7 @@ public sealed class Kit
 
     private const string Root = "res://assets/third_party/";
     private static readonly string[] Folders = { "quaternius_village", "quaternius_nature", "kaykit_landmarks" };
-    private static readonly Color RoofMultiply = new("#A8887A");
+    private static readonly Color RoofMultiply = new(0.86f, 1.02f, 1.10f);   // grey tile (~0.44) x this ~= slate #5E7079
 
     private readonly Dictionary<string, Model?> _models = new();
     private readonly Dictionary<string, Material> _muted = new();
@@ -174,18 +174,22 @@ public sealed class Kit
             m.NormalEnabled = false;
             m.NormalTexture = null;
             m.ClearcoatEnabled = false;
-            // Terracotta tiles are near-neon orange in the kit: pull most of the saturation out, then warm/darken toward slate-red.
+            // Terracotta tiles become the zone's slate roofs: strip the hue, keep the painted tile shading,
+            // then multiply so the lit tile lands on the palette slate (#5E7079).
             if (key.Contains("RoundTiles", StringComparison.OrdinalIgnoreCase))
             {
-                if (m.AlbedoTexture != null) m.AlbedoTexture = Desaturated(m.AlbedoTexture, 0.38f, 0.92f);
+                if (m.AlbedoTexture != null) m.AlbedoTexture = Desaturated(m.AlbedoTexture, 0.10f, 1.0f);
                 m.AlbedoColor *= RoofMultiply;
             }
+            // Kit timber is orange-tan; pull it toward the palette timber (#7E5A3A).
+            if (key.Contains("WoodTrim", StringComparison.OrdinalIgnoreCase)) m.AlbedoColor *= new Color(0.80f, 0.72f, 0.66f);
             // The kit's bark is salmon-pink; pull it toward a warm brown so trunks stop reading as candy.
             if (key.Contains("Bark", StringComparison.OrdinalIgnoreCase)) m.AlbedoColor *= new Color(0.86f, 0.78f, 0.72f);
             if (key.Contains("hexagons_medieval", StringComparison.OrdinalIgnoreCase))
             {
                 var tex = KayKitMutedAtlas();
                 if (tex != null) m.AlbedoTexture = tex;
+                m.AlbedoColor *= new Color(0.84f, 0.81f, 0.77f);   // chalk-white flat colours -> warm pale stone
             }
             // Vegetation cards from the nature kit: keep alpha scissor but light both sides.
             if (m.Transparency == BaseMaterial3D.TransparencyEnum.AlphaScissor) m.CullMode = BaseMaterial3D.CullModeEnum.Disabled;

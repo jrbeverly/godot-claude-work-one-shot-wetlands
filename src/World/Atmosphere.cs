@@ -20,7 +20,7 @@ public static class Atmosphere
         var fogCol = Paint(L.Col("fog", "#A9BFD3"), tonemapWhite);
         var horizon = Paint(L.Col("skyHorizon", "#C9D7E2"), tonemapWhite);
         var top = Paint(L.Col("skyTop", "#6F95C2"), tonemapWhite);
-        var ambient = L.Col("ambient", "#B9C8D6");
+        var ambient = L.Col("ambient", "#8FA2C4");
         var sunCol = new Color(L.Sun.Color);
 
         var skyMat = new ShaderMaterial { Shader = GD.Load<Shader>("res://shaders/sky.gdshader") };
@@ -47,7 +47,7 @@ public static class Atmosphere
             Sky = sky,
             AmbientLightSource = Godot.Environment.AmbientSource.Color,
             AmbientLightColor = ambient,
-            AmbientLightEnergy = 1.0f,
+            AmbientLightEnergy = 1.2f,
             ReflectedLightSource = Godot.Environment.ReflectionSource.Disabled,
             TonemapMode = Godot.Environment.ToneMapper.Filmic,
             TonemapWhite = tonemapWhite,
@@ -66,8 +66,11 @@ public static class Atmosphere
             // at the horizon instead, so fogged ridges still meet the sky without a seam.
             FogAerialPerspective = 0.0f,
             // The sky shader fades into the fog colour at the horizon itself; a high value here would wash out the clouds.
-            FogSkyAffect = 0.12f,
-            FogHeightDensity = 0.0f,
+            FogSkyAffect = 0.25f,
+            // Low mist band (lake surface, the Throat floor) when the layout asks for it; the village flats sit above it.
+            // Thin: long grazing views across the Mere pass through hundreds of metres of this band, so keep it a haze.
+            FogHeight = L.Fog.HeightFogEnabled ? L.Fog.HeightFogLevel - 2.0f : 0f,
+            FogHeightDensity = L.Fog.HeightFogEnabled ? 0.0045f : 0.0f,
             AdjustmentEnabled = true,
             AdjustmentSaturation = 1.0f,
             AdjustmentContrast = 0.98f,
@@ -85,9 +88,9 @@ public static class Atmosphere
             LightEnergy = L.Sun.Energy,
             ShadowEnabled = true,
             ShadowOpacity = 0.6f,
-            ShadowBlur = 1.6f,
+            ShadowBlur = 0.8f,
             DirectionalShadowMode = DirectionalLight3D.ShadowMode.Parallel4Splits,
-            DirectionalShadowMaxDistance = 260f,
+            DirectionalShadowMaxDistance = 180f,
             DirectionalShadowSplit1 = 0.08f,
             DirectionalShadowSplit2 = 0.22f,
             DirectionalShadowSplit3 = 0.5f,

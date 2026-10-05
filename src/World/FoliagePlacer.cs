@@ -23,6 +23,8 @@ public static class FoliagePlacer
     private const float RangedChunkSize = 40f;
 
     private enum Kind { Tree, Bush, Tuft, Rock, Pebble }
+    /// <summary>Boulders match the warm palette rock (#857C70) instead of the kit's cool blue-grey.</summary>
+    private static readonly Color RockTint = new(1.0f, 0.95f, 0.88f);
 
     private readonly record struct Instance(Transform3D Xf, Color Tint);
     private readonly record struct GroupKey(string Model, Color Tint, Kind Kind, int Cx, int Cz);
@@ -99,7 +101,7 @@ public static class FoliagePlacer
         foreach (var biome in biomes)
         {
             var tint = biome.LeafTint is { Length: > 0 } ? new Color(biome.LeafTint) : Colors.White;
-            float threshold = ClumpThreshold(biome);
+            float threshold = 0.5f + 0.3f * Mathf.Clamp(biome.Clumpiness, 0f, 1f);
             foreach (var choice in biome.Undergrowth)
             {
                 if (choice.Density <= 0f) continue;
@@ -117,7 +119,7 @@ public static class FoliagePlacer
                     float c = clump.GetNoise2D(x, z) * 0.5f + 0.5f;
                     float p = patch.GetNoise2D(x, z) * 0.5f + 0.5f;
                     // Ferns/mushrooms live in the stands, flowers in the glades; tufts drift in patches everywhere.
-                    float keep = keepBase * Mathf.SmoothStep(0.25f, 0.75f, p);
+                    float keep = keepBase * Mathf.SmoothStep(0.3f, 0.8f, p);
                     if (shadeLover) keep *= Mathf.SmoothStep(threshold - 0.15f, threshold + 0.1f, c);
                     else if (sunLover) keep *= 1f - 0.8f * Mathf.SmoothStep(threshold - 0.05f, threshold + 0.15f, c);
                     if (rng.Randf() > keep) return;
@@ -145,13 +147,14 @@ public static class FoliagePlacer
                 if (f.SampleSlopeDeg(px, pz) > 55f || f.SampleHeight(px, pz) > 175f) continue;
                 string m = rockModels[rng.RandiRange(0, rockModels.Length - 1)];
                 if (ModelLibrary.Get(m) == null) continue;
-                float scale = rng.RandfRange(0.6f, 1.4f);
+                // Mostly modest boulders with the odd big one, so slopes read as clusters rather than gravel.
+                float scale = rng.Randf() < 0.1f ? rng.RandfRange(2.6f, 3.5f) : rng.RandfRange(0.8f, 2.2f);
                 // Boulders lean into the slope a little; sunk so they look bedded, not dropped.
                 var basis = Basis.Identity.Rotated(Vector3.Up, rng.RandfRange(0f, Mathf.Tau));
                 var n = f.SampleNormal(px, pz);
                 basis = TiltTowards(basis, n, 0.5f).Scaled(Vector3.One * scale);
                 var xf = new Transform3D(basis, new Vector3(px, f.SampleHeight(px, pz) - 0.35f * scale, pz));
-                Add(groups, Key(m, Colors.White, Kind.Rock, px, pz), new Instance(xf, Vary(px, pz, 0.08f)));
+                Add(groups, Key(m, RockTint, Kind.Rock, px, pz), new Instance(xf, Vary(px, pz, 0.08f) * RockTint));
                 rocks++;
             }
 
@@ -160,7 +163,7 @@ public static class FoliagePlacer
             {
                 for (float arc = 0f; arc < road.Length; arc += 2.5f)
                 {
-                    if (rng.Randf() > 0.4f) continue;
+                    if (rng.Randf() > 0.2f) continue;
                     var p = road.PointAtArc(arc);
                     var t = road.TangentAtArc(arc);
                     var side = new Vector2(-t.Y, t.X).Normalized() * (rng.Randf() < 0.5f ? -1f : 1f);
@@ -171,8 +174,8 @@ public static class FoliagePlacer
                     if (f.SampleWaterDepth(px, pz) > 0f || f.SampleSiteClear(px, pz) > 0.6f) continue;
                     string m = pebbleModels[rng.RandiRange(0, pebbleModels.Length - 1)];
                     if (ModelLibrary.Get(m) == null) continue;
-                    float scale = rng.RandfRange(2.0f, 3.2f);  // kit pebbles are 0.4 m; verge stones should read from eye level
-                    var xf = Upright(px, f.SampleHeight(px, pz) - 0.03f, pz, rng.RandfRange(0f, Mathf.Tau), scale);
+                    float scale = rng.RandfRange(0.9f, 1.6f);  // kit pebbles are 0.4 m: fist- to head-sized verge stones, half sunk
+                    var xf = Upright(px, f.SampleHeight(px, pz) - 0.08f * scale, pz, rng.RandfRange(0f, Mathf.Tau), scale);
                     Add(groups, Key(m, Colors.White, Kind.Pebble, px, pz), new Instance(xf, Colors.White));
                     pebbles++;
                 }

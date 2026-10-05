@@ -15,10 +15,10 @@ uniform float tile_grass = 7.0;   // metres per texture repeat
 uniform float tile_forest = 8.0;
 uniform float tile_road = 5.0;
 uniform float tile_rock = 11.0;
-uniform float tile_snow = 9.0;
+uniform float tile_snow = 6.0;
 uniform float tile_meadow = 6.5;
 uniform float macro_scale = 0.013;        // breaks tiling with a second, large-scale sample
-uniform float macro_strength = 0.35;
+uniform float macro_strength = 0.45;
 uniform float snow_line = 115.0;
 uniform float snow_blend = 22.0;
 uniform float blend_sharpness = 1.8;     // >1 = crisper painted layer edges

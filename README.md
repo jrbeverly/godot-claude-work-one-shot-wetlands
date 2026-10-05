@@ -2,6 +2,15 @@
 
 An original single-player fantasy zone built in Godot 4.5 .NET (C#) that chases the environmental qualities of Vanilla-era MMO worlds: broad readable terrain, painterly low-detail surfaces, bold silhouettes, a committed palette, memorable roads, villages, water and landmarks, and fog as a design tool. The world is generated at startup from one authored layout file (`assets/world/layout.json`) by small project-specific C# systems; see `docs/WORLD_BIBLE.md` for the zone itself.
 
+![The saddle reveal: Thistlebury, the Mere, Harrowfold Hall and the Candle](docs/screenshots/reveal.jpg)
+
+| | | |
+|---|---|---|
+| ![Pilgrim's Gap](docs/screenshots/gap.jpg) | ![Thistlebury](docs/screenshots/village.jpg) | ![Harrowfold across the Mere](docs/screenshots/hall.jpg) |
+| ![Look-back from the Candle](docs/screenshots/candle.jpg) | ![Hollin Wood](docs/screenshots/wood.jpg) | ![The Throat](docs/screenshots/throat.jpg) |
+
+More in `docs/screenshots/` (rendered with `tools/screenshot.sh`, software Vulkan, so a GPU will look crisper).
+
 ## Requirements
 - [Godot 4.5.x **.NET/Mono** build](https://godotengine.org/download) (4.5+ is needed by the Terrain3D candidate)
 - .NET SDK 8
