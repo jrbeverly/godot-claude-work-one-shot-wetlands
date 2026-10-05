@@ -112,6 +112,29 @@ public sealed class Kit
     private Model? Load(string name)
     {
         name = Alias(name);
+        // Procedural models (moss trees, bog oaks, reeds) come from ModelLibrary; wrap their parts with muted materials.
+        if (ProceduralFoliage.IsProcedural(name))
+        {
+            var pm = ModelLibrary.Get(name);
+            if (pm == null) return null;
+            var pmodel = new Model { Name = name };
+            bool pfirst = true;
+            foreach (var part in pm.Parts)
+            {
+                int count = part.Mesh.GetSurfaceCount();
+                var mats = new Material[count];
+                for (int si = 0; si < count; si++)
+                {
+                    var src = part.Mesh.SurfaceGetMaterial(si);
+                    mats[si] = src != null ? Muted(src) : new StandardMaterial3D { Roughness = 1f, MetallicSpecular = 0f };
+                }
+                pmodel.Parts.Add(new Part(part.Mesh, part.Local, mats));
+                var box = part.Local * part.Mesh.GetAabb();
+                pmodel.Aabb = pfirst ? box : pmodel.Aabb.Merge(box);
+                pfirst = false;
+            }
+            return pmodel;
+        }
         string? path = null;
         foreach (var folder in Folders)
         {
@@ -184,7 +207,12 @@ public sealed class Kit
             // Cream plaster glows in dusk light; grey it toward the palette plaster (#B8AEA4).
             if (key.Contains("Plaster", StringComparison.OrdinalIgnoreCase)) m.AlbedoColor *= new Color(0.66f, 0.63f, 0.64f);
             // Kit timber is orange-tan; pull it toward the palette timber (#7E5A3A).
-            if (key.Contains("WoodTrim", StringComparison.OrdinalIgnoreCase) || key.Contains("Wood", StringComparison.OrdinalIgnoreCase)) m.AlbedoColor *= new Color(0.62f, 0.56f, 0.52f);
+            if (key.Contains("WoodTrim", StringComparison.OrdinalIgnoreCase) || key.Contains("Wood", StringComparison.OrdinalIgnoreCase))
+            {
+                // Orange kit timber -> weathered grey-brown: strip most of the hue, then darken.
+                if (m.AlbedoTexture != null) m.AlbedoTexture = Desaturated(m.AlbedoTexture, 0.35f, 1.0f);
+                m.AlbedoColor *= new Color(0.66f, 0.60f, 0.56f);
+            }
             // The kit's bark is salmon-pink; pull it toward a warm brown so trunks stop reading as candy.
             if (key.Contains("Bark", StringComparison.OrdinalIgnoreCase)) m.AlbedoColor *= new Color(0.86f, 0.78f, 0.72f);
             if (key.Contains("hexagons_medieval", StringComparison.OrdinalIgnoreCase))

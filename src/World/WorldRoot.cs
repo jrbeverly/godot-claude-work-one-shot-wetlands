@@ -22,9 +22,15 @@ public partial class WorldRoot : Node3D
     {
         var sw = Stopwatch.StartNew();
         // Allow `godot --path . -- --layout=res://assets/world/some_other_layout.json` for subsystem test scenes.
+        string? overlay = null;
         foreach (var a in OS.GetCmdlineUserArgs())
+        {
             if (a.StartsWith("--layout=")) LayoutPath = a["--layout=".Length..];
+            // A mood overlay (e.g. --palette=res://assets/world/palette_night.json) merges its palette/sun/fog over the layout.
+            if (a.StartsWith("--palette=")) overlay = a["--palette=".Length..];
+        }
         Layout = WorldLayout.Load(LayoutPath);
+        if (overlay != null) { Layout.ApplyOverlay(overlay); GD.Print($"World: palette overlay {overlay}"); }
         Terrain = TerrainBuilder.Build(Layout, Seed);
         Field = Terrain.Field;
         GD.Print($"World '{Layout.Name}': heightfield {Field.Size}x{Field.Size} built in {sw.ElapsedMilliseconds} ms");

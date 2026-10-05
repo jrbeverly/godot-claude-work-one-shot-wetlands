@@ -31,7 +31,7 @@ Do not hand-edit the PNGs; change the painter and regenerate. Previews land in
 | `forest_floor.png` | peat: the bog floor and hummock flanks, and under dark woods | dark red-brown earth, olive moss cushions, straw litter, root shadows | 8 m |
 | `dirt_road.png` | road ribbon | grey-green trodden mud, paler worn pools, grey pebbles, one faint rut | 5 m |
 | `rock.png` | steep slopes / cliffs (triplanar) | pale violet-grey strata: lit top edges, dark undersides, vertical joints; sits near the fog colour so walls loom | 11 m |
-| `snow.png` | above `terrain.snowLine` (tinted by palette `tintSnow`) | near-white drifts; in the Wetlands zone this layer is the pale upper cliff wall (pink-grey tint, 60 m line, 45 m blend) | 9 m |
+| `snow.png` | above `terrain.snowLine` (tinted by palette `tintSnow`) | near-white drifts; in the Wetlands zone this layer is the pale upper cliff wall (pink-grey tint, 120 m line, 50 m blend) | 9 m |
 | `mud.png` | lake / river bed | dark grey-olive, silt streaks along the current | 6 m |
 
 Foliage cards (moss curtains, leaf clumps, reeds, pale bark) are painted by `tools/paint_foliage.py` into `assets/textures/foliage/`.

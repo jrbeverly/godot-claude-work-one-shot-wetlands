@@ -117,11 +117,19 @@ public static class ProceduralFoliage
             AddCard(leaves, c, n, 0f, spread * rng.RandfRange(0.42f, 0.62f), spread * rng.RandfRange(0.28f, 0.42f), 0f, upVector: Vector3.Up);
         }
         // Curtains: moss strips hanging from the rim, each a V pair so it reads from every side.
-        int curtains = 12 + variant;
+        // Bunches around the rim (5-7) with holes between them, each bunch 2-3 overlapping V pairs.
+        int bunches = 5 + variant % 3;
         float curtainH = height * rng.RandfRange(0.42f, 0.5f);
-        for (int k = 0; k < curtains; k++)
+        var curtainSlots = new List<float>();
+        for (int b = 0; b < bunches; b++)
         {
-            float a = k * MathF.Tau / curtains + rng.RandfRange(-0.12f, 0.12f);
+            float centre = b * MathF.Tau / bunches + rng.RandfRange(-0.2f, 0.2f);
+            int per = 2 + rng.RandiRange(0, 1);
+            for (int q = 0; q < per; q++) curtainSlots.Add(centre + (q - (per - 1) * 0.5f) * 0.22f);
+        }
+        foreach (float slot in curtainSlots)
+        {
+            float a = slot;
             float rr = spread * rng.RandfRange(0.72f, 0.98f);
             var c = new Vector3(top.X + MathF.Cos(a) * rr, canopyY - 0.8f, top.Z + MathF.Sin(a) * rr);
             float w = rng.RandfRange(3.2f, 4.6f), h = curtainH * rng.RandfRange(0.8f, 1.1f);

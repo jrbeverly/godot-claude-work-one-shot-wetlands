@@ -3,6 +3,7 @@
 # display and Mesa's software Vulkan (lavapipe), so it works on a headless box.
 # Usage: tools/screenshot.sh [shot1,shot2]  (no arg = all shots)
 #   RES=1280x720 SETTLE=8 OUT=screenshots LAYOUT=res://assets/world/layout.json EXTRA="--nofog --noshadow" tools/screenshot.sh wide
+#   Mood overlay (night): EXTRA="--palette=res://assets/world/palette_night.json" OUT=screenshots/night tools/screenshot.sh road
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 GODOT="${GODOT:-godot}"

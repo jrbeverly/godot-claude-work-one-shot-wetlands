@@ -15,8 +15,8 @@ public static class FoliagePlacer
     private const int MaxTrees = 3500;
     private const int MaxUndergrowth = 45000;
     private const float EdgeMargin = 40f;      // keep the map rim bare so the mountain silhouette stays clean
-    private const float TreeAltitudeLimit = 125f;
-    private const float PineAltitudeLimit = 165f;
+    private const float TreeAltitudeLimit = 60f;      // the high walls stay bare (the references' smooth cliffs)
+    private const float PineAltitudeLimit = 95f;
     private const float ChunkSize = 128f;      // MultiMeshes are split spatially so the camera can cull/LOD them
     // Kinds with a visibility range are chunked finer: the range is judged on the whole MultiMesh AABB, so a big
     // chunk would fade out its near instances along with its far ones.
@@ -296,7 +296,7 @@ public static class FoliagePlacer
         if (f.SampleWaterDepth(x, z) > 0f || f.SampleWaterDepth(x + 1f, z) > 0f || f.SampleWaterDepth(x, z + 1f) > 0f) return false;
         if (f.SampleSlopeDeg(x, z) > 40f) return false;
         if (f.SampleSiteClear(x, z) > 0.5f) return false;
-        if (f.SampleHeight(x, z) > TreeAltitudeLimit) return false;
+        if (f.SampleHeight(x, z) > 50f) return false;
         return true;
     }
 

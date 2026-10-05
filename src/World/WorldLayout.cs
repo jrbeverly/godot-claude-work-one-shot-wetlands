@@ -48,6 +48,36 @@ public sealed class WorldLayout
                ?? throw new InvalidDataException($"Could not parse {resPath}");
     }
 
+    /// <summary>
+    /// Merge a small JSON overlay ({"palette": {...}, "sun": {...}, "fog": {...}}) over this layout, field by field, so a
+    /// time-of-day variant (dusk, night) only has to list what it changes.
+    /// </summary>
+    public void ApplyOverlay(string resPath)
+    {
+        using var file = Godot.FileAccess.Open(resPath, Godot.FileAccess.ModeFlags.Read)
+                         ?? throw new FileNotFoundException($"Could not open {resPath}: {Godot.FileAccess.GetOpenError()}");
+        var root = System.Text.Json.Nodes.JsonNode.Parse(file.GetAsText(), documentOptions: new JsonDocumentOptions { CommentHandling = JsonCommentHandling.Skip, AllowTrailingCommas = true })?.AsObject();
+        if (root == null) return;
+        if (root["palette"] is System.Text.Json.Nodes.JsonObject pal)
+            foreach (var (k, v) in pal) if (v != null) Palette[k] = v.GetValue<string>();
+        Sun = Merge(Sun, root["sun"]);
+        Fog = Merge(Fog, root["fog"]);
+    }
+
+    private static T Merge<T>(T current, System.Text.Json.Nodes.JsonNode? overlay) where T : class
+    {
+        if (overlay is not System.Text.Json.Nodes.JsonObject o) return current;
+        var merged = System.Text.Json.Nodes.JsonNode.Parse(JsonSerializer.Serialize(current, JsonOptions))!.AsObject();
+        foreach (var (k, v) in o)
+        {
+            // Case-insensitive property match so overlay keys can use the layout's camelCase.
+            string? key = null;
+            foreach (var (mk, _) in merged) if (string.Equals(mk, k, StringComparison.OrdinalIgnoreCase)) { key = mk; break; }
+            merged[key ?? k] = v?.DeepClone();
+        }
+        return JsonSerializer.Deserialize<T>(merged.ToJsonString(), JsonOptions) ?? current;
+    }
+
     /// <summary>Palette colour by role, with a fallback.</summary>
     public Color Col(string key, string fallbackHex)
         => Palette.TryGetValue(key, out var hex) && !string.IsNullOrWhiteSpace(hex) ? new Color(hex) : new Color(fallbackHex);

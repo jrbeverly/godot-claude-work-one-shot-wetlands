@@ -339,8 +339,8 @@ def paint_rock(c: Canvas):
     # Warm (yellow-leaning) stone: cool greys took a mauve cast next to the grass in-engine. Wide value
     # range between the lit slab faces and the cracks so the strata read as angular cliff, not cobbles.
     # Pale violet-grey stone: the cliffs must sit close to the fog colour so they read as looming painted walls.
-    light, mid, dark, crack = hex_rgb("A89CA2"), hex_rgb("8E8489"), hex_rgb("6C636A"), hex_rgb("4A4349")
-    top = hex_rgb("BBB0B4")
+    light, mid, dark, crack = hex_rgb("8E8288"), hex_rgb("746A70"), hex_rgb("564D54"), hex_rgb("3A3238")
+    top = hex_rgb("A0949A")
     c.tint_by_noise(1.5, mid * 0.95, light, 0.6)
     c.underpaint([light, mid, dark], [0.3, 0.4, 0.3], int(200 * area), (30, 60), (12, 22), alpha=0.5, light=0.08, soft=1.0, wobble=0.2)
     # Strata: rows of flat, hard-edged slabs. Each slab gets a hard dark crack painted under its lip first,
@@ -361,9 +361,9 @@ def paint_rock(c: Canvas):
             ang = tilt + c.rng.normal(0, 0.04)
             col = c.pick([light, mid, dark], [0.35, 0.4, 0.25])
             # Underside shadow: a crack-tone slab offset down-right, hard edged.
-            c.dab(cx + w * 0.04, cy + h * 0.2, w * 0.5, h * 0.45, ang, c.vary(crack, 0.04), alpha=0.85, wobble=0.04, soft=0.2, light=0.0, power=4.5)
+            c.dab(cx + w * 0.04, cy + h * 0.2, w * 0.5, h * 0.45, ang, c.vary(crack, 0.04), alpha=0.5, wobble=0.04, soft=0.2, light=0.0, power=4.5)
             # Slab face: flat-sided, firm rim, lit top-left flank.
-            c.dab(cx, cy, w * 0.5, h * 0.5, ang, c.vary(col, 0.06), alpha=0.95, wobble=0.06, soft=0.12, light=0.24, power=4.0)
+            c.dab(cx, cy, w * 0.5, h * 0.5, ang, c.vary(col, 0.06), alpha=0.7, wobble=0.06, soft=0.12, light=0.2, power=4.0)
             # Thin lit top edge.
             c.dab(cx - w * 0.03, cy - h * 0.38, w * 0.44, h * 0.09, ang, c.vary(top, 0.03), alpha=0.6, wobble=0.1, soft=0.6, light=0.08, power=4.0)
             x += w * c.u(0.8, 1.0)  # slabs abut with a thin crack between them
@@ -373,7 +373,7 @@ def paint_rock(c: Canvas):
         x, y = c.pos()
         c.dab(x, y, c.px(2.5, 5), c.px(40, 90), math.pi / 2 + c.rng.normal(0, 0.12), crack, alpha=0.75, wobble=0.3, soft=0.5, light=0.0)
     # Warm/cool drift so cliffs do not read as one flat tone (kept on the warm side).
-    c.tint_by_noise(2.0, hex_rgb("7E7278"), hex_rgb("9A9092"), 0.2)
+    c.tint_by_noise(2.0, hex_rgb("665A62"), hex_rgb("847A7E"), 0.2)
     c.shade_by_noise(2.0, 0.12)
     c.soften(0.6)
 
@@ -428,7 +428,7 @@ MATERIALS = {
     "meadow": (202, "7E803E", paint_meadow),
     "forest_floor": (303, "463428", paint_forest_floor),
     "dirt_road": (404, "7A7E62", paint_dirt_road),
-    "rock": (505, "8E8489", paint_rock),
+    "rock": (505, "746A70", paint_rock),
     "snow": (606, "E8EEF4", paint_snow),
     "mud": (707, "5E5A48", paint_mud),
 }

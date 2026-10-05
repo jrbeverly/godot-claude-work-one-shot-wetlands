@@ -148,7 +148,7 @@ public static class SiteBuilder
         // Recoloured (greyscale texture x tint) so the kit's orange timber plate and cream plaster end faces
         // become weathered stone too.
         // Mid-grey weathered stone: the recolour path brightens the kit texture 1.45x, so the tint sits well below the palette stone.
-        var stoneTint = new Color("#6E6C6A");
+        var stoneTint = new Color("#5E5C5A");
         var rubbleTint = new Color("#66685F");
         for (int k = 0; k < modules; k++)
         {
@@ -381,6 +381,19 @@ public static class SiteBuilder
     private static void BuildTree(WorldRoot world, Kit kit, Node3D parent, PieceSpec p, Vector2 pos, float yaw)
     {
         Color? tint = string.IsNullOrEmpty(p.LeafTint) ? null : new Color(p.LeafTint);
+        // Procedural hero trees: the same styled mesh the biomes use (foliage shader, tint, sway), one MeshInstance3D.
+        if (ProceduralFoliage.IsProcedural(p.Model ?? ""))
+        {
+            var model = ModelLibrary.Get(p.Model!);
+            if (model == null) return;
+            var mesh = ModelLibrary.GetStyledMesh(model, tint ?? Colors.White, 0.11f, MathF.Max(model.Bounds.End.Y * 0.8f, 1f));
+            var mi = new MeshInstance3D { Name = p.Model, Mesh = mesh, Transform = model.Parts[0].Local };
+            var holder = new Node3D { Name = p.Model + "_tree" };
+            holder.AddChild(mi);
+            holder.Scale = Vector3.One * p.Scale;
+            Place(parent, holder, pos, world.GroundHeight(pos.X, pos.Y) - 0.3f * p.Scale, yaw);
+            return;
+        }
         var inst = kit.Instance(p.Model ?? "CommonTree_1", tint, name => name.Contains("Leaves", StringComparison.OrdinalIgnoreCase), recolour: true);
         inst.Scale = Vector3.One * p.Scale;
         // Hero tints (copper elders) carry a little self-light so the accent survives fog and shade.

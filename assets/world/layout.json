@@ -5,9 +5,9 @@
  "sun": {
   "azimuthDeg": 262,
   "elevationDeg": 10,
-  "color": "#F2B48E",
-  "energy": 1.0,
-  "shadowOpacity": 0.3
+  "color": "#ECB4A4",
+  "energy": 0.9,
+  "shadowOpacity": 0.0
  },
  "palette": {
   "grass": "#5C6A36",
@@ -16,12 +16,12 @@
   "road": "#7A7E62",
   "rock": "#9A8E96",
   "snow": "#D8DFE6",
-  "water": "#5C6650",
-  "waterDeep": "#3F4838",
-  "skyTop": "#8A7CA4",
-  "skyHorizon": "#CDB0C4",
-  "fog": "#B9A0B8",
-  "ambient": "#9484A4",
+  "water": "#6A7060",
+  "waterDeep": "#46503F",
+  "skyTop": "#726080",
+  "skyHorizon": "#CFA4B8",
+  "fog": "#A684A4",
+  "ambient": "#9C94A4",
   "shadowTint": "#5A4E7A",
   "cloudLight": "#D4B2C8",
   "cloudShadow": "#8E7A9E",
@@ -32,31 +32,31 @@
   "leafWarm": "#96A058",
   "leafCool": "#56663A",
   "pine": "#2F4436",
-  "waterSky": "#7E7A80",
-  "sunWarm": "#E8B49E",
-  "waterShore": "#7A8268",
+  "waterSky": "#A8A2A4",
+  "sunWarm": "#DCA8B0",
+  "waterShore": "#7E8470",
   "waterGlint": "#B9BCA6",
-  "tintSnow": "#CDB8C2"
+  "tintSnow": "#B8A6AE"
  },
  "fog": {
-  "startM": 20,
-  "endM": 560,
-  "density": 0.95,
+  "startM": 30,
+  "endM": 620,
+  "density": 0.9,
   "heightFogEnabled": true,
-  "heightFogLevel": 5.5,
-  "heightFogDensity": 0.008,
-  "ambientEnergy": 1.4,
+  "heightFogLevel": 6.0,
+  "heightFogDensity": 0.1,
+  "ambientEnergy": 1.35,
   "saturation": 0.92,
   "contrast": 1.0,
   "cloudOpacity": 0.0,
   "cloudCoverage": 0.7,
-  "horizonWarmth": 0.08,
-  "skyCurve": 1.0,
+  "horizonWarmth": 0.1,
+  "skyCurve": 0.4,
   "stars": 0.0,
-  "curve": 0.8,
-  "sunScatter": 0.08,
-  "sunDiscDeg": 4.5,
-  "sunDiscEnergy": 1.1,
+  "curve": 0.9,
+  "sunScatter": 0.1,
+  "sunDiscDeg": 3.5,
+  "sunDiscEnergy": 0.8,
   "sunGlowPower": 50,
   "sunGlowStrength": 0.8,
   "sunHaloPower": 14,
@@ -237,7 +237,7 @@
     "x": 90,
     "z": 300,
     "radius": 24,
-    "height": 23.5
+    "height": 14.5
    },
    {
     "name": "Greywatch ledge",
@@ -247,8 +247,8 @@
     "height": 30
    }
   ],
-  "snowLine": 60,
-  "snowBlend": 45
+  "snowLine": 120,
+  "snowBlend": 50
  },
  "lake": {
   "name": "The Mere",
@@ -1919,7 +1919,7 @@
    "x": -105,
    "z": 75,
    "rotationDeg": 0,
-   "clearRadius": 62,
+   "clearRadius": 30,
    "pieces": [
     {
      "kind": "landmark",
@@ -3203,32 +3203,32 @@
   {
    "name": "Dawn Stand",
    "type": "grove",
-   "x": 275,
-   "z": -70,
+   "x": 330,
+   "z": -90,
    "rotationDeg": 0,
-   "clearRadius": 12,
+   "clearRadius": 38,
    "pieces": [
     {
      "kind": "tree",
      "model": "MossTree_3",
-     "x": 0,
-     "z": 0,
+     "x": -16,
+     "z": 24,
      "scale": 1.1,
      "leafTint": "#96A058"
     },
     {
      "kind": "tree",
      "model": "MossTree_1",
-     "x": 25,
-     "z": -48,
+     "x": 22,
+     "z": -30,
      "scale": 1.0,
      "leafTint": "#96A058"
     },
     {
      "kind": "tree",
      "model": "BogOak_3",
-     "x": 55,
-     "z": 30,
+     "x": -50,
+     "z": 40,
      "scale": 1.0,
      "leafTint": "#2E3A26"
     }
@@ -3244,18 +3244,18 @@
   {
    "name": "dawn_keep",
    "from": [
-    258,
+    296,
     0,
-    -104
+    -100
    ],
    "lookAt": [
-    405,
+    420,
     0,
-    -62
+    -58
    ],
    "fovDeg": 56,
    "fromAboveGround": 1.7,
-   "lookAtAboveGround": 16
+   "lookAtAboveGround": 14
   },
   {
    "name": "giant",
@@ -3292,14 +3292,14 @@
   {
    "name": "willows",
    "from": [
-    -95,
+    -118,
     0,
-    -125
+    -98
    ],
    "lookAt": [
     -30,
     0,
-    -215
+    -200
    ],
    "fovDeg": 58,
    "fromAboveGround": 1.7,
@@ -3324,17 +3324,17 @@
   {
    "name": "causeway",
    "from": [
-    152,
+    167,
     0,
-    94
+    101
    ],
    "lookAt": [
-    128,
+    126,
     0,
-    66
+    64
    ],
    "fovDeg": 56,
-   "fromAboveGround": 1.7,
+   "fromAboveGround": 2.0,
    "lookAtAboveGround": 2
   },
   {

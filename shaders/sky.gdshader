@@ -108,7 +108,7 @@ void sky() {
 	// 4. Clouds on a flat plane above the viewer.
 	float cloud_a_alpha = 0.0;
 	vec3 cloud_col = vec3(0.0);
-	if (y > 0.002) {
+	if (y > 0.002 && cloud_opacity > 0.0) {
 		vec2 plane = dir.xz / max(y, 0.002) * cloud_plane_height;
 		plane += POSITION.xz * 0.6;  // slight parallax when the camera moves, keeps the sky from feeling glued on
 		// Sun offset on the plane: toward the sun's azimuth, scaled so the lit rim is a few hundred metres wide.
@@ -147,8 +147,8 @@ void sky() {
 
 	// 5. Horizon band and below-horizon: fade into the fog colour.
 	// The sky at the rim line stays a little lighter than fully fogged ground, so far ridges read as darker silhouettes.
-	float horizon_blend = 1.0 - smoothstep(0.0, 0.12, y);
-	col = mix(col, mix(sky_horizon, fog_color, 0.5), horizon_blend * 0.6);
+	float horizon_blend = 1.0 - smoothstep(0.0, 0.18, y);
+	col = mix(col, mix(sky_horizon, fog_color, 0.75), horizon_blend * 0.85);
 	if (y < 0.0) {
 		float below = smoothstep(0.0, -0.35, y);
 		col = mix(fog_color, fog_color * 0.9, below);

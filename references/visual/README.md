@@ -1,7 +1,7 @@
 # Visual references
 
 Benchmarks of **composition, palette, terrain shape, scale, roads, foliage, architecture, fog and feel** for the Classic-WoW-evoking environment.
-They are **not assets**. No Blizzard screenshots or art are stored here (copyright); we keep links plus original written analysis. No image files are stored.
+They are **not assets**. The three JPEGs in `wow-classic/` (dawn willows + cliff keep, purple dusk with the giant tree and a channel, starlit night road through reeds) are the **reference frames the zone is tuned against**; view them, never copy pixels from them. Everything else is links plus original written analysis.
 
 ## Contents
 | File | Use |

@@ -24,11 +24,13 @@ public static class Atmosphere
         var sunCol = new Color(L.Sun.Color);
 
         var skyMat = new ShaderMaterial { Shader = GD.Load<Shader>("res://shaders/sky.gdshader") };
-        skyMat.SetShaderParameter("sky_top", top);
-        skyMat.SetShaderParameter("sky_horizon", horizon);
-        skyMat.SetShaderParameter("fog_color", fogCol);
-        skyMat.SetShaderParameter("cloud_light", Paint(L.Col("cloudLight", "#F2EBDC"), tonemapWhite));
-        skyMat.SetShaderParameter("cloud_shadow", Paint(L.Col("cloudShadow", "#7F85A6"), tonemapWhite));
+        // Plain vec3 uniforms get a Vector3: a Color handed to a non-source_color uniform is sRGB-decoded by the engine,
+        // which would darken the painted values a second time (measured: a #808080 sky rendered as #303030).
+        skyMat.SetShaderParameter("sky_top", V(top));
+        skyMat.SetShaderParameter("sky_horizon", V(horizon));
+        skyMat.SetShaderParameter("fog_color", V(fogCol));
+        skyMat.SetShaderParameter("cloud_light", V(Paint(L.Col("cloudLight", "#F2EBDC"), tonemapWhite)));
+        skyMat.SetShaderParameter("cloud_shadow", V(Paint(L.Col("cloudShadow", "#7F85A6"), tonemapWhite)));
         skyMat.SetShaderParameter("cloud_opacity", L.Fog.CloudOpacity);
         skyMat.SetShaderParameter("cloud_a_coverage", L.Fog.CloudCoverage);
         skyMat.SetShaderParameter("cloud_b_coverage", L.Fog.CloudCoverage + 0.06f);
@@ -36,7 +38,7 @@ public static class Atmosphere
         skyMat.SetShaderParameter("sky_curve", L.Fog.SkyCurve);
         skyMat.SetShaderParameter("star_strength", L.Fog.Stars);
         // Horizon warmth and disc derive from the sun colour so a palette change moves everything together.
-        skyMat.SetShaderParameter("sun_warm", Paint(L.Col("sunWarm", sunCol.Lerp(new Color("#F6E8C4"), 0.7f).ToHtml()), tonemapWhite));
+        skyMat.SetShaderParameter("sun_warm", V(Paint(L.Col("sunWarm", sunCol.Lerp(new Color("#F6E8C4"), 0.7f).ToHtml()), tonemapWhite)));
         skyMat.SetShaderParameter("sun_disc_deg", L.Fog.SunDiscDeg);
         skyMat.SetShaderParameter("sun_disc_soft_deg", L.Fog.SunDiscDeg * 0.66f);
         skyMat.SetShaderParameter("sun_disc_energy", L.Fog.SunDiscEnergy);
@@ -80,7 +82,7 @@ public static class Atmosphere
             // at the horizon instead, so fogged ridges still meet the sky without a seam.
             FogAerialPerspective = 0.0f,
             // The sky shader fades into the fog colour at the horizon itself; a high value here would wash out the clouds.
-            FogSkyAffect = 0.4f,
+            FogSkyAffect = 0.0f,
             // Low mist band (lake surface, the Throat floor) when the layout asks for it; the village flats sit above it.
             // Thin: long grazing views across the Mere pass through hundreds of metres of this band, so keep it a haze.
             FogHeight = L.Fog.HeightFogEnabled ? L.Fog.HeightFogLevel - 2.0f : 0f,
@@ -100,7 +102,7 @@ public static class Atmosphere
             Name = "Sun",
             LightColor = sunCol,
             LightEnergy = L.Sun.Energy,
-            ShadowEnabled = true,
+            ShadowEnabled = L.Sun.ShadowOpacity > 0.01f,
             ShadowOpacity = L.Sun.ShadowOpacity,
             ShadowBlur = 1.6f,
             DirectionalShadowMode = DirectionalLight3D.ShadowMode.Parallel4Splits,
@@ -119,6 +121,8 @@ public static class Atmosphere
         sun.LookAtFromPosition(Vector3.Zero - dir * 10f, Vector3.Zero, Vector3.Up);
         parent.AddChild(sun);
     }
+
+    private static Vector3 V(Color c) => new(c.R, c.G, c.B);
 
     /// <summary>
     /// Linear HDR colour that Godot's filmic tonemapper (with the given white) displays as <paramref name="screen"/>,

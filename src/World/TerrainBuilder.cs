@@ -251,6 +251,9 @@ public static class TerrainBuilder
             });
 
         // 7. Ground layers and tint.
+        // Horizontal unit vector pointing toward the sun (azimuth 0 = north, clockwise) for the baked lit-crest tint.
+        float sunAz = Mathf.DegToRad(L.Sun.AzimuthDeg);
+        var sunDir = new Vector2(MathF.Sin(sunAz), -MathF.Cos(sunAz));
         var forestBiomes = L.Biomes.FindAll(b => b.GroundTexture == "forestFloor");
         var rockBiomes = L.Biomes.FindAll(b => b.GroundTexture == "rock");
         var meadowBiomes = L.Biomes.FindAll(b => b.GroundTexture == "meadow");
@@ -264,6 +267,9 @@ public static class TerrainBuilder
             float sn = splatNoise.GetNoise2D(x, z);
 
             float rock = Smooth(Mathf.Clamp((slopeDeg - 36f + sn * 5f) / 12f, 0f, 1f));
+            // Hummock flanks are steep-ish peat, never strata: no slope rock on the low bog floor.
+            if (L.Marsh is { } mr0 && (x - mr0.X) * (x - mr0.X) + (z - mr0.Z) * (z - mr0.Z) < mr0.Radius * mr0.Radius)
+                rock *= Smooth((h - mr0.WaterLevel - 6f) / 8f);
             // High fells are bare rock whatever their slope (the snow line sits above them on all but the north rim).
             rock = MathF.Max(rock, Smooth((h - 90f + sn * 10f) / 45f));
             foreach (var b in rockBiomes) rock = MathF.Max(rock, BiomeWeight(b, x, z, sn));
@@ -303,7 +309,7 @@ public static class TerrainBuilder
 
             // Tint: warm/cool hue drift, sunlit south-west facing slopes a touch lighter, hollows cooler.
             float tn = tintNoise.GetNoise2D(x, z);
-            float facing = Mathf.Clamp(nrm.X * -0.35f + nrm.Z * 0.6f, -1f, 1f); // faces towards +Z (south) and -X (west)
+            float facing = Mathf.Clamp(nrm.X * sunDir.X + nrm.Z * sunDir.Y, -1f, 1f) * 0.7f; // slopes facing the sun's azimuth
             float v = 1f + 0.10f * tn + 0.05f * facing;
             float warm = 0.5f + 0.5f * tn;
             // Warm pole = reddish peat, cool pole = olive: the baked patchiness Classic ground has instead of lighting.
