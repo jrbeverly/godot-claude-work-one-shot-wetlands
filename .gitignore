@@ -22,8 +22,8 @@ Thumbs.db
 .idea/
 *.swp
 
-# Rendered shots (regenerate with tools/screenshot.sh); curated ones live in docs/screenshots
-screenshots/
+# Rendered shots at the repo root (regenerate with tools/screenshot.sh); curated ones in docs/screenshots ARE tracked
+/screenshots/
 
 # Agent worktrees
 .claude/worktrees/
