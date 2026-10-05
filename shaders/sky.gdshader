@@ -148,7 +148,7 @@ void sky() {
 	// 5. Horizon band and below-horizon: fade into the fog colour.
 	// The sky at the rim line stays a little lighter than fully fogged ground, so far ridges read as darker silhouettes.
 	float horizon_blend = 1.0 - smoothstep(0.0, 0.18, y);
-	col = mix(col, mix(sky_horizon, fog_color, 0.75), horizon_blend * 0.85);
+	col = mix(col, mix(sky_horizon, fog_color, 0.3), horizon_blend * 0.7);
 	if (y < 0.0) {
 		float below = smoothstep(0.0, -0.35, y);
 		col = mix(fog_color, fog_color * 0.9, below);

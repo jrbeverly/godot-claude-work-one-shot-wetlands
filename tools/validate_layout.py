@@ -5,7 +5,7 @@ Exit code 1 on errors; warnings are printed but do not fail."""
 import json, math, sys
 
 TREES = {f"CommonTree_{i}" for i in range(1, 6)} | {f"Pine_{i}" for i in range(1, 6)} | {"DeadTree_1", "DeadTree_3", "DeadTree_5", "TwistedTree_1", "TwistedTree_3", "TwistedTree_5"} | {f"MossTree_{i}" for i in range(1, 4)} | {f"BogOak_{i}" for i in range(1, 4)}
-UNDER = {"Reeds_1", "Reeds_2", "Reeds_3", "Bush_Common", "Bush_Common_Flowers", "Fern_1", "Clover_1", "Flower_3_Group", "Flower_4_Group", "Grass_Common_Short", "Grass_Common_Tall", "Grass_Wispy_Short", "Grass_Wispy_Tall", "Mushroom_Common", "Mushroom_Laetiporus", "Rock_Medium_1", "Rock_Medium_2", "Rock_Medium_3", "Pebble_Round_1", "Pebble_Round_3", "Pebble_Square_1", "Pebble_Square_3"}
+UNDER = {"Reeds_1", "Reeds_2", "Reeds_3", "Reeds_4", "Bush_Common", "Bush_Common_Flowers", "Fern_1", "Clover_1", "Flower_3_Group", "Flower_4_Group", "Grass_Common_Short", "Grass_Common_Tall", "Grass_Wispy_Short", "Grass_Wispy_Tall", "Mushroom_Common", "Mushroom_Laetiporus", "Rock_Medium_1", "Rock_Medium_2", "Rock_Medium_3", "Pebble_Round_1", "Pebble_Round_3", "Pebble_Square_1", "Pebble_Square_3"}
 LANDMARKS = {"church", "tavern", "blacksmith", "windmill", "lumbermill", "mine", "well", "tower"}
 PROPS = {"wagon", "crate", "RockPath_Round_Thin", "RockPath_Square_Thin"}
 GROUND = {"grass", "meadow", "forestFloor", "rock", "snow"}

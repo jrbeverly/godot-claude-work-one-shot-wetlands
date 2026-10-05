@@ -13,7 +13,7 @@ namespace GodotWarcraft.World;
 public static class FoliagePlacer
 {
     private const int MaxTrees = 3500;
-    private const int MaxUndergrowth = 45000;
+    private const int MaxUndergrowth = 80000;
     private const float EdgeMargin = 40f;      // keep the map rim bare so the mountain silhouette stays clean
     private const float TreeAltitudeLimit = 60f;      // the high walls stay bare (the references' smooth cliffs)
     private const float PineAltitudeLimit = 95f;
@@ -24,7 +24,7 @@ public static class FoliagePlacer
 
     private enum Kind { Tree, Bush, Tuft, Rock, Pebble }
     /// <summary>Boulders match the warm palette rock (#857C70) instead of the kit's cool blue-grey.</summary>
-    private static readonly Color RockTint = new(1.0f, 0.95f, 0.88f);
+    private static readonly Color RockTint = new(0.62f, 0.60f, 0.52f);   // dark mossy bog boulders, never pale plastic
 
     private readonly record struct Instance(Transform3D Xf, Color Tint);
     private readonly record struct GroupKey(string Model, Color Tint, Kind Kind, int Cx, int Cz);
@@ -87,7 +87,8 @@ public static class FoliagePlacer
                 bool pine = choice.Model.StartsWith("Pine", StringComparison.OrdinalIgnoreCase);
                 // Marsh trees stand in the shallows and on the banks; everything else keeps off the water.
                 bool wader = choice.Model.StartsWith("MossTree", StringComparison.OrdinalIgnoreCase) || choice.Model.StartsWith("BogOak", StringComparison.OrdinalIgnoreCase);
-                float scale = choice.Scale * rng.RandfRange(0.85f, 1.2f);
+                // Biased toward full-size trees with about one in four saplings, so stands are not a picket line of equals.
+                float scale = choice.Scale * Mathf.Lerp(0.5f, 1.3f, MathF.Pow(rng.Randf(), 0.7f));
                 if (!TreeSpotOk(f, x, z, scale, pine ? PineAltitudeLimit : TreeAltitudeLimit, wader)) return;
 
                 var model = ModelLibrary.Get(choice.Model);
@@ -137,9 +138,9 @@ public static class FoliagePlacer
                     if (reed)
                     {
                         // Full density within ~7 m of water, a quarter elsewhere; the patch noise still breaks it up.
-                        keep = keepBase * (NearWater(f, x, z, 7f) ? 1f : 0.25f) * Mathf.SmoothStep(0.2f, 0.7f, p);
+                        keep = keepBase * (NearWater(f, x, z, 8f) ? 1f : 0.45f) * Mathf.SmoothStep(0.15f, 0.6f, p);
                         if (rng.Randf() > keep) return;
-                        if (!ReedSpotOk(f, x, z)) return;
+                        if (!ReedSpotOk(f, x, z, choice.Model.EndsWith("4") ? 0.6f : 0.25f)) return;
                     }
                     else
                     {
@@ -147,7 +148,7 @@ public static class FoliagePlacer
                         if (!UndergrowthSpotOk(f, x, z)) return;
                     }
 
-                    float scale = BaseScale(choice.Model) * choice.Scale * rng.RandfRange(0.8f, 1.25f);
+                    float scale = BaseScale(choice.Model) * choice.Scale * (reed ? rng.RandfRange(0.9f, 1.5f) : rng.RandfRange(0.8f, 1.25f));
                     float y = f.SampleHeight(x, z) - 0.06f - 0.1f * MathF.Min(f.SampleSlopeDeg(x, z) / 30f, 1f);
                     var xf = Upright(x, y, z, rng.RandfRange(0f, Mathf.Tau), scale);
                     under.Add((Key(choice.Model, tint, kind, x, z), new Instance(xf, Vary(x, z, 0.12f))));
@@ -245,12 +246,12 @@ public static class FoliagePlacer
                     : GeometryInstance3D.ShadowCastingSetting.Off,
             };
             // Reeds are the bog's main ground cover (a few quads each), so they stay visible much further than tufts.
-            float rangeEnd = key.Model.StartsWith("Reeds", StringComparison.OrdinalIgnoreCase) ? 170f
+            float rangeEnd = key.Model.StartsWith("Reeds", StringComparison.OrdinalIgnoreCase) ? 120f
                 : key.Kind switch { Kind.Tuft => 90f, Kind.Pebble => 70f, Kind.Bush => 220f, _ => 0f };
             if (rangeEnd > 0f)
             {
                 mmi.VisibilityRangeEnd = rangeEnd;
-                mmi.VisibilityRangeEndMargin = rangeEnd * 0.2f;
+                mmi.VisibilityRangeEndMargin = rangeEnd * 0.35f;
                 // Dithered self-fade only works on the foliage ShaderMaterial here; on the kit's StandardMaterial3D
                 // (pebbles, mushrooms) it hid the instances outright, so those get a plain hysteresis cut instead.
                 bool shaderMat = mesh.SurfaceGetMaterial(0) is ShaderMaterial;
@@ -301,12 +302,12 @@ public static class FoliagePlacer
     }
 
     /// <summary>Reeds: like other undergrowth but allowed to stand in up to 0.6 m of water.</summary>
-    private static bool ReedSpotOk(HeightField f, float x, float z)
+    private static bool ReedSpotOk(HeightField f, float x, float z, float maxDepth)
     {
         float margin = f.HalfExtent - EdgeMargin;
         if (MathF.Abs(x) > margin || MathF.Abs(z) > margin) return false;
-        if (f.SampleRoadDistance(x, z) < 2.4f) return false;
-        if (f.SampleWaterDepth(x, z) > 0.6f) return false;
+        if (f.SampleRoadDistance(x, z) < 1.4f) return false;      // reeds grow to the road's edge (R2)
+        if (f.SampleWaterDepth(x, z) > maxDepth) return false;
         if (f.SampleSlopeDeg(x, z) > 40f) return false;
         if (f.SampleSiteClear(x, z) > 0.5f) return false;
         if (f.SampleHeight(x, z) > TreeAltitudeLimit) return false;

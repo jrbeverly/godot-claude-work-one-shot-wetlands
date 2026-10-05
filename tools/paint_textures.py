@@ -218,14 +218,14 @@ def paint_grass(c: Canvas):
             c.dab(x + (j - 1.5) * 3.5 * c.k, y - 6 * c.k, c.px(2.2, 3.2), c.px(9, 15), ang, c.vary(col, 0.04),
                   alpha=0.75, wobble=0.12, soft=0.8, light=0.2)
     c.shade_by_noise(2.5, 0.10)
-    c.mute(0.28, 0.90)
+    c.mute(0.30, 0.80)
     c.soften(0.7)
 
 
 def paint_meadow(c: Canvas):
     area = c.k * c.k
     # Sedge band around the pools: straw-olive, greyer than a hay meadow, wind-combed.
-    base, straw, deep, green = hex_rgb("7E803E"), hex_rgb("A89C58"), hex_rgb("596038"), hex_rgb("6E7A3C")
+    base, straw, deep, green = hex_rgb("6E7040"), hex_rgb("8E8A50"), hex_rgb("525836"), hex_rgb("64703A")
     c.tint_by_noise(1.5, base * 0.95, straw * 0.95, 0.6)
     c.underpaint([base, straw, deep, green], [0.35, 0.3, 0.15, 0.2], int(300 * area), (24, 42), (16, 28), alpha=0.6, light=0.12)
     for _ in range(int(28 * area)):
@@ -239,7 +239,7 @@ def paint_meadow(c: Canvas):
               alpha=0.7, wobble=0.3, soft=0.8, light=0.2, shadow=0.2, shadow_offset=0.3)
     # Dry grass: long thin pale-straw blades all leaning the same general way, like wind has combed them.
     lean = c.u(-0.35, 0.35)
-    pale = hex_rgb("BFB270")
+    pale = hex_rgb("A8A068")
     for _ in range(int(70 * area)):
         x, y = c.pos()
         col = c.pick([straw, pale, straw * 0.92], [0.45, 0.35, 0.2])
@@ -265,8 +265,8 @@ def paint_meadow(c: Canvas):
 def paint_forest_floor(c: Canvas):
     area = c.k * c.k
     # Peat: dark red-brown earth (the hummocks of the references) with olive moss cushions and straw litter.
-    base, litter, litter_l, moss, root = hex_rgb("463428"), hex_rgb("5E4A36"), hex_rgb("72603E"), hex_rgb("55602F"), hex_rgb("2C221C")
-    soil = hex_rgb("3E302A")
+    base, litter, litter_l, moss, root = hex_rgb("3E3024"), hex_rgb("4E3E2C"), hex_rgb("5A4A34"), hex_rgb("4A5230"), hex_rgb("2C221C")
+    soil = hex_rgb("382A24")
     c.tint_by_noise(1.5, base * 0.9, litter * 0.85, 0.55)
     c.underpaint([base, moss, soil, litter * 0.9], [0.4, 0.25, 0.2, 0.15], int(420 * area), (16, 30), (12, 22), alpha=0.55, light=0.12)
     # Root shadows: broad, soft, dark meanders under everything (a few, not a web).
@@ -278,22 +278,22 @@ def paint_forest_floor(c: Canvas):
     # Moss cushions: lit green blobs.
     for _ in range(int(60 * area)):
         x, y = c.pos()
-        c.dab(x, y, c.px(10, 18), c.px(8, 14), c.u(0, math.pi), c.vary(moss, 0.06), alpha=0.7, wobble=0.35, soft=0.7, light=0.25, shadow=0.25)
+        c.dab(x, y, c.px(10, 18), c.px(8, 14), c.u(0, math.pi), c.vary(moss, 0.06), alpha=0.5, wobble=0.35, soft=0.7, light=0.2, shadow=0.2)
     # Two very large, very soft bare-soil pools: the macro sample needs something big to break the grid.
     for _ in range(2):
         x, y = c.pos()
         c.dab(x, y, c.px(120, 180), c.px(70, 110), c.u(0, math.pi), c.vary(soil * 1.08, 0.03), alpha=0.5, wobble=0.35, soft=1.0, light=0.04)
     # Leaf litter: ochre ovals in loose drifts, lit on one side with a soft outline. Drift count, spread
     # and leaf count vary a lot so no two drifts look alike and they do not read as an even grid.
-    for _ in range(int(13 * area)):
+    for _ in range(int(5 * area)):
         gx, gy = c.pos()
         spread = c.u(0.6, 1.7)
         # A soft soil patch under the drift so the leaves sit in something.
         c.dab(gx, gy, c.px(26, 44) * spread, c.px(18, 30) * spread, c.u(0, math.pi), c.vary(soil * 1.1, 0.04), alpha=0.55, wobble=0.35, soft=1.0, light=0.06)
         for _ in range(c.rng.integers(4, int(10 + 12 * spread))):
-            col = c.pick([litter, litter_l, hex_rgb("6A5A3A")], [0.45, 0.3, 0.25])
+            col = c.pick([litter, litter_l, hex_rgb("504230")], [0.45, 0.3, 0.25])
             c.dab(gx + c.rng.normal(0, 16 * spread) * c.k, gy + c.rng.normal(0, 12 * spread) * c.k, c.px(7, 13), c.px(4.5, 7.5), c.u(0, math.pi), c.vary(col, 0.07),
-                  alpha=0.8, wobble=0.25, soft=0.6, light=0.3, shadow=0.3, shadow_offset=0.4, edge_dark=0.12)
+                  alpha=0.5, wobble=0.25, soft=0.6, light=0.15, shadow=0.2, shadow_offset=0.4, edge_dark=0.1)
     c.shade_by_noise(2.0, 0.12)
     c.soften(0.7)
 
@@ -346,7 +346,7 @@ def paint_rock(c: Canvas):
     # Strata: rows of flat, hard-edged slabs. Each slab gets a hard dark crack painted under its lip first,
     # then the slab face (firm rim, almost no wobble), then a thin lit top edge.
     # Band thicknesses vary (natural bedding, not courses of masonry); they sum to the tile height.
-    rows = 9
+    rows = 4
     weights = c.rng.uniform(0.6, 1.5, rows)
     band_hs = weights / weights.sum() * c.n
     y_base = 0.0
@@ -361,7 +361,7 @@ def paint_rock(c: Canvas):
             ang = tilt + c.rng.normal(0, 0.04)
             col = c.pick([light, mid, dark], [0.35, 0.4, 0.25])
             # Underside shadow: a crack-tone slab offset down-right, hard edged.
-            c.dab(cx + w * 0.04, cy + h * 0.2, w * 0.5, h * 0.45, ang, c.vary(crack, 0.04), alpha=0.5, wobble=0.04, soft=0.2, light=0.0, power=4.5)
+            c.dab(cx + w * 0.04, cy + h * 0.2, w * 0.5, h * 0.45, ang, c.vary(crack, 0.04), alpha=0.3, wobble=0.04, soft=0.3, light=0.0, power=4.5)
             # Slab face: flat-sided, firm rim, lit top-left flank.
             c.dab(cx, cy, w * 0.5, h * 0.5, ang, c.vary(col, 0.06), alpha=0.7, wobble=0.06, soft=0.12, light=0.2, power=4.0)
             # Thin lit top edge.
@@ -369,9 +369,9 @@ def paint_rock(c: Canvas):
             x += w * c.u(0.8, 1.0)  # slabs abut with a thin crack between them
         y_base += band_h
     # Fissures: tall vertical joints cutting through two or three beds, hard and dark.
-    for _ in range(int(14 * area)):
+    for _ in range(int(5 * area)):
         x, y = c.pos()
-        c.dab(x, y, c.px(2.5, 5), c.px(40, 90), math.pi / 2 + c.rng.normal(0, 0.12), crack, alpha=0.75, wobble=0.3, soft=0.5, light=0.0)
+        c.dab(x, y, c.px(2.5, 5), c.px(40, 90), c.rng.normal(0, 0.12), crack, alpha=0.5, wobble=0.3, soft=0.6, light=0.0)
     # Warm/cool drift so cliffs do not read as one flat tone (kept on the warm side).
     c.tint_by_noise(2.0, hex_rgb("665A62"), hex_rgb("847A7E"), 0.2)
     c.shade_by_noise(2.0, 0.12)
@@ -425,8 +425,8 @@ def paint_mud(c: Canvas):
 MATERIALS = {
     # name: (seed, base colour, painter)
     "grass": (101, "5C6A36", paint_grass),
-    "meadow": (202, "7E803E", paint_meadow),
-    "forest_floor": (303, "463428", paint_forest_floor),
+    "meadow": (202, "6E7040", paint_meadow),
+    "forest_floor": (303, "3E3024", paint_forest_floor),
     "dirt_road": (404, "7A7E62", paint_dirt_road),
     "rock": (505, "746A70", paint_rock),
     "snow": (606, "E8EEF4", paint_snow),

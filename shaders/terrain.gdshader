@@ -18,7 +18,7 @@ uniform float tile_rock = 11.0;
 uniform float tile_snow = 6.0;
 uniform float tile_meadow = 6.5;
 uniform float macro_scale = 0.0075;        // breaks tiling with a second, large-scale sample
-uniform float macro_strength = 0.6;
+uniform float macro_strength = 0.45;
 uniform float snow_line = 115.0;
 uniform float snow_blend = 22.0;
 uniform float blend_sharpness = 2.4;     // >1 = crisper painted layer edges
@@ -79,7 +79,10 @@ void fragment() {
 	float flatness = smoothstep(0.55, 0.9, v_wnormal.y);
 	float snow_noise = (texture(tex_snow, uv * 0.01).r - 0.5) * snow_blend * 1.2;
 	float snow = smoothstep(snow_line - snow_blend, snow_line + snow_blend, v_wpos.y + snow_noise) * mix(0.85, 1.0, flatness);   // steep faces pale too: this layer doubles as the high wall
-	vec3 snow_col = sample_layer(tex_snow, uv, tile_snow) * tint_snow;
+	// Triplanar: the pale-wall layer is sampled on near-vertical faces, so no top-down streaking.
+	vec3 snow_col = sample_triplanar(tex_snow, v_wpos, v_wnormal, tile_snow) * tint_snow;
+	// The wall base sits in shade and the top catches the light (the dawn reference's cliff).
+	snow_col *= mix(0.72, 1.12, smoothstep(10.0, 140.0, v_wpos.y));
 	albedo = mix(albedo, snow_col, snow);
 
 	// Baked tint (vertex hue drift) and darker, cooler ground under water.

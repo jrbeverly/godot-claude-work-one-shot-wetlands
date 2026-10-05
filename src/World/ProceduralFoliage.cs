@@ -41,27 +41,29 @@ public static class ProceduralFoliage
     {
         // Proportions from the references: trunk 1.6-2.2 m thick at chest height flaring to ~3 m at the root,
         // canopy top 15-19 m, canopy spread 14-18 m, curtains hanging to roughly half height.
-        float height = 15f + variant * 1.5f + rng.RandfRange(-1f, 1f);
-        float trunkR = 0.9f + 0.12f * variant;
-        float spread = 7.5f + 0.6f * variant;          // canopy radius
-        float canopyY = height * 0.78f;                // where the umbrella sits
+        // R1 proportions: canopy as wide as the tree is tall, leaf mass a third of the height, curtains another third,
+        // trunk visible only in the bottom quarter and flaring to ~3 m at the root.
+        float height = 18f + variant * 1.5f + rng.RandfRange(-1f, 1f);
+        float trunkR = 1.1f + 0.15f * variant;
+        float spread = height * 0.48f;                 // canopy radius
+        float canopyY = height * 0.64f;                // where the umbrella sits
         var trunk = new Surface();
         var leaves = new Surface();
         var moss = new Surface();
 
         // Trunk: a tapered, gently bent tube with a root flare.
         var spine = new List<(Vector3 p, float r)>();
-        float lean = rng.RandfRange(-0.08f, 0.08f), bend = rng.RandfRange(-0.12f, 0.12f);
+        float lean = rng.RandfRange(-0.16f, 0.16f), bend = rng.RandfRange(-0.2f, 0.2f);
         for (int i = 0; i <= 8; i++)
         {
             float t = i / 8f;
             float y = t * canopyY;
-            float flare = MathF.Pow(1f - t, 5f) * 0.5f;                      // modest root flare
-            float r = trunkR * (1.05f - 0.42f * t) + flare * trunkR;
+            float flare = MathF.Pow(1f - t, 3f) * 1.1f;                      // root buttress flare
+            float r = trunkR * (1.05f - 0.55f * t) + flare * trunkR;
             var p = new Vector3(lean * y + bend * MathF.Sin(t * MathF.PI) * 2.5f, y - 0.4f, bend * 0.5f * MathF.Sin(t * MathF.PI * 1.3f) * 2.0f);
             spine.Add((p, r));
         }
-        Tube(trunk, spine, 12, uvPerMetre: 0.25f, rng);
+        Tube(trunk, spine, 12, uvPerMetre: 0.45f, rng, canopyY);
 
         // Branches: 4-6 heavy limbs from the top third of the trunk fanning out to the canopy rim.
         int branches = 4 + variant % 3;
@@ -76,50 +78,52 @@ public static class ProceduralFoliage
             var end = new Vector3(start.X + MathF.Cos(a) * reach, canopyY + rng.RandfRange(-1.5f, 1.0f), start.Z + MathF.Sin(a) * reach);
             var mid = start.Lerp(end, 0.5f) + new Vector3(0, rng.RandfRange(0.5f, 2.0f), 0);
             var bs = new List<(Vector3, float)> { (start, trunkR * 0.55f), (mid, trunkR * 0.36f), (end, trunkR * 0.16f) };
-            Tube(trunk, bs, 7, uvPerMetre: 0.3f, rng);
+            Tube(trunk, bs, 7, uvPerMetre: 0.45f, rng, canopyY);
             rimPoints.Add(end);
         }
 
         // Crown: three big overlapping cards, each tilted a little in its own direction, so the top reads as a
         // broad lumpy plate (the references' willows are flat-topped but never razor-straight).
-        for (int k = 0; k < 3; k++)
+        for (int k = 0; k < 4; k++)
         {
-            float a = rng.RandfRange(0f, MathF.Tau), tilt = rng.RandfRange(0.12f, 0.3f);
+            float a = rng.RandfRange(0f, MathF.Tau), tilt = rng.RandfRange(0.25f, 0.5f);
             var n = (Vector3.Up + new Vector3(MathF.Cos(a), 0, MathF.Sin(a)) * tilt).Normalized();
-            var c = new Vector3(top.X + rng.RandfRange(-1.5f, 1.5f), canopyY + 0.8f + k * 0.7f, top.Z + rng.RandfRange(-1.5f, 1.5f));
-            AddCard(leaves, c, n, rng.RandfRange(0, MathF.Tau), spread * rng.RandfRange(0.78f, 0.95f), spread * rng.RandfRange(0.7f, 0.9f), 0f);
+            var c = new Vector3(top.X + rng.RandfRange(-1.5f, 1.5f), canopyY + 0.6f + k * 0.8f, top.Z + rng.RandfRange(-1.5f, 1.5f));
+            AddCard(leaves, c, n, rng.RandfRange(0, MathF.Tau), spread * rng.RandfRange(0.72f, 0.9f), spread * rng.RandfRange(0.62f, 0.82f), 1f);
         }
-        // Top-knots: a few small upright cards on the crown so the silhouette has bumps instead of a line.
+        // Top-knots: a few leaning caps on the crown so the silhouette has bumps instead of a line.
         for (int k = 0; k < 3; k++)
         {
             float a = k * MathF.Tau / 3f + rng.RandfRange(-0.4f, 0.4f);
-            var c = new Vector3(top.X + MathF.Cos(a) * spread * 0.3f, canopyY + 2.2f, top.Z + MathF.Sin(a) * spread * 0.3f);
-            AddCard(leaves, c, new Vector3(MathF.Cos(a + 1.3f), 0.25f, MathF.Sin(a + 1.3f)), 0f, spread * 0.42f, spread * 0.26f, 0f, upVector: Vector3.Up);
+            var c = new Vector3(top.X + MathF.Cos(a) * spread * 0.3f, canopyY + 1.6f, top.Z + MathF.Sin(a) * spread * 0.3f);
+            AddCard(leaves, c, new Vector3(MathF.Cos(a + 1.3f), 0.7f, MathF.Sin(a + 1.3f)), 0f, spread * 0.34f, spread * 0.22f, 1f, upVector: Vector3.Up);
         }
-        // Petals: the dome's shoulders, tilted well outward-down, at uneven heights.
+        // Petals: the dome's shoulders, below the crown and tilted well outward-down, at uneven heights.
         int petals = 6 + variant % 2;
         for (int k = 0; k < petals; k++)
         {
             float a = k * MathF.Tau / petals + rng.RandfRange(-0.25f, 0.25f);
-            var c = new Vector3(top.X + MathF.Cos(a) * spread * 0.55f, canopyY + rng.RandfRange(-0.9f, 0.9f), top.Z + MathF.Sin(a) * spread * 0.55f);
+            var c = new Vector3(top.X + MathF.Cos(a) * spread * 0.55f, canopyY - 1.6f + rng.RandfRange(-0.9f, 0.9f), top.Z + MathF.Sin(a) * spread * 0.55f);
             var outward = new Vector3(MathF.Cos(a), 0, MathF.Sin(a));
-            var n = (Vector3.Up * 0.75f + outward * rng.RandfRange(0.6f, 0.9f)).Normalized();   // ~40-50 deg
-            AddCard(leaves, c, n, a + rng.RandfRange(-0.5f, 0.5f), spread * rng.RandfRange(0.55f, 0.75f), spread * rng.RandfRange(0.45f, 0.6f), 0f);
+            var n = (Vector3.Up * 0.55f + outward * rng.RandfRange(0.7f, 0.95f)).Normalized();   // ~50-60 deg
+            AddCard(leaves, c, n, a + rng.RandfRange(-0.5f, 0.5f), spread * rng.RandfRange(0.55f, 0.75f), spread * rng.RandfRange(0.45f, 0.6f), 0.9f);
         }
-        // Skirt: outward-facing cards around the rim so the canopy keeps its mass seen from eye level; irregular sizes.
+        // Skirt: two rings of outward-facing cards so the leaf mass spans a third of the height seen from eye level.
         int skirt = 8;
+        for (int ring = 0; ring < 2; ring++)
         for (int k = 0; k < skirt; k++)
         {
-            float a = k * MathF.Tau / skirt + rng.RandfRange(-0.2f, 0.2f);
+            float a = k * MathF.Tau / skirt + rng.RandfRange(-0.2f, 0.2f) + ring * 0.39f;
             var outward = new Vector3(MathF.Cos(a), 0, MathF.Sin(a));
-            var c = new Vector3(top.X, canopyY - 0.9f + rng.RandfRange(-0.8f, 0.8f), top.Z) + outward * spread * rng.RandfRange(0.7f, 0.85f);
-            var n = (outward * 0.9f + Vector3.Up * rng.RandfRange(0.25f, 0.55f)).Normalized();
-            AddCard(leaves, c, n, 0f, spread * rng.RandfRange(0.42f, 0.62f), spread * rng.RandfRange(0.28f, 0.42f), 0f, upVector: Vector3.Up);
+            float yy = canopyY - (ring == 0 ? 1.6f : 4.6f) + rng.RandfRange(-0.8f, 0.8f);
+            var c = new Vector3(top.X, yy, top.Z) + outward * spread * rng.RandfRange(0.68f, 0.85f) * (ring == 0 ? 1f : 0.92f);
+            var n = (outward * 0.9f + Vector3.Up * rng.RandfRange(0.1f, 0.3f)).Normalized();
+            AddCard(leaves, c, n, 0f, spread * rng.RandfRange(0.42f, 0.62f), spread * rng.RandfRange(0.26f, 0.4f), ring == 0 ? 0.85f : 0.75f, upVector: Vector3.Up);
         }
         // Curtains: moss strips hanging from the rim, each a V pair so it reads from every side.
         // Bunches around the rim (5-7) with holes between them, each bunch 2-3 overlapping V pairs.
-        int bunches = 5 + variant % 3;
-        float curtainH = height * rng.RandfRange(0.42f, 0.5f);
+        int bunches = 8 + variant % 3;
+        float curtainH = height * rng.RandfRange(0.4f, 0.48f);
         var curtainSlots = new List<float>();
         for (int b = 0; b < bunches; b++)
         {
@@ -131,7 +135,7 @@ public static class ProceduralFoliage
         {
             float a = slot;
             float rr = spread * rng.RandfRange(0.72f, 0.98f);
-            var c = new Vector3(top.X + MathF.Cos(a) * rr, canopyY - 0.8f, top.Z + MathF.Sin(a) * rr);
+            var c = new Vector3(top.X + MathF.Cos(a) * rr, canopyY - 2.2f, top.Z + MathF.Sin(a) * rr);
             float w = rng.RandfRange(3.2f, 4.6f), h = curtainH * rng.RandfRange(0.8f, 1.1f);
             AddHanging(moss, c, a + rng.RandfRange(-0.4f, 0.4f), w, h);
             AddHanging(moss, c, a + MathF.PI * 0.55f, w * 0.8f, h * 0.9f);
@@ -174,28 +178,30 @@ public static class ProceduralFoliage
         }
         // Crown: a lumpy dark mass in two tiers of tilted cards (no flat plates: edge-on they read as lines), with a few
         // upright cards so the silhouette is a mass with bumps, and the kit's bare twigs poking out above it.
-        float spread = 9f + variant;
-        float canopyY = topY * 0.7f;
-        for (int tier = 0; tier < 2; tier++)
+        // R3's giant: a flat-topped crown 1.3-1.5x as wide as the visible trunk is tall, with a flat dark underside and
+        // the bare twigs of the kit trunk poking through above it.
+        float spread = 13f + variant;
+        float canopyY = topY * 0.58f;
+        for (int tier = 0; tier < 3; tier++)
         {
-            int n = tier == 0 ? 7 : 5;
-            float rr = tier == 0 ? spread * 0.55f : spread * 0.3f;
-            float yy = canopyY + tier * 3.2f;
+            int n = tier == 0 ? 7 : tier == 1 ? 6 : 4;
+            float rr = tier == 0 ? spread * 0.6f : tier == 1 ? spread * 0.4f : spread * 0.2f;
+            float yy = canopyY + tier * 2.4f;
             for (int k = 0; k < n; k++)
             {
                 float a = k * MathF.Tau / n + rng.RandfRange(-0.3f, 0.3f);
                 var outward = new Vector3(MathF.Cos(a), 0, MathF.Sin(a));
-                var c = outward * rr + new Vector3(rng.RandfRange(-1f, 1f), yy + rng.RandfRange(-1.2f, 1.2f), rng.RandfRange(-1f, 1f));
-                var nrm = (Vector3.Up * rng.RandfRange(0.5f, 0.9f) + outward * rng.RandfRange(0.4f, 0.9f)).Normalized();
-                AddCard(leaves, c, nrm, rng.RandfRange(0, MathF.Tau), spread * rng.RandfRange(0.5f, 0.7f), spread * rng.RandfRange(0.4f, 0.55f), 0f);
+                var c = outward * rr + new Vector3(rng.RandfRange(-1f, 1f), yy + rng.RandfRange(-0.8f, 0.8f), rng.RandfRange(-1f, 1f));
+                var nrm = (Vector3.Up * 0.9f + outward * rng.RandfRange(0.25f, 0.45f)).Normalized();
+                AddCard(leaves, c, nrm, rng.RandfRange(0, MathF.Tau), spread * rng.RandfRange(0.6f, 0.8f), spread * rng.RandfRange(0.45f, 0.6f), tier == 0 ? 0.8f : 1f);
             }
         }
-        for (int k = 0; k < 6; k++)
+        for (int k = 0; k < 7; k++)
         {
-            float a = k * MathF.Tau / 6 + rng.RandfRange(-0.3f, 0.3f);
+            float a = k * MathF.Tau / 7 + rng.RandfRange(-0.3f, 0.3f);
             var outward = new Vector3(MathF.Cos(a), 0, MathF.Sin(a));
-            var c = outward * spread * 0.7f + new Vector3(0, canopyY + rng.RandfRange(-0.5f, 2.0f), 0);
-            AddCard(leaves, c, (outward * 0.9f + Vector3.Up * 0.3f).Normalized(), 0f, spread * rng.RandfRange(0.45f, 0.6f), spread * rng.RandfRange(0.35f, 0.5f), 0f, upVector: Vector3.Up);
+            var c = outward * spread * 0.85f + new Vector3(0, canopyY + rng.RandfRange(0f, 2.5f), 0);
+            AddCard(leaves, c, (outward * 0.9f + Vector3.Up * 0.3f).Normalized(), 0f, spread * rng.RandfRange(0.4f, 0.55f), spread * rng.RandfRange(0.3f, 0.4f), 0.8f, upVector: Vector3.Up);
         }
         leaves.Commit(mesh, LeafMaterial("Leaves_BogOak", "leaf_clump.png"));
         return mesh;
@@ -206,8 +212,9 @@ public static class ProceduralFoliage
     private static ArrayMesh BuildReeds(int variant, RandomNumberGenerator rng)
     {
         var s = new Surface();
-        int cards = 2 + variant % 2;                       // 2 or 3 crossed cards
-        float h = 1.3f + 0.25f * variant, w = h * 0.55f;
+        // Variants 1-3: waist-high reed clumps; 4: the short dense sedge that sprouts through the water surface.
+        int cards = 4;
+        float h = variant == 4 ? 0.6f : 0.9f + 0.15f * variant, w = h * (variant == 4 ? 1.3f : 1.1f);
         for (int k = 0; k < cards; k++)
         {
             float a = k * MathF.PI / cards + rng.RandfRange(-0.15f, 0.15f);
@@ -235,7 +242,7 @@ public static class ProceduralFoliage
             ResourceName = dark ? "Trunk_BogOak" : "Trunk_Pale",
             AlbedoTexture = Tex("bark_pale.png"),
             // The dark oak keeps the pale bark texture but multiplied down to a near-silhouette brown-grey.
-            AlbedoColor = dark ? new Color(0.40f, 0.36f, 0.34f) : new Color(0.80f, 0.74f, 0.66f),
+            AlbedoColor = dark ? new Color(0.50f, 0.44f, 0.40f) : new Color(0.92f, 0.76f, 0.54f),
             Roughness = 1f,
             MetallicSpecular = 0f,
             VertexColorUseAsAlbedo = true,
@@ -276,7 +283,7 @@ public static class ProceduralFoliage
     }
 
     /// <summary>Tube along a spine of (point, radius); rings are oriented by the local tangent. Vertex colour darkens toward the ground (baked AO).</summary>
-    private static void Tube(Surface s, List<(Vector3 p, float r)> spine, int segs, float uvPerMetre, RandomNumberGenerator rng)
+    private static void Tube(Surface s, List<(Vector3 p, float r)> spine, int segs, float uvPerMetre, RandomNumberGenerator rng, float shadeTop = 12f)
     {
         int rings = spine.Count;
         var ringStart = new int[rings];
@@ -289,14 +296,15 @@ public static class ProceduralFoliage
             var side = MathF.Abs(tan.Y) > 0.9f ? Vector3.Right : Vector3.Up.Cross(tan).Normalized();
             var fwd = tan.Cross(side).Normalized();
             ringStart[i] = s.V.Count;
-            float shade = Mathf.Lerp(0.72f, 1f, Mathf.Clamp(p.Y / 6f, 0f, 1f));
+            // Lit at the root (the brightest part of the tree in R1), into shade under the canopy.
+            float shade = Mathf.Lerp(1f, 0.74f, Mathf.Clamp(p.Y / MathF.Max(shadeTop, 1f), 0f, 1f));
             for (int k = 0; k <= segs; k++)
             {
                 float a = k / (float)segs * MathF.Tau;
                 var n = (side * MathF.Cos(a) + fwd * MathF.Sin(a)).Normalized();
                 // Slight lumpiness so the trunk is not a lathe.
                 float bump = 1f + 0.06f * MathF.Sin(a * 3f + i * 1.7f) + 0.04f * MathF.Sin(a * 5f + i);
-                s.Add(p + n * r * bump, n, new Vector2(k / (float)segs, arc * uvPerMetre), shade);
+                s.Add(p + n * r * bump, n, new Vector2(k / (float)segs * 3f, arc * uvPerMetre), shade);
             }
         }
         for (int i = 0; i < rings - 1; i++)
@@ -319,7 +327,7 @@ public static class ProceduralFoliage
         var right = up.Cross(n).Normalized();
         up = n.Cross(right).Normalized();
         if (yaw != 0f) { right = right.Rotated(n, yaw); up = up.Rotated(n, yaw); }
-        float sh = 1f;
+        float sh = shade <= 0f ? 1f : shade;
         int a = s.Add(c - right * hw - up * hh, n, new Vector2(0, 1), sh);
         int b = s.Add(c + right * hw - up * hh, n, new Vector2(1, 1), sh);
         int cc = s.Add(c + right * hw + up * hh, n, new Vector2(1, 0), sh);
@@ -333,11 +341,11 @@ public static class ProceduralFoliage
         var right = new Vector3(MathF.Cos(yaw), 0, MathF.Sin(yaw));
         var n = Vector3.Up.Cross(right).Normalized();
         float hw = w * 0.5f;
-        // Darker toward the bottom: the strands hang in the tree's own shade.
-        int a = s.Add(c - right * hw, n, new Vector2(0, 0), 1f);
-        int b = s.Add(c + right * hw, n, new Vector2(1, 0), 1f);
-        int cc = s.Add(c + right * hw - new Vector3(0, h, 0), n, new Vector2(1, 1), 0.8f);
-        int d = s.Add(c - right * hw - new Vector3(0, h, 0), n, new Vector2(0, 1), 0.8f);
+        // Darkest where the strands leave the canopy's underside, lit toward the hem (R1).
+        int a = s.Add(c - right * hw, n, new Vector2(0, 0), 0.7f);
+        int b = s.Add(c + right * hw, n, new Vector2(1, 0), 0.7f);
+        int cc = s.Add(c + right * hw - new Vector3(0, h, 0), n, new Vector2(1, 1), 1f);
+        int d = s.Add(c - right * hw - new Vector3(0, h, 0), n, new Vector2(0, 1), 1f);
         s.Tri(a, b, cc); s.Tri(a, cc, d);
     }
 

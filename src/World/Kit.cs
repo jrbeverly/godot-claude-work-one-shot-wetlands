@@ -25,7 +25,7 @@ public sealed class Kit
 
     private const string Root = "res://assets/third_party/";
     private static readonly string[] Folders = { "quaternius_village", "quaternius_nature", "kaykit_landmarks" };
-    private static readonly Color RoofMultiply = new(0.86f, 1.02f, 1.10f);   // grey tile (~0.44) x this ~= slate #5E7079
+    private static readonly Color RoofMultiply = new(1.0f, 1.12f, 1.2f);   // grey tile (~0.44) x this ~= slate #5E7079
 
     private readonly Dictionary<string, Model?> _models = new();
     private readonly Dictionary<string, Material> _muted = new();
@@ -75,7 +75,7 @@ public sealed class Kit
         var copy = (Material)muted.Duplicate();
         if (copy is StandardMaterial3D std)
         {
-            if (recolour && std.AlbedoTexture != null) std.AlbedoTexture = Desaturated(std.AlbedoTexture, 0f, 1.45f);
+            if (recolour && std.AlbedoTexture != null) std.AlbedoTexture = Desaturated(std.AlbedoTexture, 0f, 1.2f);
             std.AlbedoColor *= tint;
         }
         _tinted[key] = copy;
@@ -204,22 +204,28 @@ public sealed class Kit
                 if (m.AlbedoTexture != null) m.AlbedoTexture = Desaturated(m.AlbedoTexture, 0.10f, 1.0f);
                 m.AlbedoColor *= RoofMultiply;
             }
+            // Orange-tan kit brick -> weathered grey stone (palette stone #7E7A78).
+            if (key.Contains("Brick", StringComparison.OrdinalIgnoreCase) || key.Contains("RockTrim", StringComparison.OrdinalIgnoreCase))
+            {
+                if (m.AlbedoTexture != null) m.AlbedoTexture = Desaturated(m.AlbedoTexture, 0.22f, 0.92f);
+                m.AlbedoColor *= new Color(0.74f, 0.73f, 0.70f);
+            }
             // Cream plaster glows in dusk light; grey it toward the palette plaster (#B8AEA4).
             if (key.Contains("Plaster", StringComparison.OrdinalIgnoreCase)) m.AlbedoColor *= new Color(0.66f, 0.63f, 0.64f);
             // Kit timber is orange-tan; pull it toward the palette timber (#7E5A3A).
             if (key.Contains("WoodTrim", StringComparison.OrdinalIgnoreCase) || key.Contains("Wood", StringComparison.OrdinalIgnoreCase))
             {
                 // Orange kit timber -> weathered grey-brown: strip most of the hue, then darken.
-                if (m.AlbedoTexture != null) m.AlbedoTexture = Desaturated(m.AlbedoTexture, 0.35f, 1.0f);
-                m.AlbedoColor *= new Color(0.66f, 0.60f, 0.56f);
+                if (m.AlbedoTexture != null) m.AlbedoTexture = Desaturated(m.AlbedoTexture, 0.2f, 1.0f);
+                m.AlbedoColor *= new Color(0.56f, 0.52f, 0.50f);
             }
             // The kit's bark is salmon-pink; pull it toward a warm brown so trunks stop reading as candy.
-            if (key.Contains("Bark", StringComparison.OrdinalIgnoreCase)) m.AlbedoColor *= new Color(0.86f, 0.78f, 0.72f);
+            if (key.Contains("Bark", StringComparison.OrdinalIgnoreCase)) m.AlbedoColor *= new Color(0.62f, 0.52f, 0.44f);
             if (key.Contains("hexagons_medieval", StringComparison.OrdinalIgnoreCase))
             {
                 var tex = KayKitMutedAtlas();
                 if (tex != null) m.AlbedoTexture = tex;
-                m.AlbedoColor *= new Color(0.84f, 0.81f, 0.77f);   // chalk-white flat colours -> warm pale stone
+                m.AlbedoColor *= new Color(0.80f, 0.78f, 0.76f);   // chalk-white flat colours -> warm pale stone
             }
             // Vegetation cards from the nature kit: keep alpha scissor but light both sides.
             if (m.Transparency == BaseMaterial3D.TransparencyEnum.AlphaScissor) m.CullMode = BaseMaterial3D.CullModeEnum.Disabled;

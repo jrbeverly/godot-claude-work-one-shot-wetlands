@@ -141,6 +141,18 @@ public static class SiteBuilder
     /// <summary>A crumbling line of brick wall modules (two back to back so both faces are brick), length along local X.</summary>
     private static void BuildRuinWall(WorldRoot world, Kit kit, Node3D parent, PieceSpec p, Vector2 pos, float yaw, RandomNumberGenerator rng)
     {
+        if (p.Intact && p.HeightM > 6f)
+        {
+            // Keep wall: one massive smooth slab with a crenellated top, like the sandstone keep in the dawn reference.
+            var stone = new StandardMaterial3D { AlbedoColor = new Color(p.Tint ?? "#8E7E72"), Roughness = 1f, MetallicSpecular = 0f };
+            float gy = world.GroundHeight(pos.X, pos.Y);
+            var wall = new Node3D { Name = "KeepWall", Position = new Vector3(pos.X, gy - 0.3f, pos.Y), RotationDegrees = new Vector3(0, -yaw, 0) };
+            parent.AddChild(wall);
+            wall.AddChild(new MeshInstance3D { Mesh = new BoxMesh { Size = new Vector3(p.LengthM, p.HeightM + 0.3f, 1.6f) }, Position = new Vector3(0, (p.HeightM + 0.3f) * 0.5f, 0), MaterialOverride = stone });
+            for (float lx = -p.LengthM * 0.5f + 0.8f; lx < p.LengthM * 0.5f; lx += 3.2f)
+                wall.AddChild(new MeshInstance3D { Mesh = new BoxMesh { Size = new Vector3(1.6f, 1.4f, 1.6f) }, Position = new Vector3(lx, p.HeightM + 0.3f + 0.7f, 0), MaterialOverride = stone });
+            return;
+        }
         int modules = Math.Max(1, (int)MathF.Ceiling(p.LengthM / 2f));
         var line = new Node3D { Name = "RuinWall" };
         parent.AddChild(line);
@@ -148,8 +160,8 @@ public static class SiteBuilder
         // Recoloured (greyscale texture x tint) so the kit's orange timber plate and cream plaster end faces
         // become weathered stone too.
         // Mid-grey weathered stone: the recolour path brightens the kit texture 1.45x, so the tint sits well below the palette stone.
-        var stoneTint = new Color("#5E5C5A");
-        var rubbleTint = new Color("#66685F");
+        var stoneTint = new Color("#55534E");
+        var rubbleTint = new Color("#4C5244");
         for (int k = 0; k < modules; k++)
         {
             float roll = p.Intact ? 1f : rng.Randf();
@@ -245,16 +257,16 @@ public static class SiteBuilder
         var node = new Node3D { Name = "Brazier", Position = new Vector3(pos.X, groundY + p.HeightM, pos.Y) };
         var bowl = new MeshInstance3D
         {
-            Mesh = new BoxMesh { Size = new Vector3(2.0f, 0.7f, 2.0f) },
+            Mesh = new BoxMesh { Size = new Vector3(1.1f, 0.5f, 1.1f) },
             MaterialOverride = new StandardMaterial3D { AlbedoColor = new Color("#3A3330"), Roughness = 1f, MetallicSpecular = 0f },
         };
         var fire = new MeshInstance3D
         {
-            Position = new Vector3(0, 0.95f, 0),
-            Mesh = new BoxMesh { Size = new Vector3(1.4f, 1.3f, 1.4f) },
+            Position = new Vector3(0, 0.55f, 0),
+            Mesh = new BoxMesh { Size = new Vector3(0.7f, 0.6f, 0.7f) },
             MaterialOverride = new StandardMaterial3D
             {
-                AlbedoColor = new Color("#FFB060"), EmissionEnabled = true, Emission = new Color("#FFB060"), EmissionEnergyMultiplier = 8f,
+                AlbedoColor = new Color("#FFB060"), EmissionEnabled = true, Emission = new Color("#FFB060"), EmissionEnergyMultiplier = 4f,
                 ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded,
             },
             CastShadow = GeometryInstance3D.ShadowCastingSetting.Off,
@@ -263,10 +275,10 @@ public static class SiteBuilder
         var halo = new MeshInstance3D
         {
             Position = new Vector3(0, 1.6f, 0),
-            Mesh = new QuadMesh { Size = new Vector2(5.5f, 5.5f) },
+            Mesh = new QuadMesh { Size = new Vector2(4.0f, 4.0f) },
             MaterialOverride = new StandardMaterial3D
             {
-                AlbedoColor = new Color(glow.R, glow.G, glow.B, 0.45f),
+                AlbedoColor = new Color(glow.R, glow.G, glow.B, 0.25f),
                 Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
                 BlendMode = BaseMaterial3D.BlendModeEnum.Add,
                 ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded,
@@ -276,7 +288,7 @@ public static class SiteBuilder
             },
             CastShadow = GeometryInstance3D.ShadowCastingSetting.Off,
         };
-        var light = new OmniLight3D { Position = new Vector3(0, 2.0f, 0), LightColor = glow, LightEnergy = 3.5f, OmniRange = 24f, ShadowEnabled = false };
+        var light = new OmniLight3D { Position = new Vector3(0, 1.4f, 0), LightColor = glow, LightEnergy = 2.0f, OmniRange = 16f, ShadowEnabled = false };
         node.AddChild(bowl); node.AddChild(fire); node.AddChild(halo); node.AddChild(light);
         parent.AddChild(node);
     }
@@ -320,8 +332,9 @@ public static class SiteBuilder
         float length = MathF.Max(p.LengthM, 4f), width = MathF.Max(p.WidthM > 10f ? 2.4f : p.WidthM, 1.6f);
         float water = world.Layout.Marsh?.WaterLevel ?? world.Layout.Lake?.WaterLevel ?? 0f;
         float deckTop = water + (p.HeightM > 0.05f ? p.HeightM : 0.8f);
-        var plank = new Color("#6E5A44");
-        var postMat = new StandardMaterial3D { AlbedoColor = new Color("#3E3024"), Roughness = 1f, MetallicSpecular = 0f };
+        // The kit plank texture is already darkened by Kit.Muted, so the tint stays light (lands around #4E4034 on screen).
+        var plank = new Color("#C8B49C");
+        var postMat = new StandardMaterial3D { AlbedoColor = new Color("#4A3C30"), Roughness = 1f, MetallicSpecular = 0f };
         var walk = new Node3D { Name = "Boardwalk", Position = new Vector3(pos.X, deckTop, pos.Y), RotationDegrees = new Vector3(0, -yaw, 0) };
         parent.AddChild(walk);
         int tiles = (int)MathF.Ceiling(length / 2f);
@@ -344,7 +357,7 @@ public static class SiteBuilder
                 if (h < 0.3f) continue;
                 walk.AddChild(new MeshInstance3D
                 {
-                    Mesh = new BoxMesh { Size = new Vector3(0.25f, h, 0.25f) },
+                    Mesh = new BoxMesh { Size = new Vector3(0.4f, h, 0.4f) },
                     Position = new Vector3(lx + sx, top - h * 0.5f, sz * (width * 0.5f - 0.15f)),
                     MaterialOverride = postMat,
                 });
@@ -363,7 +376,7 @@ public static class SiteBuilder
         if (pick < 0) pick = 0;
         float h = (p.HeightM > 0.1f ? p.HeightM : 3f) * p.Scale;
         float w = h >= 2.5f ? h * rng.RandfRange(0.24f, 0.32f) : h * rng.RandfRange(0.9f, 1.3f);
-        var inst = kit.Instance(rocks[pick], new Color("#8E8D86"), recolour: true);
+        var inst = kit.Instance(rocks[pick], new Color("#6A6458"), recolour: true);
         inst.Scale = new Vector3(w / rockW[pick], (h + 0.4f) / rockH[pick], w * 0.8f / rockW[pick]);
         if (p.Fallen)
         {
@@ -375,7 +388,7 @@ public static class SiteBuilder
             Place(parent, holder, pos, world.GroundHeight(pos.X, pos.Y) - 0.3f + w * 0.35f, yaw);
             return;
         }
-        Place(parent, inst, pos, world.GroundHeight(pos.X, pos.Y) - 0.4f, yaw + rng.RandfRange(-8f, 8f));
+        Place(parent, inst, pos, world.GroundHeight(pos.X, pos.Y) - 0.6f, yaw + rng.RandfRange(-8f, 8f));
     }
 
     private static void BuildTree(WorldRoot world, Kit kit, Node3D parent, PieceSpec p, Vector2 pos, float yaw)
@@ -396,8 +409,8 @@ public static class SiteBuilder
         }
         var inst = kit.Instance(p.Model ?? "CommonTree_1", tint, name => name.Contains("Leaves", StringComparison.OrdinalIgnoreCase), recolour: true);
         inst.Scale = Vector3.One * p.Scale;
-        // Hero tints (copper elders) carry a little self-light so the accent survives fog and shade.
-        if (tint is { } accent)
+        // Bright hero tints carry a little self-light so the accent survives fog and shade; dark tints (pines) do not glow.
+        if (tint is { } accent && accent.Luminance > 0.45f)
             foreach (var mi in inst.FindChildren("*", "MeshInstance3D", true, false))
                 if (mi is MeshInstance3D m && m.Mesh != null)
                     for (int si = 0; si < m.Mesh.GetSurfaceCount(); si++)

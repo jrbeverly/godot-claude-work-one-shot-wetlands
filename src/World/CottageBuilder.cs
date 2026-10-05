@@ -157,8 +157,8 @@ public static class CottageBuilder
         float dist = Math.Max(Math.Abs(ax), Math.Max(Math.Abs(az) - ridgeHalf, 0f)) * (halfRoofW / (across * 0.5f + 0.76f));
         float roofH = ridge - (ridge + 0.4f) * dist / halfRoofW;
         var local = rotate ? new Vector3(az, 0, ax) : new Vector3(ax, 0, az);
-        var chimneyInst = kit.Instance(rng.Randf() < 0.5f ? "Prop_Chimney" : "Prop_Chimney2");
-        Place(parent, chimneyInst, new Vector3(local.X, y + roofH - 1.6f, local.Z), 0f);
+        var chimneyInst = kit.Instance("Prop_Chimney2");   // the plain brick stack; the other reads as a crate on the roof
+        Place(parent, chimneyInst, new Vector3(local.X, y + roofH - 1.2f, local.Z), 0f);
     }
 
     private static void Place(Node3D parent, Node3D inst, Vector3 pos, float yawDeg)

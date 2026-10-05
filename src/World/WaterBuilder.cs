@@ -89,17 +89,17 @@ public static class WaterBuilder
             // Bog water: shallow everywhere, so it goes opaque-murky sooner and the pale painted glints carry the read.
             // Murky and near-opaque: the bed never shows, the pale glints and a broad sheen carry the read.
             mat.SetShaderParameter("depth_fade", 1.2f);
-            mat.SetShaderParameter("shore_band", 0.7f);
-            mat.SetShaderParameter("alpha_shallow", 0.6f);
+            mat.SetShaderParameter("shore_band", 1.4f);
+            mat.SetShaderParameter("alpha_shallow", 0.35f);
             mat.SetShaderParameter("alpha_base", 0.93f);
-            mat.SetShaderParameter("streak_strength", 0.22f);
+            mat.SetShaderParameter("streak_strength", 0.2f);
             mat.SetShaderParameter("ripple_tint", 0.08f);
-            mat.SetShaderParameter("fresnel_strength", 0.12f);
-            mat.SetShaderParameter("roughness", 0.55f);
-            mat.SetShaderParameter("specular", 0.18f);
+            mat.SetShaderParameter("fresnel_strength", 0.06f);
+            mat.SetShaderParameter("roughness", 0.7f);
+            mat.SetShaderParameter("specular", 0.04f);
             mat.SetShaderParameter("wobble_scale", 0.4f);
             mat.SetShaderParameter("wobble_strength", 0.05f);
-            mat.SetShaderParameter("glint_strength", 0.8f);
+            mat.SetShaderParameter("glint_strength", 0.9f);
             mat.SetShaderParameter("glint_color", L.Col("waterGlint", "#B9BCA6"));
         }
         return mat;

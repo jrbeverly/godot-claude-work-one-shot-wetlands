@@ -17,3 +17,6 @@ shader_parameter/tex_rock = ExtResource("5_rock")
 shader_parameter/tex_snow = ExtResource("6_snow")
 shader_parameter/tex_meadow = ExtResource("7_meadow")
 shader_parameter/tile_grass = 6.0
+shader_parameter/tile_rock = 26.0
+shader_parameter/tile_snow = 40.0
+shader_parameter/tile_road = 8.0

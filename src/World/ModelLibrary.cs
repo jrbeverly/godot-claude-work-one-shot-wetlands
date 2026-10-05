@@ -141,19 +141,27 @@ public static class ModelLibrary
         }
         // Procedural Wetlands foliage: canopies go dark against the sky (little backlight), reeds and moss curtains
         // take a straw rim from the low sun. Thin painted strips need a lower scissor or they erode in the mips.
-        if (name.Contains("MossClump") || name.Contains("BogOak"))
-            mat.SetShaderParameter("backlight_strength", 0.06f);
+        if (name.Contains("MossClump"))
+            mat.SetShaderParameter("backlight_strength", 0.16f);
+        else if (name.Contains("BogOak"))
+        {
+            mat.SetShaderParameter("backlight_strength", 0.14f);
+            mat.SetShaderParameter("backlight_color", new Color(0.85f, 0.80f, 0.60f));
+        }
         else if (name.Contains("MossCurtain"))
         {
-            mat.SetShaderParameter("backlight_strength", 0.2f);
+            mat.SetShaderParameter("backlight_strength", 0.12f);
             mat.SetShaderParameter("backlight_color", new Color(0.95f, 0.88f, 0.62f));
-            mat.SetShaderParameter("alpha_scissor", 0.34f);
+            mat.SetShaderParameter("alpha_scissor", 0.3f);
+            // The curtain swings as a sheet: full amplitude from a few metres up, instead of pinned at the hem.
+            mat.SetShaderParameter("sway_amplitude", 0.18f);
+            mat.SetShaderParameter("sway_height", MathF.Max(swayHeight * 0.3f, 1f));
         }
         else if (name.Contains("Reeds"))
         {
-            mat.SetShaderParameter("backlight_strength", 0.32f);
+            mat.SetShaderParameter("backlight_strength", 0.18f);
             mat.SetShaderParameter("backlight_color", new Color(0.95f, 0.88f, 0.62f));
-            mat.SetShaderParameter("alpha_scissor", 0.32f);
+            mat.SetShaderParameter("alpha_scissor", 0.26f);
         }
         mat.SetShaderParameter("tint", new Color(baseCol.R * tint.R, baseCol.G * tint.G, baseCol.B * tint.B, 1f));
         if (!(name.Contains("MossCurtain") || name.Contains("Reeds"))) mat.SetShaderParameter("alpha_scissor", 0.4f);
@@ -174,7 +182,7 @@ public static class ModelLibrary
         m.NormalEnabled = false;      // normal maps add micro-detail the painted look does not want
         m.VertexColorUseAsAlbedo = true; // kit AO in COLOR_0 plus the MultiMesh per-instance tint
         // Salmon-pink kit bark -> warm brown trunks.
-        if ((std.ResourceName ?? "").Contains("Bark", StringComparison.OrdinalIgnoreCase)) m.AlbedoColor *= new Color(0.62f, 0.54f, 0.48f);
+        if ((std.ResourceName ?? "").Contains("Bark", StringComparison.OrdinalIgnoreCase)) m.AlbedoColor *= new Color(0.52f, 0.44f, 0.38f);
         m.RoughnessTexture = null;
         m.MetallicTexture = null;
         if (m.Transparency == BaseMaterial3D.TransparencyEnum.AlphaScissor) m.AlphaScissorThreshold = 0.4f;

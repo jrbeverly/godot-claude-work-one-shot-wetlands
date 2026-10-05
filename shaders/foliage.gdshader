@@ -37,6 +37,7 @@ void fragment() {
 	ALBEDO = col * tint.rgb * COLOR.rgb;
 	ALPHA = c.a;
 	ALPHA_SCISSOR_THRESHOLD = alpha_scissor;
+	ALPHA_ANTIALIASING_EDGE = alpha_scissor + 0.08;   // alpha-to-coverage softening under MSAA
 	ROUGHNESS = 1.0;
 	SPECULAR = 0.0;
 	METALLIC = 0.0;
