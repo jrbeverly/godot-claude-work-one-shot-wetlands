@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Godot 4.5 .NET project, C# by default (`src/`), GDScript only for third-party addons. Single-player Classic-WoW-feel fantasy environment (no MMO/networking). Keep it simple; `dotnet build` must pass; no gameplay/RPG systems unless asked. Full conventions: `CLAUDE.md` (source of truth).
+Godot 4.5 .NET project, C# by default (`src/`), GDScript only for third-party addons. Single-player Classic-WoW-feel fantasy environment (no MMO/networking): the zone **Fallowmere** is generated at startup from `assets/world/layout.json` (design: `docs/WORLD_BIBLE.md`). Keep it simple; `dotnet build` must pass; no gameplay/RPG systems unless asked. Full conventions: `CLAUDE.md` (source of truth). Look at the world with `tools/screenshot.sh` before and after visual changes.
 
 ## Reference library (read before relevant decisions)
 Index: `references/README.md`. Code references are fetched by `tools/fetch-references.sh` (pinned in `references/references.yaml`, source snapshots committed). Consult selectively.
