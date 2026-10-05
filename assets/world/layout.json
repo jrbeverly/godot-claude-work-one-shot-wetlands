@@ -1077,7 +1077,7 @@
     }
    ],
    "groundTexture": "forestFloor",
-   "leafTint": "#4E5838"
+   "leafTint": "#58644A"
   },
   {
    "name": "Candlehill Flank",
@@ -1199,7 +1199,7 @@
     }
    ],
    "groundTexture": "grass",
-   "leafTint": "#4E5838"
+   "leafTint": "#58644A"
   },
   {
    "name": "Gap Meadow",
@@ -1828,7 +1828,7 @@
      "x": 0,
      "z": 0,
      "scale": 1.0,
-     "leafTint": "#4E5A42"
+     "leafTint": "#5E6A4E"
     },
     {
      "kind": "fence",
@@ -2473,7 +2473,7 @@
      "x": 0,
      "z": 0,
      "scale": 1.0,
-     "leafTint": "#4E5A42"
+     "leafTint": "#5E6A4E"
     }
    ]
   },
@@ -2540,7 +2540,7 @@
      "x": -3,
      "z": -15,
      "scale": 1.0,
-     "leafTint": "#4E5A42"
+     "leafTint": "#5E6A4E"
     },
     {
      "kind": "tree",
@@ -2548,7 +2548,7 @@
      "x": 10,
      "z": 12,
      "scale": 1.0,
-     "leafTint": "#4E5A42"
+     "leafTint": "#5E6A4E"
     },
     {
      "kind": "tree",
@@ -2556,7 +2556,7 @@
      "x": -17,
      "z": 10,
      "scale": 1.0,
-     "leafTint": "#4E5A42"
+     "leafTint": "#5E6A4E"
     },
     {
      "kind": "tree",
@@ -2989,7 +2989,7 @@
      "z": -2,
      "rotationDeg": 0,
      "scale": 16.0,
-     "tint": "#9A8878"
+     "tint": "#786A60"
     },
     {
      "kind": "brazier",
@@ -3035,7 +3035,7 @@
      "lengthM": 28,
      "heightM": 22,
      "intact": true,
-     "tint": "#7A6658"
+     "tint": "#4E4038"
     },
     {
      "kind": "ruinWall",
@@ -3045,7 +3045,7 @@
      "lengthM": 44,
      "heightM": 24,
      "intact": true,
-     "tint": "#7A6658"
+     "tint": "#4E4038"
     },
     {
      "kind": "ruinWall",
@@ -3055,7 +3055,7 @@
      "lengthM": 44,
      "heightM": 20,
      "intact": true,
-     "tint": "#7A6658"
+     "tint": "#4E4038"
     },
     {
      "kind": "windowRow",
@@ -3109,7 +3109,7 @@
      "x": 0,
      "z": 0,
      "scale": 1.4,
-     "leafTint": "#4E5A42"
+     "leafTint": "#5E6A4E"
     },
     {
      "kind": "tree",
@@ -3143,7 +3143,7 @@
      "x": 0,
      "z": 0,
      "scale": 1.0,
-     "leafTint": "#4E5A42"
+     "leafTint": "#5E6A4E"
     },
     {
      "kind": "tree",
@@ -3201,7 +3201,7 @@
      "x": -50,
      "z": 40,
      "scale": 1.0,
-     "leafTint": "#4E5A42"
+     "leafTint": "#5E6A4E"
     }
    ]
   }
@@ -3279,9 +3279,9 @@
   {
    "name": "hythe",
    "from": [
-    -24,
+    -18,
     0,
-    44
+    52
    ],
    "lookAt": [
     -62,

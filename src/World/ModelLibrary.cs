@@ -145,7 +145,7 @@ public static class ModelLibrary
             mat.SetShaderParameter("backlight_strength", 0.16f);
         else if (name.Contains("BogOak"))
         {
-            mat.SetShaderParameter("backlight_strength", 0.14f);
+            mat.SetShaderParameter("backlight_strength", 0.2f);
             mat.SetShaderParameter("backlight_color", new Color(0.85f, 0.80f, 0.60f));
         }
         else if (name.Contains("MossCurtain"))
@@ -181,6 +181,8 @@ public static class ModelLibrary
         m.MetallicSpecular = 0f;
         m.NormalEnabled = false;      // normal maps add micro-detail the painted look does not want
         m.VertexColorUseAsAlbedo = true; // kit AO in COLOR_0 plus the MultiMesh per-instance tint
+        // Pale blue-white kit rock -> dark mossy bog boulders.
+        if ((std.ResourceName ?? "").Contains("Rock", StringComparison.OrdinalIgnoreCase)) m.AlbedoColor *= new Color(0.50f, 0.48f, 0.42f);
         // Salmon-pink kit bark -> warm brown trunks.
         if ((std.ResourceName ?? "").Contains("Bark", StringComparison.OrdinalIgnoreCase)) m.AlbedoColor *= new Color(0.52f, 0.44f, 0.38f);
         m.RoughnessTexture = null;
