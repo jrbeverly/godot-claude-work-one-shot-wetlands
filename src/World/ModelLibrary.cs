@@ -40,7 +40,8 @@ public static class ModelLibrary
     public static Model? Get(string name)
     {
         if (Cache.TryGetValue(name, out var cached)) return cached;
-        Model? model = null;
+        Model? model = ProceduralFoliage.Build(name);
+        if (model != null) { Cache[name] = model; return model; }
         foreach (var dir in PackDirs)
         {
             var path = dir + name + ".gltf";
@@ -132,9 +133,30 @@ public static class ModelLibrary
             mat.SetShaderParameter("saturation", 0.6f);
             baseCol = new Color(0.82f, 0.86f, 0.66f);
         }
-        else if (name.Contains("Flowers")) mat.SetShaderParameter("saturation", 0.85f);
+        else if (name.Contains("Flowers"))
+        {
+            mat.SetShaderParameter("saturation", 0.85f);
+            // A non-white tint repaints the kit's multicolour petal sheet in that colour (bog-blue accents).
+            if (tint != Colors.White) { mat.SetShaderParameter("recolor", 1f); mat.SetShaderParameter("recolor_ref", 0.5f); }
+        }
+        // Procedural Wetlands foliage: canopies go dark against the sky (little backlight), reeds and moss curtains
+        // take a straw rim from the low sun. Thin painted strips need a lower scissor or they erode in the mips.
+        if (name.Contains("MossClump") || name.Contains("BogOak"))
+            mat.SetShaderParameter("backlight_strength", 0.06f);
+        else if (name.Contains("MossCurtain"))
+        {
+            mat.SetShaderParameter("backlight_strength", 0.2f);
+            mat.SetShaderParameter("backlight_color", new Color(0.95f, 0.88f, 0.62f));
+            mat.SetShaderParameter("alpha_scissor", 0.34f);
+        }
+        else if (name.Contains("Reeds"))
+        {
+            mat.SetShaderParameter("backlight_strength", 0.32f);
+            mat.SetShaderParameter("backlight_color", new Color(0.95f, 0.88f, 0.62f));
+            mat.SetShaderParameter("alpha_scissor", 0.32f);
+        }
         mat.SetShaderParameter("tint", new Color(baseCol.R * tint.R, baseCol.G * tint.G, baseCol.B * tint.B, 1f));
-        mat.SetShaderParameter("alpha_scissor", 0.4f);
+        if (!(name.Contains("MossCurtain") || name.Contains("Reeds"))) mat.SetShaderParameter("alpha_scissor", 0.4f);
         mat.SetShaderParameter("sway_amplitude", swayAmplitude);
         mat.SetShaderParameter("sway_height", swayHeight);
         mat.ResourceName = (src?.ResourceName ?? "Leaves") + "_tinted";
@@ -152,7 +174,7 @@ public static class ModelLibrary
         m.NormalEnabled = false;      // normal maps add micro-detail the painted look does not want
         m.VertexColorUseAsAlbedo = true; // kit AO in COLOR_0 plus the MultiMesh per-instance tint
         // Salmon-pink kit bark -> warm brown trunks.
-        if ((std.ResourceName ?? "").Contains("Bark", StringComparison.OrdinalIgnoreCase)) m.AlbedoColor *= new Color(0.86f, 0.78f, 0.72f);
+        if ((std.ResourceName ?? "").Contains("Bark", StringComparison.OrdinalIgnoreCase)) m.AlbedoColor *= new Color(0.62f, 0.54f, 0.48f);
         m.RoughnessTexture = null;
         m.MetallicTexture = null;
         if (m.Transparency == BaseMaterial3D.TransparencyEnum.AlphaScissor) m.AlphaScissorThreshold = 0.4f;

@@ -24,7 +24,20 @@ public static class WaterBuilder
         var root = new Node3D { Name = "Water" };
         world.AddChild(root);
 
-        if (L.Lake is { } lake)
+        if (L.Marsh is { } marsh)
+        {
+            root.AddChild(new MeshInstance3D
+            {
+                Name = $"Marsh_{Safe(marsh.Name)}",
+                Mesh = BuildMarshMesh(marsh, world.Field),
+                MaterialOverride = MakeMaterial(shader, L, flowPerSecond: 0f, marsh: true),
+                CastShadow = GeometryInstance3D.ShadowCastingSetting.Off,
+                GIMode = GeometryInstance3D.GIModeEnum.Disabled,
+            });
+        }
+
+        // A lake at the marsh's own level is already covered by the sheet; a separate mesh would only z-fight.
+        if (L.Lake is { } lake && !(L.Marsh is { } m2 && MathF.Abs(m2.WaterLevel - lake.WaterLevel) < 0.05f))
         {
             var mesh = BuildLakeMesh(lake);
             root.AddChild(new MeshInstance3D
@@ -48,15 +61,15 @@ public static class WaterBuilder
                 Name = $"River_{Safe(spec.Name)}",
                 Mesh = mesh,
                 // ~0.6 m/s downstream drift reads as a lazy brook; UV.x is in metres.
-                MaterialOverride = MakeMaterial(shader, L, flowPerSecond: 0.6f),
+                MaterialOverride = MakeMaterial(shader, L, flowPerSecond: 0.6f, marsh: L.Marsh != null),
                 CastShadow = GeometryInstance3D.ShadowCastingSetting.Off,
                 GIMode = GeometryInstance3D.GIModeEnum.Disabled,
             });
         }
-        GD.Print($"Water: lake={(L.Lake != null ? 1 : 0)} rivers={world.Terrain.Rivers.Count}");
+        GD.Print($"Water: marsh={(L.Marsh != null ? 1 : 0)} lake={(L.Lake != null ? 1 : 0)} rivers={world.Terrain.Rivers.Count}");
     }
 
-    private static ShaderMaterial MakeMaterial(Shader shader, WorldLayout L, float flowPerSecond)
+    private static ShaderMaterial MakeMaterial(Shader shader, WorldLayout L, float flowPerSecond, bool marsh = false)
     {
         var water = L.Col("water", "#4C7A8C");
         var deep = L.Col("waterDeep", water.Darkened(0.4f).ToHtml());
@@ -66,10 +79,70 @@ public static class WaterBuilder
         mat.SetShaderParameter("color_shallow", water);
         mat.SetShaderParameter("color_deep", deep);
         // Shoreline: a lighter version of the water colour (not the grey horizon), so shallows stay coloured.
-        mat.SetShaderParameter("color_shore", water.Lightened(0.35f).Lerp(horizon, 0.25f));
-        mat.SetShaderParameter("sky_color", horizon.Lerp(top, 0.35f));
+        // Shoreline a touch lighter than the water, never the sky: bog water stays dark under the pink haze.
+        mat.SetShaderParameter("color_shore", L.Col("waterShore", water.Lightened(0.18f).ToHtml()));
+        // The "sky" the water leans toward is the palette's waterSky if given, else a greyed horizon.
+        mat.SetShaderParameter("sky_color", L.Col("waterSky", horizon.Lerp(new Color("#8A8E90"), 0.55f).ToHtml()));
         mat.SetShaderParameter("flow", new Vector2(flowPerSecond, 0f));
+        if (marsh)
+        {
+            // Bog water: shallow everywhere, so it goes opaque-murky sooner and the pale painted glints carry the read.
+            // Murky and near-opaque: the bed never shows, the pale glints and a broad sheen carry the read.
+            mat.SetShaderParameter("depth_fade", 1.2f);
+            mat.SetShaderParameter("shore_band", 0.7f);
+            mat.SetShaderParameter("alpha_shallow", 0.6f);
+            mat.SetShaderParameter("alpha_base", 0.93f);
+            mat.SetShaderParameter("streak_strength", 0.22f);
+            mat.SetShaderParameter("ripple_tint", 0.08f);
+            mat.SetShaderParameter("fresnel_strength", 0.12f);
+            mat.SetShaderParameter("roughness", 0.55f);
+            mat.SetShaderParameter("specular", 0.18f);
+            mat.SetShaderParameter("wobble_scale", 0.4f);
+            mat.SetShaderParameter("wobble_strength", 0.05f);
+            mat.SetShaderParameter("glint_strength", 0.8f);
+            mat.SetShaderParameter("glint_color", L.Col("waterGlint", "#B9BCA6"));
+        }
         return mat;
+    }
+
+    /// <summary>
+    /// One flat sheet over the marsh disc as a grid of quads (cell ~12 m), clipped to the disc, skipping cells whose
+    /// four corners are all comfortably above the water so the terrain does not have to hide it. Vertex density keeps
+    /// the fog/lighting gradients smooth across the long views the bog is made for.
+    /// </summary>
+    private static ArrayMesh BuildMarshMesh(MarshSpec marsh, HeightField field)
+    {
+        const float cell = 12f;
+        int n = (int)MathF.Ceiling(marsh.Radius * 2f / cell) + 1;
+        float x0 = marsh.X - marsh.Radius, z0 = marsh.Z - marsh.Radius;
+        var st = new SurfaceTool();
+        st.Begin(Mesh.PrimitiveType.Triangles);
+        var verts = new List<Vector3>();
+        var index = new Dictionary<(int, int), int>();
+        int Vert(int i, int j)
+        {
+            if (index.TryGetValue((i, j), out var k)) return k;
+            var v = new Vector3(x0 + i * cell, marsh.WaterLevel, z0 + j * cell);
+            AddVertex(st, verts, v);
+            index[(i, j)] = verts.Count - 1;
+            return verts.Count - 1;
+        }
+        for (int j = 0; j < n - 1; j++)
+        for (int i = 0; i < n - 1; i++)
+        {
+            float cx = x0 + (i + 0.5f) * cell, cz = z0 + (j + 0.5f) * cell;
+            if ((cx - marsh.X) * (cx - marsh.X) + (cz - marsh.Z) * (cz - marsh.Z) > marsh.Radius * marsh.Radius) continue;
+            bool dry = true;
+            for (int dj = 0; dj <= 1 && dry; dj++)
+            for (int di = 0; di <= 1 && dry; di++)
+                if (field.SampleHeight(x0 + (i + di) * cell, z0 + (j + dj) * cell) < marsh.WaterLevel + 1.5f) dry = false;
+            // Also test the cell centre: a pool smaller than a cell could sit between the corners.
+            if (dry && field.SampleHeight(cx, cz) >= marsh.WaterLevel + 1.5f) continue;
+            int a = Vert(i, j), b = Vert(i + 1, j), c = Vert(i, j + 1), d = Vert(i + 1, j + 1);
+            AddTriUp(st, verts, a, b, c);
+            AddTriUp(st, verts, b, d, c);
+        }
+        return st.Commit();
     }
 
     /// <summary>Concentric rings of quads so the big surface still has vertices for fog/lighting gradients.</summary>

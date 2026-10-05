@@ -17,11 +17,11 @@ uniform float tile_road = 5.0;
 uniform float tile_rock = 11.0;
 uniform float tile_snow = 6.0;
 uniform float tile_meadow = 6.5;
-uniform float macro_scale = 0.013;        // breaks tiling with a second, large-scale sample
-uniform float macro_strength = 0.45;
+uniform float macro_scale = 0.0075;        // breaks tiling with a second, large-scale sample
+uniform float macro_strength = 0.6;
 uniform float snow_line = 115.0;
 uniform float snow_blend = 22.0;
-uniform float blend_sharpness = 1.8;     // >1 = crisper painted layer edges
+uniform float blend_sharpness = 2.4;     // >1 = crisper painted layer edges
 // Per-layer tints let the zone palette steer the painted tiles without repainting them.
 uniform vec3 tint_grass : source_color = vec3(1.0);
 uniform vec3 tint_forest : source_color = vec3(1.0);
@@ -29,7 +29,7 @@ uniform vec3 tint_road : source_color = vec3(1.0);
 uniform vec3 tint_rock : source_color = vec3(1.0);
 uniform vec3 tint_snow : source_color = vec3(1.0);
 uniform vec3 tint_meadow : source_color = vec3(1.0);
-uniform vec3 wet_tint : source_color = vec3(0.55, 0.62, 0.55);
+uniform vec3 wet_tint : source_color = vec3(0.43, 0.39, 0.32);   // submerged peat: darker and warmer
 
 varying vec4 v_splat;
 varying vec4 v_custom;
@@ -78,13 +78,13 @@ void fragment() {
 	// Snow settles on flatter ground above the snow line; rock faces stay darker.
 	float flatness = smoothstep(0.55, 0.9, v_wnormal.y);
 	float snow_noise = (texture(tex_snow, uv * 0.01).r - 0.5) * snow_blend * 1.2;
-	float snow = smoothstep(snow_line - snow_blend, snow_line + snow_blend, v_wpos.y + snow_noise) * mix(0.35, 1.0, flatness);
+	float snow = smoothstep(snow_line - snow_blend, snow_line + snow_blend, v_wpos.y + snow_noise) * mix(0.85, 1.0, flatness);   // steep faces pale too: this layer doubles as the high wall
 	vec3 snow_col = sample_layer(tex_snow, uv, tile_snow) * tint_snow;
 	albedo = mix(albedo, snow_col, snow);
 
 	// Baked tint (vertex hue drift) and darker, cooler ground under water.
 	albedo *= v_custom.rgb;
-	float wet = clamp(v_wet / 1.2, 0.0, 1.0);
+	float wet = clamp(v_wet / 0.5, 0.0, 1.0);
 	albedo = mix(albedo, albedo * wet_tint, wet);
 
 	ALBEDO = albedo;

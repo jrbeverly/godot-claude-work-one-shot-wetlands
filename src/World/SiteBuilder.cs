@@ -50,13 +50,15 @@ public static class SiteBuilder
         switch (p.Kind.ToLowerInvariant())
         {
             case "cottage": BuildCottage(world, kit, parent, site, p, pos, yaw, rng); break;
-            case "landmark": BuildLandmark(world, kit, parent, p, pos, yaw, site.Type == "ruin" ? new Color("#8F8C86") : null); break;
+            case "landmark": BuildLandmark(world, kit, parent, p, pos, yaw, p.Tint != null ? new Color(p.Tint) : site.Type == "ruin" ? new Color("#8F8C86") : null); break;
             case "fence": BuildFence(world, kit, parent, site, p); break;
             case "prop": BuildProp(world, kit, parent, p, pos, yaw); break;
             case "ruinwall": BuildRuinWall(world, kit, parent, p, pos, yaw, rng); break;
             case "standingstone": BuildStandingStone(world, kit, parent, p, pos, yaw, rng); break;
             case "pier": BuildPier(world, kit, parent, p, pos, yaw); break;
             case "brazier": BuildBrazier(parent, p, pos, world.GroundHeight(pos.X, pos.Y)); break;
+            case "windowrow": BuildWindowRow(world, parent, p, pos, yaw); break;
+            case "boardwalk": BuildBoardwalk(world, kit, parent, p, pos, yaw); break;
             case "tree": BuildTree(world, kit, parent, p, pos, yaw); break;
             case "field": BuildField(world, kit, parent, site, p, pos, yaw, rng); break;
             default: GD.PushWarning($"Sites: unknown piece kind '{p.Kind}' in site '{site.Name}'"); break;
@@ -145,20 +147,22 @@ public static class SiteBuilder
         // Weathered grey with a hint of moss; the kit's cream plaster/orange plate would read freshly built.
         // Recoloured (greyscale texture x tint) so the kit's orange timber plate and cream plaster end faces
         // become weathered stone too.
-        var stoneTint = new Color("#A6A49A");
-        var rubbleTint = new Color("#9A9C92");
+        // Mid-grey weathered stone: the recolour path brightens the kit texture 1.45x, so the tint sits well below the palette stone.
+        var stoneTint = new Color("#6E6C6A");
+        var rubbleTint = new Color("#66685F");
         for (int k = 0; k < modules; k++)
         {
-            float roll = rng.Randf();
+            float roll = p.Intact ? 1f : rng.Randf();
             if (roll < 0.15f) continue;                                   // missing
             float hScale = roll < 0.55f ? rng.RandfRange(0.4f, 0.7f) : 1f; // stump or full
-            hScale *= Mathf.Clamp(p.HeightM / 3f, 0.3f, 1.2f);
+            // Intact walls stack to the asked height (module 3.12 m); ruins top out around one module.
+            hScale *= p.Intact ? p.HeightM / 3.12f : Mathf.Clamp(p.HeightM / 3f, 0.3f, 1.2f);
             float lx = -modules + 1 + 2 * k;
             var off = Rotate(new Vector3(lx, 0, 0), yaw);
             var wp = new Vector2(pos.X + off.X, pos.Y + off.Z);
             float gy = world.GroundHeight(wp.X, wp.Y);
             var seg = new Node3D { Position = new Vector3(wp.X, gy - 0.12f, wp.Y) };
-            seg.RotationDegrees = new Vector3(rng.RandfRange(-3f, 3f), -yaw, rng.RandfRange(-3f, 3f));
+            seg.RotationDegrees = p.Intact ? new Vector3(0, -yaw, 0) : new Vector3(rng.RandfRange(-3f, 3f), -yaw, rng.RandfRange(-3f, 3f));
             seg.Scale = new Vector3(1, hScale, 1);
             var front = kit.Instance("Wall_UnevenBrick_Straight", stoneTint, recolour: true);
             front.Position = new Vector3(0, 0, 0.2f);
@@ -175,7 +179,7 @@ public static class SiteBuilder
                 seg.AddChild(cap);
             }
             line.AddChild(seg);
-            if (rng.Randf() < 0.6f)
+            if (!p.Intact && rng.Randf() < 0.6f)
             {
                 var rubble = kit.Instance(rng.Randf() < 0.5f ? "Rock_Medium_2" : "Rock_Medium_3", rubbleTint, recolour: true);
                 float rs = rng.RandfRange(0.18f, 0.32f);
@@ -195,7 +199,7 @@ public static class SiteBuilder
         float length = MathF.Max(p.LengthM, 4f), width = MathF.Max(p.WidthM > 10f ? 2.4f : p.WidthM, 2f);
         float water = world.Layout.Lake?.WaterLevel ?? 0f;
         float deckTop = MathF.Max(water + (p.HeightM > 0.1f ? p.HeightM : 1.4f), world.GroundHeight(pos.X, pos.Y) + 0.2f);
-        var stone = new Color("#B9B6AA");
+        var stone = new Color("#8A8780");
         var pier = new Node3D { Name = "Pier", Position = new Vector3(pos.X, deckTop, pos.Y), RotationDegrees = new Vector3(0, -yaw, 0) };
         parent.AddChild(pier);
         int tiles = (int)MathF.Ceiling(length / 2f);
@@ -275,6 +279,78 @@ public static class SiteBuilder
         var light = new OmniLight3D { Position = new Vector3(0, 2.0f, 0), LightColor = glow, LightEnergy = 3.5f, OmniRange = 24f, ShadowEnabled = false };
         node.AddChild(bowl); node.AddChild(fire); node.AddChild(halo); node.AddChild(light);
         parent.AddChild(node);
+    }
+
+    /// <summary>
+    /// A row of lit windows: Count emissive cards along local X at HeightM above the ground, facing local +Z, plus a warm
+    /// light every third window. The keep's glowing window strip in the dawn reference, in one piece.
+    /// </summary>
+    private static void BuildWindowRow(WorldRoot world, Node3D parent, PieceSpec p, Vector2 pos, float yaw)
+    {
+        var glow = new Color("#F2C465");
+        var row = new Node3D { Name = "WindowRow", Position = new Vector3(pos.X, world.GroundHeight(pos.X, pos.Y) + p.HeightM, pos.Y), RotationDegrees = new Vector3(0, -yaw, 0) };
+        parent.AddChild(row);
+        var mat = new StandardMaterial3D
+        {
+            AlbedoColor = glow, EmissionEnabled = true, Emission = glow, EmissionEnergyMultiplier = 6f,
+            ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded,
+        };
+        int count = Math.Max(1, p.Count);
+        for (int k = 0; k < count; k++)
+        {
+            float lx = (k - (count - 1) * 0.5f) * p.SpacingM;
+            row.AddChild(new MeshInstance3D
+            {
+                Mesh = new QuadMesh { Size = new Vector2(0.55f, 1.3f) },
+                Position = new Vector3(lx, 0, 0.3f),
+                MaterialOverride = mat,
+                CastShadow = GeometryInstance3D.ShadowCastingSetting.Off,
+            });
+            if (k % 3 == 1)
+                row.AddChild(new OmniLight3D { Position = new Vector3(lx, 0, 1.5f), LightColor = glow, LightEnergy = 2f, OmniRange = 14f, ShadowEnabled = false });
+        }
+    }
+
+    /// <summary>
+    /// Timber boardwalk over the bog: dark plank deck tiles along local X on posts down to the bed. Deck top sits HeightM
+    /// above the marsh (or lake) water, or just above the ground where the walk crosses land.
+    /// </summary>
+    private static void BuildBoardwalk(WorldRoot world, Kit kit, Node3D parent, PieceSpec p, Vector2 pos, float yaw)
+    {
+        float length = MathF.Max(p.LengthM, 4f), width = MathF.Max(p.WidthM > 10f ? 2.4f : p.WidthM, 1.6f);
+        float water = world.Layout.Marsh?.WaterLevel ?? world.Layout.Lake?.WaterLevel ?? 0f;
+        float deckTop = water + (p.HeightM > 0.05f ? p.HeightM : 0.8f);
+        var plank = new Color("#6E5A44");
+        var postMat = new StandardMaterial3D { AlbedoColor = new Color("#3E3024"), Roughness = 1f, MetallicSpecular = 0f };
+        var walk = new Node3D { Name = "Boardwalk", Position = new Vector3(pos.X, deckTop, pos.Y), RotationDegrees = new Vector3(0, -yaw, 0) };
+        parent.AddChild(walk);
+        int tiles = (int)MathF.Ceiling(length / 2f);
+        for (int k = 0; k < tiles; k++)
+        {
+            float lx = -length * 0.5f + 1f + k * 2f;
+            var wp = Rotate(new Vector3(lx, 0, 0), yaw);
+            float groundHere = world.GroundHeight(pos.X + wp.X, pos.Y + wp.Z);
+            float top = MathF.Max(deckTop, groundHere + 0.25f) - deckTop;      // lift the deck where the walk crosses land
+            var tile = kit.Instance("Floor_WoodDark", plank);
+            tile.Position = new Vector3(lx, top, 0);
+            tile.Scale = new Vector3(1, 1, width / 2f);
+            walk.AddChild(tile);
+            foreach (float sz in new[] { -1f, 1f })
+            foreach (float sx in new[] { -0.75f, 0.75f })
+            {
+                var pp = Rotate(new Vector3(lx + sx, 0, sz * (width * 0.5f - 0.15f)), yaw);
+                float bed = world.GroundHeight(pos.X + pp.X, pos.Y + pp.Z) - 0.3f;
+                float h = deckTop + top - bed;
+                if (h < 0.3f) continue;
+                walk.AddChild(new MeshInstance3D
+                {
+                    Mesh = new BoxMesh { Size = new Vector3(0.25f, h, 0.25f) },
+                    Position = new Vector3(lx + sx, top - h * 0.5f, sz * (width * 0.5f - 0.15f)),
+                    MaterialOverride = postMat,
+                });
+            }
+        }
+        MarkClearRect(world.Field, pos, yaw, length * 0.5f, width * 0.5f, 1.5f);
     }
 
     private static void BuildStandingStone(WorldRoot world, Kit kit, Node3D parent, PieceSpec p, Vector2 pos, float yaw, RandomNumberGenerator rng)

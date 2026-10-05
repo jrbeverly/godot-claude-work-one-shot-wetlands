@@ -181,8 +181,10 @@ public sealed class Kit
                 if (m.AlbedoTexture != null) m.AlbedoTexture = Desaturated(m.AlbedoTexture, 0.10f, 1.0f);
                 m.AlbedoColor *= RoofMultiply;
             }
+            // Cream plaster glows in dusk light; grey it toward the palette plaster (#B8AEA4).
+            if (key.Contains("Plaster", StringComparison.OrdinalIgnoreCase)) m.AlbedoColor *= new Color(0.66f, 0.63f, 0.64f);
             // Kit timber is orange-tan; pull it toward the palette timber (#7E5A3A).
-            if (key.Contains("WoodTrim", StringComparison.OrdinalIgnoreCase)) m.AlbedoColor *= new Color(0.80f, 0.72f, 0.66f);
+            if (key.Contains("WoodTrim", StringComparison.OrdinalIgnoreCase) || key.Contains("Wood", StringComparison.OrdinalIgnoreCase)) m.AlbedoColor *= new Color(0.62f, 0.56f, 0.52f);
             // The kit's bark is salmon-pink; pull it toward a warm brown so trunks stop reading as candy.
             if (key.Contains("Bark", StringComparison.OrdinalIgnoreCase)) m.AlbedoColor *= new Color(0.86f, 0.78f, 0.72f);
             if (key.Contains("hexagons_medieval", StringComparison.OrdinalIgnoreCase))

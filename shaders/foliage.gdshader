@@ -7,6 +7,7 @@ uniform sampler2D albedo_tex : source_color, filter_linear_mipmap_anisotropic, r
 uniform vec4 tint : source_color = vec4(1.0);
 uniform float alpha_scissor : hint_range(0.0, 1.0) = 0.4;
 uniform float backlight_strength : hint_range(0.0, 1.0) = 0.22;
+uniform vec3 backlight_color : source_color = vec3(1.0);   // straw for reeds and moss, so low sun rims them warm
 uniform float saturation : hint_range(0.0, 1.5) = 1.0;      // <1 mutes neon kit colours
 // Recolour: 1 = ignore the texture's hue and paint its luminance (relative to recolor_ref) with the tint.
 // Used for the kit's red leaf sheet so the same bush/tree meshes can be green.
@@ -39,5 +40,5 @@ void fragment() {
 	ROUGHNESS = 1.0;
 	SPECULAR = 0.0;
 	METALLIC = 0.0;
-	BACKLIGHT = vec3(backlight_strength);
+	BACKLIGHT = backlight_color * backlight_strength;
 }

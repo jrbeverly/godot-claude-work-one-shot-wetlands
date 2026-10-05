@@ -4,12 +4,12 @@ Usage: tools/validate_layout.py [assets/world/layout.json]
 Exit code 1 on errors; warnings are printed but do not fail."""
 import json, math, sys
 
-TREES = {f"CommonTree_{i}" for i in range(1, 6)} | {f"Pine_{i}" for i in range(1, 6)} | {"DeadTree_1", "DeadTree_3", "DeadTree_5", "TwistedTree_1", "TwistedTree_3", "TwistedTree_5"}
-UNDER = {"Bush_Common", "Bush_Common_Flowers", "Fern_1", "Clover_1", "Flower_3_Group", "Flower_4_Group", "Grass_Common_Short", "Grass_Common_Tall", "Grass_Wispy_Short", "Grass_Wispy_Tall", "Mushroom_Common", "Mushroom_Laetiporus", "Rock_Medium_1", "Rock_Medium_2", "Rock_Medium_3", "Pebble_Round_1", "Pebble_Round_3", "Pebble_Square_1", "Pebble_Square_3"}
+TREES = {f"CommonTree_{i}" for i in range(1, 6)} | {f"Pine_{i}" for i in range(1, 6)} | {"DeadTree_1", "DeadTree_3", "DeadTree_5", "TwistedTree_1", "TwistedTree_3", "TwistedTree_5"} | {f"MossTree_{i}" for i in range(1, 4)} | {f"BogOak_{i}" for i in range(1, 4)}
+UNDER = {"Reeds_1", "Reeds_2", "Reeds_3", "Bush_Common", "Bush_Common_Flowers", "Fern_1", "Clover_1", "Flower_3_Group", "Flower_4_Group", "Grass_Common_Short", "Grass_Common_Tall", "Grass_Wispy_Short", "Grass_Wispy_Tall", "Mushroom_Common", "Mushroom_Laetiporus", "Rock_Medium_1", "Rock_Medium_2", "Rock_Medium_3", "Pebble_Round_1", "Pebble_Round_3", "Pebble_Square_1", "Pebble_Square_3"}
 LANDMARKS = {"church", "tavern", "blacksmith", "windmill", "lumbermill", "mine", "well", "tower"}
 PROPS = {"wagon", "crate", "RockPath_Round_Thin", "RockPath_Square_Thin"}
 GROUND = {"grass", "meadow", "forestFloor", "rock", "snow"}
-PIECE_KINDS = {"cottage", "landmark", "fence", "prop", "ruinWall", "standingStone", "tree", "field", "pier", "brazier"}
+PIECE_KINDS = {"cottage", "landmark", "fence", "prop", "ruinWall", "standingStone", "tree", "field", "pier", "brazier", "windowRow", "boardwalk"}
 PALETTE_KEYS = ["grass", "meadow", "forestFloor", "road", "rock", "snow", "water", "waterDeep", "skyTop", "skyHorizon", "fog", "ambient", "shadowTint", "roofTile", "timber", "plaster", "stone", "leafWarm", "leafCool", "pine"]
 
 errors, warnings = [], []
@@ -44,6 +44,14 @@ for h in T.get("hills", []):
 for r in T.get("ridges", []):
     for p in r.get("points", []): pt(p, f"ridge {r.get('name')}")
 for fl in T.get("flats", []): num(fl["height"], "flat.height"); inb(fl["x"], fl["z"], f"flat {fl.get('name')}")
+marsh = L.get("marsh")
+if marsh:
+    mwl = num(marsh.get("waterLevel", 4), "marsh.waterLevel"); inb(marsh.get("x", 0), marsh.get("z", 0), "marsh")
+    for pool in marsh.get("pools", []):
+        inb(pool["x"], pool["z"], f"pool {pool.get('name')}")
+        if math.hypot(pool["x"] - marsh.get("x", 0), pool["z"] - marsh.get("z", 0)) > marsh.get("radius", 300): warn(f"pool {pool.get('name')}: outside the marsh disc")
+    for fl in T.get("flats", []):
+        if math.hypot(fl["x"] - marsh.get("x", 0), fl["z"] - marsh.get("z", 0)) < marsh.get("radius", 300) and fl["height"] < mwl + 0.3: warn(f"flat {fl.get('name')}: at or below the marsh water level {mwl}")
 lake = L.get("lake")
 if lake:
     wl = num(lake["waterLevel"], "lake.waterLevel"); inb(lake["x"], lake["z"], "lake")

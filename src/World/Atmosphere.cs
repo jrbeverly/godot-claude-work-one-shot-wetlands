@@ -27,10 +27,23 @@ public static class Atmosphere
         skyMat.SetShaderParameter("sky_top", top);
         skyMat.SetShaderParameter("sky_horizon", horizon);
         skyMat.SetShaderParameter("fog_color", fogCol);
-        skyMat.SetShaderParameter("cloud_light", Paint(new Color("#F2EBDC"), tonemapWhite));
-        skyMat.SetShaderParameter("cloud_shadow", Paint(new Color("#7F85A6"), tonemapWhite));
+        skyMat.SetShaderParameter("cloud_light", Paint(L.Col("cloudLight", "#F2EBDC"), tonemapWhite));
+        skyMat.SetShaderParameter("cloud_shadow", Paint(L.Col("cloudShadow", "#7F85A6"), tonemapWhite));
+        skyMat.SetShaderParameter("cloud_opacity", L.Fog.CloudOpacity);
+        skyMat.SetShaderParameter("cloud_a_coverage", L.Fog.CloudCoverage);
+        skyMat.SetShaderParameter("cloud_b_coverage", L.Fog.CloudCoverage + 0.06f);
+        skyMat.SetShaderParameter("horizon_warmth", L.Fog.HorizonWarmth);
+        skyMat.SetShaderParameter("sky_curve", L.Fog.SkyCurve);
+        skyMat.SetShaderParameter("star_strength", L.Fog.Stars);
         // Horizon warmth and disc derive from the sun colour so a palette change moves everything together.
-        skyMat.SetShaderParameter("sun_warm", Paint(sunCol.Lerp(new Color("#F6E8C4"), 0.7f), tonemapWhite));
+        skyMat.SetShaderParameter("sun_warm", Paint(L.Col("sunWarm", sunCol.Lerp(new Color("#F6E8C4"), 0.7f).ToHtml()), tonemapWhite));
+        skyMat.SetShaderParameter("sun_disc_deg", L.Fog.SunDiscDeg);
+        skyMat.SetShaderParameter("sun_disc_soft_deg", L.Fog.SunDiscDeg * 0.66f);
+        skyMat.SetShaderParameter("sun_disc_energy", L.Fog.SunDiscEnergy);
+        skyMat.SetShaderParameter("glow_power", L.Fog.SunGlowPower);
+        skyMat.SetShaderParameter("glow_strength", L.Fog.SunGlowStrength);
+        skyMat.SetShaderParameter("halo_power", L.Fog.SunHaloPower);
+        skyMat.SetShaderParameter("halo_strength", L.Fog.SunHaloStrength);
         skyMat.SetShaderParameter("sun_color", sunCol.Lerp(Colors.White, 0.5f));
         var sky = new Sky
         {
@@ -47,7 +60,7 @@ public static class Atmosphere
             Sky = sky,
             AmbientLightSource = Godot.Environment.AmbientSource.Color,
             AmbientLightColor = ambient,
-            AmbientLightEnergy = 1.2f,
+            AmbientLightEnergy = L.Fog.AmbientEnergy,
             ReflectedLightSource = Godot.Environment.ReflectionSource.Disabled,
             TonemapMode = Godot.Environment.ToneMapper.Filmic,
             TonemapWhite = tonemapWhite,
@@ -57,23 +70,24 @@ public static class Atmosphere
             FogLightColor = fogCol.LinearToSrgb(),
             FogLightEnergy = 1.0f,
             // Low: the sky shader paints its own warm horizon; scatter would double it.
-            FogSunScatter = 0.04f,
+            FogSunScatter = L.Fog.SunScatter,
             FogDepthBegin = L.Fog.StartM,
             FogDepthEnd = L.Fog.EndM,
-            FogDepthCurve = 1.0f,
+            FogDepthCurve = L.Fog.Curve,
+            FogDensity = L.Fog.Density,
             // Off: aerial perspective samples the radiance cubemap, which averages the sun into a warm cast and
             // shows a half-screen LOD seam on the software rasteriser. The sky shader blends to the fog colour
             // at the horizon instead, so fogged ridges still meet the sky without a seam.
             FogAerialPerspective = 0.0f,
             // The sky shader fades into the fog colour at the horizon itself; a high value here would wash out the clouds.
-            FogSkyAffect = 0.25f,
+            FogSkyAffect = 0.4f,
             // Low mist band (lake surface, the Throat floor) when the layout asks for it; the village flats sit above it.
             // Thin: long grazing views across the Mere pass through hundreds of metres of this band, so keep it a haze.
             FogHeight = L.Fog.HeightFogEnabled ? L.Fog.HeightFogLevel - 2.0f : 0f,
-            FogHeightDensity = L.Fog.HeightFogEnabled ? 0.0045f : 0.0f,
+            FogHeightDensity = L.Fog.HeightFogEnabled ? L.Fog.HeightFogDensity : 0.0f,
             AdjustmentEnabled = true,
-            AdjustmentSaturation = 1.0f,
-            AdjustmentContrast = 0.98f,
+            AdjustmentSaturation = L.Fog.Saturation,
+            AdjustmentContrast = L.Fog.Contrast,
             SsaoEnabled = false,
             SsilEnabled = false,
             SsrEnabled = false,
@@ -87,15 +101,15 @@ public static class Atmosphere
             LightColor = sunCol,
             LightEnergy = L.Sun.Energy,
             ShadowEnabled = true,
-            ShadowOpacity = 0.6f,
-            ShadowBlur = 0.8f,
+            ShadowOpacity = L.Sun.ShadowOpacity,
+            ShadowBlur = 1.6f,
             DirectionalShadowMode = DirectionalLight3D.ShadowMode.Parallel4Splits,
             DirectionalShadowMaxDistance = 180f,
             DirectionalShadowSplit1 = 0.08f,
             DirectionalShadowSplit2 = 0.22f,
             DirectionalShadowSplit3 = 0.5f,
             DirectionalShadowFadeStart = 0.8f,
-            LightAngularDistance = 1.5f,
+            LightAngularDistance = 2.5f,
             // Feeds LIGHT0_DIRECTION/COLOR to the sky shader for the disc and halo.
             SkyMode = DirectionalLight3D.SkyModeEnum.LightAndSky,
         };

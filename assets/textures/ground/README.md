@@ -26,13 +26,15 @@ Do not hand-edit the PNGs; change the painter and regenerate. Previews land in
 ## Materials
 | File | Use | Palette idea | Suggested world tile |
 |---|---|---|---|
-| `grass.png` | default ground | olive-green turf: wide soft tufts, thin lit blades, deep pockets, warm patches | 6-7 m |
-| `meadow.png` | dry/golden biome ground (`groundTexture: "meadow"`) | straw-coloured wind-combed blades over green, sparse flower specks | 6.5 m |
-| `forest_floor.png` | under tree canopy | dark green-brown, moss cushions, ochre leaf drifts, root shadows | 8 m |
-| `dirt_road.png` | road ribbon | tan, lighter worn pools, soft pebbles, one faint rut | 5 m |
-| `rock.png` | steep slopes / cliffs (triplanar) | warm angular strata of varying bed thickness: lit top edges, hard dark undersides, tall vertical joints | 11 m |
-| `snow.png` | above the snow line | near-white drifts with soft blue hollows | 9 m |
-| `mud.png` | lake / river bed | dark olive-brown, silt streaks along the current | 6 m |
+| `grass.png` | turf on hummock crowns and higher ground | dull olive marsh turf: wide soft tufts, deep pockets, yellow-leaning patches | 6-7 m |
+| `meadow.png` | sedge band around the water (`groundTexture: "meadow"` and the marsh splat rule) | straw-olive wind-combed blades, cream/bog-blue flower specks | 6.5 m |
+| `forest_floor.png` | peat: the bog floor and hummock flanks, and under dark woods | dark red-brown earth, olive moss cushions, straw litter, root shadows | 8 m |
+| `dirt_road.png` | road ribbon | grey-green trodden mud, paler worn pools, grey pebbles, one faint rut | 5 m |
+| `rock.png` | steep slopes / cliffs (triplanar) | pale violet-grey strata: lit top edges, dark undersides, vertical joints; sits near the fog colour so walls loom | 11 m |
+| `snow.png` | above `terrain.snowLine` (tinted by palette `tintSnow`) | near-white drifts; in the Wetlands zone this layer is the pale upper cliff wall (pink-grey tint, 60 m line, 45 m blend) | 9 m |
+| `mud.png` | lake / river bed | dark grey-olive, silt streaks along the current | 6 m |
+
+Foliage cards (moss curtains, leaf clumps, reeds, pale bark) are painted by `tools/paint_foliage.py` into `assets/textures/foliage/`.
 
 `meadow.png` is the fifth terrain layer (`tex_meadow`, weight in `CUSTOM0.a`, see `shaders/terrain.gdshader`).
 `mud.png` is not yet wired; it is ready for the water subsystem (lake / river beds).

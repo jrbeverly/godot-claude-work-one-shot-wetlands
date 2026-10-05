@@ -23,6 +23,9 @@ uniform float wobble_scale = 0.22;     // repeats per metre (~4-5 m ripple cells
 uniform float wobble_speed = 0.18;
 uniform float ripple_tint = 0.12;      // albedo lightness swing from the wobble field
 uniform float streak_strength = 0.12; // soft pale streaks on the ripple crests: the painted "animated water" read
+uniform vec3 glint_color : source_color = vec3(0.73, 0.74, 0.65);  // the pale painted specks of bog water
+uniform float glint_strength = 0.0;    // 0 = off; ~0.8 for the marsh sheet
+uniform float glint_scale = 1.6;       // speck cells per metre
 uniform vec2 flow = vec2(0.0, 0.0);    // UV units per second; rivers scroll along +x (downstream)
 uniform sampler2D DEPTH_TEXTURE : hint_depth_texture, filter_linear;
 
@@ -89,6 +92,15 @@ void fragment() {
 	col *= 1.0 + (hc - 0.5) * 2.0 * ripple_tint;
 	float streak = smoothstep(0.54, 0.74, hc);
 	col = mix(col, mix(col, sky_color, 0.6), streak * streak_strength);
+
+	// Dense small pale specks (painted highlights, not reflections) that fade out beyond ~100 m so far water stays flat.
+	if (glint_strength > 0.0) {
+		float t2 = TIME * 0.35;
+		float sp = value_noise(uv * glint_scale + vec2(t2 * 1.3, -t2 * 0.7));
+		float sp2 = value_noise(uv * glint_scale * 2.7 + vec2(-t2 * 0.9, t2 * 1.4) + 11.3);
+		float speck = smoothstep(0.78, 0.9, sp * 0.6 + sp2 * 0.4) * (1.0 - smoothstep(60.0, 140.0, water_dist));
+		col = mix(col, glint_color, speck * glint_strength);
+	}
 
 	// Mild fresnel toward the sky, never a mirror.
 	float fres = pow(1.0 - clamp(dot(VIEW, vn), 0.0, 1.0), 4.0);

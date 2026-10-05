@@ -13,7 +13,7 @@ namespace GodotWarcraft.World;
 public static class FoliagePlacer
 {
     private const int MaxTrees = 3500;
-    private const int MaxUndergrowth = 25000;
+    private const int MaxUndergrowth = 45000;
     private const float EdgeMargin = 40f;      // keep the map rim bare so the mountain silhouette stays clean
     private const float TreeAltitudeLimit = 125f;
     private const float PineAltitudeLimit = 165f;
@@ -74,12 +74,21 @@ public static class FoliagePlacer
                 float c = clump.GetNoise2D(x, z) * 0.5f + 0.5f;
                 // Ragged stand edges: a soft probability band around the threshold instead of a hard cut.
                 float keep = Mathf.SmoothStep(threshold - 0.08f, threshold + 0.1f, c);
+                // In the bog, stands gather on the hummock crowns and islands; the open sheet between stays treeless.
+                if (L.Marsh is { } mk)
+                {
+                    float dxm = x - mk.X, dzm = z - mk.Z;
+                    if (dxm * dxm + dzm * dzm < mk.Radius * mk.Radius)
+                        keep *= Mathf.Lerp(0.25f, 1f, Mathf.SmoothStep(mk.WaterLevel + 0.8f, mk.WaterLevel + 2.2f, f.SampleHeight(x, z)));
+                }
                 if (rng.Randf() > keep) return;
 
                 var choice = PickTree(biome.Trees, totalWeight, rng.Randf() * totalWeight);
                 bool pine = choice.Model.StartsWith("Pine", StringComparison.OrdinalIgnoreCase);
+                // Marsh trees stand in the shallows and on the banks; everything else keeps off the water.
+                bool wader = choice.Model.StartsWith("MossTree", StringComparison.OrdinalIgnoreCase) || choice.Model.StartsWith("BogOak", StringComparison.OrdinalIgnoreCase);
                 float scale = choice.Scale * rng.RandfRange(0.85f, 1.2f);
-                if (!TreeSpotOk(f, x, z, scale, pine ? PineAltitudeLimit : TreeAltitudeLimit)) return;
+                if (!TreeSpotOk(f, x, z, scale, pine ? PineAltitudeLimit : TreeAltitudeLimit, wader)) return;
 
                 var model = ModelLibrary.Get(choice.Model);
                 if (model == null) return;
@@ -100,17 +109,20 @@ public static class FoliagePlacer
         var under = new List<(GroupKey key, Instance inst)>();
         foreach (var biome in biomes)
         {
-            var tint = biome.LeafTint is { Length: > 0 } ? new Color(biome.LeafTint) : Colors.White;
+            var biomeTint = biome.LeafTint is { Length: > 0 } ? new Color(biome.LeafTint) : Colors.White;
             float threshold = 0.5f + 0.3f * Mathf.Clamp(biome.Clumpiness, 0f, 1f);
             foreach (var choice in biome.Undergrowth)
             {
                 if (choice.Density <= 0f) continue;
+                var tint = choice.Tint is { Length: > 0 } ? new Color(choice.Tint) : biomeTint;
                 var model = ModelLibrary.Get(choice.Model);
                 if (model == null) continue;
                 var kind = ClassifyUndergrowth(choice.Model);
                 float spacing = 1.7f / MathF.Sqrt(Mathf.Clamp(choice.Density, 0.01f, 1f)); // 0.2 -> 3.8 m, 1 -> 1.7 m
                 bool shadeLover = kind == Kind.Bush && (choice.Model.StartsWith("Fern") || choice.Model.StartsWith("Mushroom"));
                 bool sunLover = choice.Model.StartsWith("Flower") || choice.Model.StartsWith("Clover");
+                // Reeds crowd the water's edge and stand in the shallows; away from water they thin to stragglers.
+                bool reed = choice.Model.StartsWith("Reeds", StringComparison.OrdinalIgnoreCase);
                 float keepBase = Mathf.Clamp(choice.Weight, 0.05f, 1f);
 
                 ForEachGridCell(biome, spacing, rng, (x, z) =>
@@ -122,10 +134,20 @@ public static class FoliagePlacer
                     float keep = keepBase * Mathf.SmoothStep(0.3f, 0.8f, p);
                     if (shadeLover) keep *= Mathf.SmoothStep(threshold - 0.15f, threshold + 0.1f, c);
                     else if (sunLover) keep *= 1f - 0.8f * Mathf.SmoothStep(threshold - 0.05f, threshold + 0.15f, c);
-                    if (rng.Randf() > keep) return;
-                    if (!UndergrowthSpotOk(f, x, z)) return;
+                    if (reed)
+                    {
+                        // Full density within ~7 m of water, a quarter elsewhere; the patch noise still breaks it up.
+                        keep = keepBase * (NearWater(f, x, z, 7f) ? 1f : 0.25f) * Mathf.SmoothStep(0.2f, 0.7f, p);
+                        if (rng.Randf() > keep) return;
+                        if (!ReedSpotOk(f, x, z)) return;
+                    }
+                    else
+                    {
+                        if (rng.Randf() > keep) return;
+                        if (!UndergrowthSpotOk(f, x, z)) return;
+                    }
 
-                    float scale = BaseScale(choice.Model) * rng.RandfRange(0.8f, 1.25f);
+                    float scale = BaseScale(choice.Model) * choice.Scale * rng.RandfRange(0.8f, 1.25f);
                     float y = f.SampleHeight(x, z) - 0.06f - 0.1f * MathF.Min(f.SampleSlopeDeg(x, z) / 30f, 1f);
                     var xf = Upright(x, y, z, rng.RandfRange(0f, Mathf.Tau), scale);
                     under.Add((Key(choice.Model, tint, kind, x, z), new Instance(xf, Vary(x, z, 0.12f))));
@@ -144,7 +166,8 @@ public static class FoliagePlacer
                 float px = x + rng.RandfRange(-6f, 6f), pz = z + rng.RandfRange(-6f, 6f);
                 if (f.SampleRock(px, pz) < 0.45f || rng.Randf() > 0.45f) continue;
                 if (f.SampleWaterDepth(px, pz) > 0f || f.SampleRoadDistance(px, pz) < 4f || f.SampleSiteClear(px, pz) > 0.25f) continue;
-                if (f.SampleSlopeDeg(px, pz) > 55f || f.SampleHeight(px, pz) > 175f) continue;
+                // Boulders belong on the lower slopes; on the high walls they would float as dark blobs in the fog.
+                if (f.SampleSlopeDeg(px, pz) > 42f || f.SampleHeight(px, pz) > 60f) continue;
                 string m = rockModels[rng.RandiRange(0, rockModels.Length - 1)];
                 if (ModelLibrary.Get(m) == null) continue;
                 // Mostly modest boulders with the odd big one, so slopes read as clusters rather than gravel.
@@ -221,7 +244,9 @@ public static class FoliagePlacer
                     ? GeometryInstance3D.ShadowCastingSetting.On
                     : GeometryInstance3D.ShadowCastingSetting.Off,
             };
-            float rangeEnd = key.Kind switch { Kind.Tuft => 90f, Kind.Pebble => 70f, Kind.Bush => 220f, _ => 0f };
+            // Reeds are the bog's main ground cover (a few quads each), so they stay visible much further than tufts.
+            float rangeEnd = key.Model.StartsWith("Reeds", StringComparison.OrdinalIgnoreCase) ? 170f
+                : key.Kind switch { Kind.Tuft => 90f, Kind.Pebble => 70f, Kind.Bush => 220f, _ => 0f };
             if (rangeEnd > 0f)
             {
                 mmi.VisibilityRangeEnd = rangeEnd;
@@ -243,7 +268,7 @@ public static class FoliagePlacer
 
     // ---- placement rules ---------------------------------------------------------------------------
 
-    private static bool TreeSpotOk(HeightField f, float x, float z, float scale, float altitudeLimit)
+    private static bool TreeSpotOk(HeightField f, float x, float z, float scale, float altitudeLimit, bool wader = false)
     {
         float margin = f.HalfExtent - EdgeMargin;
         if (MathF.Abs(x) > margin || MathF.Abs(z) > margin) return false;
@@ -251,6 +276,8 @@ public static class FoliagePlacer
         if (f.SampleSlopeDeg(x, z) > 36f) return false;
         if (f.SampleSiteClear(x, z) > 0.25f) return false;
         if (f.SampleHeight(x, z) > altitudeLimit) return false;
+        // Waders may stand in up to half a metre of water (roots in the bog, as in the references).
+        if (wader) return f.SampleWaterDepth(x, z) < 0.5f;
         // Banks: no trunks in the water nor overhanging it from within 3 m.
         if (f.SampleWaterDepth(x, z) > 0f) return false;
         for (int k = 0; k < 4; k++)
@@ -271,6 +298,31 @@ public static class FoliagePlacer
         if (f.SampleSiteClear(x, z) > 0.5f) return false;
         if (f.SampleHeight(x, z) > TreeAltitudeLimit) return false;
         return true;
+    }
+
+    /// <summary>Reeds: like other undergrowth but allowed to stand in up to 0.6 m of water.</summary>
+    private static bool ReedSpotOk(HeightField f, float x, float z)
+    {
+        float margin = f.HalfExtent - EdgeMargin;
+        if (MathF.Abs(x) > margin || MathF.Abs(z) > margin) return false;
+        if (f.SampleRoadDistance(x, z) < 2.4f) return false;
+        if (f.SampleWaterDepth(x, z) > 0.6f) return false;
+        if (f.SampleSlopeDeg(x, z) > 40f) return false;
+        if (f.SampleSiteClear(x, z) > 0.5f) return false;
+        if (f.SampleHeight(x, z) > TreeAltitudeLimit) return false;
+        return true;
+    }
+
+    /// <summary>Any water within <paramref name="r"/> metres (eight compass samples plus the centre).</summary>
+    private static bool NearWater(HeightField f, float x, float z, float r)
+    {
+        if (f.SampleWaterDepth(x, z) > 0f) return true;
+        for (int k = 0; k < 8; k++)
+        {
+            float a = k * Mathf.Pi * 0.25f;
+            if (f.SampleWaterDepth(x + r * MathF.Cos(a), z + r * MathF.Sin(a)) > 0f) return true;
+        }
+        return false;
     }
 
     /// <summary>True when <paramref name="biome"/> is the highest-priority biome covering the point.</summary>

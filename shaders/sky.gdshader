@@ -35,6 +35,7 @@ uniform float cloud_b_coverage = 0.62;
 uniform float cloud_b_softness = 0.12;
 uniform vec2 cloud_b_drift = vec2(2.6, -1.0);
 uniform float cloud_opacity = 0.92;
+uniform float star_strength = 0.0;        // painted star field for night palettes (0 = none)
 uniform int debug_ramp = 0;               // 1: output linear grey = EYEDIR.y * 3 (tonemapper calibration aid)
 
 float hash21(vec2 p) {
@@ -128,13 +129,26 @@ void sky() {
 		cloud_col = mix(cloud_col, mix(sky_horizon, fog_color, 0.5), far_haze * 0.55);
 	}
 
+	// Stars: a sparse hash field on the sky dome, fading toward the horizon and hidden by cloud.
+	if (star_strength > 0.0 && y > 0.0) {
+		vec2 sp = dir.xz / (y + 0.35) * 260.0;
+		vec2 cellId = floor(sp);
+		float hs = hash21(cellId);
+		vec2 centre = cellId + 0.5 + (vec2(hash21(cellId + 7.1), hash21(cellId + 3.3)) - 0.5) * 0.8;
+		float dist = length(sp - centre);
+		float star = (1.0 - smoothstep(0.0, 0.12 + hs * 0.1, dist)) * step(0.93, hs);
+		float twinkle = 0.7 + 0.3 * sin(TIME * (1.0 + hs * 3.0) + hs * 40.0);
+		col += vec3(0.9, 0.95, 1.0) * star * twinkle * star_strength * smoothstep(0.02, 0.3, y) * 3.0;
+	}
+
 	// Sun disc behind clouds, halo in front (it reads as glow through the cloud).
 	col = mix(col, cloud_col, cloud_a_alpha);
 	col += sun_total * (1.0 - cloud_a_alpha * 0.85);
 
 	// 5. Horizon band and below-horizon: fade into the fog colour.
+	// The sky at the rim line stays a little lighter than fully fogged ground, so far ridges read as darker silhouettes.
 	float horizon_blend = 1.0 - smoothstep(0.0, 0.12, y);
-	col = mix(col, fog_color, horizon_blend * 0.85);
+	col = mix(col, mix(sky_horizon, fog_color, 0.5), horizon_blend * 0.6);
 	if (y < 0.0) {
 		float below = smoothstep(0.0, -0.35, y);
 		col = mix(fog_color, fog_color * 0.9, below);

@@ -22,6 +22,7 @@ public sealed class WorldLayout
     public FogSpec Fog { get; set; } = new();
     public TerrainSpec Terrain { get; set; } = new();
     public LakeSpec? Lake { get; set; }
+    public MarshSpec? Marsh { get; set; }
     public List<RiverSpec> Rivers { get; set; } = new();
     public List<RoadSpec> Roads { get; set; } = new();
     public List<BiomeSpec> Biomes { get; set; } = new();
@@ -59,20 +60,50 @@ public sealed class SunSpec
     public float ElevationDeg { get; set; } = 35f;
     public string Color { get; set; } = "#FFE9C4";
     public float Energy { get; set; } = 1.2f;
+    public float ShadowOpacity { get; set; } = 0.6f;
 }
 
+/// <summary>Fog plus the handful of mood knobs that belong with it (ambient strength, grading, cloud cover, stars).</summary>
 public sealed class FogSpec
 {
     public float StartM { get; set; } = 60f;
     public float EndM { get; set; } = 700f;
-    public float Density { get; set; } = 0.0025f;
+    /// <summary>Depth-fog opacity ceiling (0..1): below 1 the far rim keeps a little of its own shading.</summary>
+    public float Density { get; set; } = 1.0f;
+    /// <summary>Depth-fog curve; below 1 the fog arrives early and saturates late (the references' 150-300 m band).</summary>
+    public float Curve { get; set; } = 1.0f;
     public bool HeightFogEnabled { get; set; }
     public float HeightFogLevel { get; set; } = 0f;
+    public float HeightFogDensity { get; set; } = 0.0045f;
+    public float AmbientEnergy { get; set; } = 1.2f;
+    public float Saturation { get; set; } = 1.0f;
+    public float Contrast { get; set; } = 0.98f;
+    /// <summary>0..1 opacity of the painted cloud banks (0 = clear sky).</summary>
+    public float CloudOpacity { get; set; } = 0.92f;
+    /// <summary>Cloud noise threshold: higher = fewer clouds (0.56 = the original scattered banks).</summary>
+    public float CloudCoverage { get; set; } = 0.56f;
+    public float HorizonWarmth { get; set; } = 0.045f;
+    /// <summary>Sky gradient curve; >1 keeps more of the sky in the horizon tone.</summary>
+    public float SkyCurve { get; set; } = 1.0f;
+    /// <summary>0..1 strength of a painted star field (night skies).</summary>
+    public float Stars { get; set; } = 0f;
+    /// <summary>How much the fog blushes toward the sun colour on the sun side (Environment.FogSunScatter).</summary>
+    public float SunScatter { get; set; } = 0.04f;
+    public float SunDiscDeg { get; set; } = 3.0f;
+    public float SunDiscEnergy { get; set; } = 2.4f;
+    public float SunGlowPower { get; set; } = 140f;
+    public float SunGlowStrength { get; set; } = 0.6f;
+    public float SunHaloPower { get; set; } = 24f;
+    public float SunHaloStrength { get; set; } = 0.22f;
 }
 
 public sealed class TerrainSpec
 {
     public float BaseHeight { get; set; } = 4f;
+    /// <summary>Absolute snow line in metres; null = two thirds up the rim (the old default). Set very high for snowless zones.</summary>
+    public float? SnowLine { get; set; }
+    /// <summary>Width of the snow/pale-wall gradient in metres; null = a tenth of the rim height.</summary>
+    public float? SnowBlend { get; set; }
     public RimSpec Rim { get; set; } = new();
     public List<HillSpec> Hills { get; set; } = new();
     public List<BasinSpec> Basins { get; set; } = new();
@@ -85,6 +116,8 @@ public sealed class RimSpec
     public float StartRadius { get; set; } = 380f;
     public float EdgeHeight { get; set; } = 180f;
     public float Roughness { get; set; } = 0.3f;
+    /// <summary>Exponent on the rim ramp: 1.25 = long easy slope, 2+ = a short apron then near-sheer walls.</summary>
+    public float RampPower { get; set; } = 1.25f;
     /// <summary>Optional per-side edge heights (north = -Z, south = +Z, east = +X, west = -X); null = EdgeHeight.</summary>
     public float? EdgeHeightNorth { get; set; }
     public float? EdgeHeightSouth { get; set; }
@@ -152,6 +185,53 @@ public sealed class LakeSpec
     public float Depth { get; set; } = 5f;
 }
 
+/// <summary>
+/// Bog water: one flat sheet at <see cref="WaterLevel"/> covering a disc of the lowland. The ground is sculpted to sit
+/// just above it, with authored <see cref="Pools"/> carved below it and a field of low <see cref="Hummocks"/> rising
+/// out of it, so pools, channels and islands all come from one plane (the Classic way: water is a height, not a mesh).
+/// </summary>
+public sealed class MarshSpec
+{
+    public string Name { get; set; } = "";
+    public float X { get; set; }
+    public float Z { get; set; }
+    public float Radius { get; set; } = 300f;
+    public float WaterLevel { get; set; } = 4f;
+    /// <summary>Ground inside the disc is pulled toward WaterLevel + this (metres) before pools and hummocks; 0 = leave the authored terrain.</summary>
+    public float FloorAbove { get; set; } = 0.9f;
+    /// <summary>How strongly the floor is pulled (0..1); the pull fades out toward the disc edge.</summary>
+    public float FloorStrength { get; set; } = 0.8f;
+    /// <summary>Metres of broad noise added to the flattened floor so the sheet breaks into random shallow pools.</summary>
+    public float FloorNoise { get; set; } = 1.4f;
+    public List<PoolSpec> Pools { get; set; } = new();
+    public HummockSpec Hummocks { get; set; } = new();
+}
+
+public sealed class PoolSpec
+{
+    public string Name { get; set; } = "";
+    public float X { get; set; }
+    public float Z { get; set; }
+    public float RadiusX { get; set; } = 30f;
+    public float RadiusZ { get; set; } = 30f;
+    /// <summary>Bed depth below the marsh water level at the centre.</summary>
+    public float Depth { get; set; } = 1.5f;
+}
+
+/// <summary>Rounded earthen mounds scattered over the marsh floor (the dark peat domes of the references).</summary>
+public sealed class HummockSpec
+{
+    public bool Enabled { get; set; } = true;
+    /// <summary>Average spacing of mound centres in metres (jittered).</summary>
+    public float Spacing { get; set; } = 34f;
+    public float RadiusMin { get; set; } = 9f;
+    public float RadiusMax { get; set; } = 22f;
+    public float HeightMin { get; set; } = 1.2f;
+    public float HeightMax { get; set; } = 3.2f;
+    /// <summary>Fraction of grid cells that get a mound (0..1).</summary>
+    public float Coverage { get; set; } = 0.55f;
+}
+
 public sealed class RiverSpec
 {
     public string Name { get; set; } = "";
@@ -199,6 +279,9 @@ public sealed class UndergrowthChoice
     public string Model { get; set; } = "Grass_Common_Tall";
     public float Weight { get; set; } = 1f;
     public float Density { get; set; } = 0.2f;
+    /// <summary>Per-choice tint; null = the biome's leafTint. On flower sheets a non-white tint repaints the petals.</summary>
+    public string? Tint { get; set; }
+    public float Scale { get; set; } = 1f;
 }
 
 public sealed class SiteSpec
@@ -238,6 +321,13 @@ public sealed class PieceSpec
     /// <summary>standingStone only: lying on its side.</summary>
     public bool Fallen { get; set; }
     public string? LeafTint { get; set; }
+    /// <summary>ruinWall: a standing wall (no gaps, no stumps, no rubble), stacked to HeightM.</summary>
+    public bool Intact { get; set; }
+    /// <summary>windowRow: number of lit windows; also the brazier count for a row of lights.</summary>
+    public int Count { get; set; } = 4;
+    public float SpacingM { get; set; } = 2.2f;
+    /// <summary>landmark: albedo multiply (e.g. weathered grey for a keep).</summary>
+    public string? Tint { get; set; }
 }
 
 public sealed class SpawnSpec

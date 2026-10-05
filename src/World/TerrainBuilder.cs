@@ -53,7 +53,7 @@ public static class TerrainBuilder
                 float m1 = rimNoise.GetNoise2D(x * 0.33f, z * 0.33f);          // ~270 m features
                 float ridged = MathF.Pow(1f - MathF.Abs(m1), 1.6f);             // soft crests and saddles
                 float mass = (1f - rim.Roughness * 0.9f) + rim.Roughness * 0.9f * ridged;
-                float ramp = MathF.Pow(t * t * (3f - 2f * t), 1.25f);
+                float ramp = MathF.Pow(t * t * (3f - 2f * t), rim.RampPower);
                 float edgeH = rim.HeightToward(x, z);
                 float shoulder = 0.12f * edgeH * Smooth(t * 2.2f) * (0.5f + 0.5f * medium.GetNoise2D(x * 0.5f, z * 0.5f));
                 h += edgeH * ramp * mass + shoulder;
@@ -77,6 +77,72 @@ public static class TerrainBuilder
 
         // 2b. Banded rock: steep ground steps softly into terraces (reads as painted strata, not noise).
         Terrace(f, 10f, 0.25f, rimNoise);
+
+        // 2c. Marsh floor and hummocks (before the lake/rivers so pools and channels still cut through them).
+        if (L.Marsh is { } marsh)
+        {
+            var marshNoise = new FastNoiseLite { Seed = seed + 41, NoiseType = FastNoiseLite.NoiseTypeEnum.SimplexSmooth, Frequency = 1f / 48f, FractalOctaves = 2, FractalGain = 0.5f };
+            // Pull the ground toward a floor just above the water; broad noise lets it dip below in places.
+            if (marsh.FloorStrength > 0f) ApplyRect(f, marsh.X - marsh.Radius, marsh.Z - marsh.Radius, marsh.X + marsh.Radius, marsh.Z + marsh.Radius, (x, z, k) =>
+            {
+                float dn = MathF.Sqrt((x - marsh.X) * (x - marsh.X) + (z - marsh.Z) * (z - marsh.Z)) / marsh.Radius;
+                if (dn >= 1f) return;
+                float w = marsh.FloorStrength * (1f - Smooth((dn - 0.7f) / 0.3f));
+                float floor = marsh.WaterLevel + marsh.FloorAbove + marshNoise.GetNoise2D(x, z) * marsh.FloorNoise;
+                float h = f.Heights[k];
+                // Only ground that is already low joins the bog; hills and the rim keep their height.
+                float lowness = 1f - Smooth((h - floor - 6f) / 10f);
+                f.Heights[k] = Mathf.Lerp(h, floor, w * lowness);
+            });
+            if (marsh.Hummocks.Enabled)
+            {
+                var hm = marsh.Hummocks;
+                var hrng = new RandomNumberGenerator { Seed = (ulong)seed * 13UL + 5UL };
+                for (float gz = marsh.Z - marsh.Radius; gz <= marsh.Z + marsh.Radius; gz += hm.Spacing)
+                for (float gx = marsh.X - marsh.Radius; gx <= marsh.X + marsh.Radius; gx += hm.Spacing)
+                {
+                    float cx = gx + hrng.RandfRange(-0.45f, 0.45f) * hm.Spacing, cz = gz + hrng.RandfRange(-0.45f, 0.45f) * hm.Spacing;
+                    float r = hrng.RandfRange(hm.RadiusMin, hm.RadiusMax), hh = hrng.RandfRange(hm.HeightMin, hm.HeightMax);
+                    bool keep = hrng.Randf() < hm.Coverage;
+                    float dn = MathF.Sqrt((cx - marsh.X) * (cx - marsh.X) + (cz - marsh.Z) * (cz - marsh.Z)) / marsh.Radius;
+                    if (!keep || dn > 0.97f) continue;
+                    // Not under roads (they would leave a shelf beside the ribbon) nor on settlement flats (a ring step).
+                    bool blocked = false;
+                    foreach (var road in L.Roads) { var rp = Polyline.FromControlPoints(road.Points, 3f); if (rp.Closest(new Vector2(cx, cz)).dist < r + 5f) { blocked = true; break; } }
+                    if (!blocked) foreach (var site in L.Sites) { float sdx = site.X - cx, sdz = site.Z - cz; if (MathF.Sqrt(sdx * sdx + sdz * sdz) < site.ClearRadius + r * 0.6f) { blocked = true; break; } }
+                    if (blocked) continue;
+                    // Mounds only grow out of low ground; on hills they would read as warts.
+                    float ground = f.SampleHeight(cx, cz);
+                    if (ground > marsh.WaterLevel + 5f) continue;
+                    float squash = hrng.RandfRange(0.7f, 1.3f);     // elliptical, not all round
+                    float ang = hrng.RandfRange(0f, MathF.PI);
+                    ApplyRect(f, cx - r * 1.4f, cz - r * 1.4f, cx + r * 1.4f, cz + r * 1.4f, (x, z, k) =>
+                    {
+                        float dx = x - cx, dz = z - cz;
+                        float u = (dx * MathF.Cos(ang) + dz * MathF.Sin(ang)) / (r * squash), v = (-dx * MathF.Sin(ang) + dz * MathF.Cos(ang)) / (r / squash);
+                        float d = MathF.Sqrt(u * u + v * v);
+                        if (d >= 1f) return;
+                        // Flat-topped dome with a small step at the rim: once the sheet laps it, it reads as a cut peat bank.
+                        f.Heights[k] += hh * (0.12f + 0.88f * Smooth(Mathf.Clamp((1f - d) * 1.5f, 0f, 1f)));
+                    });
+                }
+            }
+            foreach (var pool in marsh.Pools)
+            {
+                float rmax = MathF.Max(pool.RadiusX, pool.RadiusZ) * 1.3f;
+                ApplyRect(f, pool.X - rmax, pool.Z - rmax, pool.X + rmax, pool.Z + rmax, (x, z, k) =>
+                {
+                    float dx = (x - pool.X) / pool.RadiusX, dz = (z - pool.Z) / pool.RadiusZ;
+                    float dn = MathF.Sqrt(dx * dx + dz * dz);
+                    if (dn > 1.25f) return;
+                    float bed = marsh.WaterLevel - pool.Depth * Cosine(MathF.Min(dn, 1f));
+                    float h = f.Heights[k];
+                    // Inside: never above the bed. Rim: ease the bank down toward it over the outer 25 %.
+                    if (dn < 1f) f.Heights[k] = MathF.Min(h, bed);
+                    else f.Heights[k] = Mathf.Lerp(MathF.Min(h, marsh.WaterLevel + 0.6f), h, Smooth((dn - 1f) / 0.25f));
+                });
+            }
+        }
 
         // 3. Lake: bowl with the shoreline exactly at water level.
         if (L.Lake is { } lake)
@@ -149,6 +215,13 @@ public static class TerrainBuilder
             var prof = new float[n];
             for (int s = 0; s < n; s++) { var p = pl.PointAtArc(s * 2f); prof[s] = f.SampleHeight(p.X, p.Y); }
             prof = Smooth1D(prof, 10);
+            // A causeway, never a ford: inside the marsh the road rides at least 0.6 m above the sheet.
+            if (L.Marsh is { } mr)
+                for (int s = 0; s < n; s++)
+                {
+                    var p = pl.PointAtArc(s * 2f);
+                    if ((p.X - mr.X) * (p.X - mr.X) + (p.Y - mr.Z) * (p.Y - mr.Z) < mr.Radius * mr.Radius) prof[s] = MathF.Max(prof[s], mr.WaterLevel + 0.6f);
+                }
             ApplyAlong(f, pl, w * 3.2f, (dist, arc, h, x, z) =>
             {
                 float target = prof[Math.Clamp((int)MathF.Round(arc / 2f), 0, n - 1)];
@@ -166,6 +239,16 @@ public static class TerrainBuilder
                 f.SplatRoad[k] = MathF.Max(f.SplatRoad[k], paint);
             });
         }
+
+        // 6b. Marsh water depth from the final heights: everything inside the disc below the sheet is under water,
+        // and nothing a road or flat lifted above it counts as wet any more.
+        if (L.Marsh is { } ms)
+            ApplyRadial(f, ms.X, ms.Z, ms.Radius, (dn, h) => h, (x, z, k) =>
+            {
+                float depth = ms.WaterLevel - f.Heights[k];
+                if (depth > 0f) f.WaterDepth[k] = MathF.Max(f.WaterDepth[k], depth);
+                else if (f.WaterDepth[k] > 0f && f.WaterDepth[k] < 1.5f) f.WaterDepth[k] = 0f;
+            });
 
         // 7. Ground layers and tint.
         var forestBiomes = L.Biomes.FindAll(b => b.GroundTexture == "forestFloor");
@@ -193,6 +276,22 @@ public static class TerrainBuilder
 
             float meadow = 0f;
             foreach (var b in meadowBiomes) meadow = MathF.Max(meadow, BiomeWeight(b, x, z, sn));
+
+            // Marsh ground: peat (the forest-floor layer) covers the low bog, a sedge band (meadow layer) rings the
+            // water, and plain grass survives only on the crowns of hummocks and the higher ground around the bog.
+            if (L.Marsh is { } mh)
+            {
+                float dn = MathF.Sqrt((x - mh.X) * (x - mh.X) + (z - mh.Z) * (z - mh.Z)) / mh.Radius;
+                if (dn < 1f)
+                {
+                    float inMarsh = 1f - Smooth((dn - 0.78f) / 0.22f);
+                    float above = h - mh.WaterLevel;
+                    float peat = inMarsh * (1f - Smooth((above - 1.9f + sn * 0.7f) / 2.6f));
+                    float sedge = inMarsh * (1f - Smooth((above - 0.25f + sn * 0.35f) / 1.0f)) * Smooth((above + 0.4f) / 0.6f);
+                    meadow = MathF.Max(meadow, sedge);
+                    forest = MathF.Max(forest, peat * (1f - sedge * 0.75f));
+                }
+            }
             meadow *= (1f - forest) * (1f - rock);
 
             float grass = Mathf.Clamp(1f - rock - forest * 0.9f - meadow, 0f, 1f);
@@ -205,9 +304,18 @@ public static class TerrainBuilder
             // Tint: warm/cool hue drift, sunlit south-west facing slopes a touch lighter, hollows cooler.
             float tn = tintNoise.GetNoise2D(x, z);
             float facing = Mathf.Clamp(nrm.X * -0.35f + nrm.Z * 0.6f, -1f, 1f); // faces towards +Z (south) and -X (west)
-            float v = 1f + 0.07f * tn + 0.05f * facing;
+            float v = 1f + 0.10f * tn + 0.05f * facing;
             float warm = 0.5f + 0.5f * tn;
-            var tint = new Color(v * (1f + 0.04f * (warm - 0.5f)), v * (1f + 0.03f * (warm - 0.5f)), v * (1f - 0.06f * (warm - 0.5f)), 1f);
+            // Warm pole = reddish peat, cool pole = olive: the baked patchiness Classic ground has instead of lighting.
+            var tint = new Color(v * (1f + 0.06f * (warm - 0.5f)), v * (1f + 0.02f * (warm - 0.5f)), v * (1f - 0.09f * (warm - 0.5f)), 1f);
+            // Banks darken toward the water (damp peat lip).
+            if (L.Marsh is { } mt && f.WaterDepth[k] <= 0f)
+            {
+                float above = h - mt.WaterLevel;
+                float damp = 1f - Smooth((above - 0.2f) / 0.9f);
+                tint *= 1f - 0.12f * Mathf.Clamp(damp, 0f, 1f);
+                tint.A = 1f;
+            }
             // Meadow has its own straw tile; only a whisper of warmth in the tint so the blend edge stays soft.
             if (meadow > 0f) tint = tint.Lerp(new Color(tint.R * 1.03f, tint.G * 1.0f, tint.B * 0.95f, 1f), meadow);
             f.Tint[k] = tint;
@@ -259,12 +367,14 @@ public static class TerrainBuilder
         return 1f - Smooth(Mathf.Clamp((dn - 0.72f + noise * 0.12f) / 0.3f, 0f, 1f));
     }
 
-    private static void ApplyRadial(HeightField f, float cx, float cz, float radius, Func<float, float, float> fn)
+    private static void ApplyRadial(HeightField f, float cx, float cz, float radius, Func<float, float, float> fn, Action<float, float, int>? extra = null)
     {
         ApplyRect(f, cx - radius, cz - radius, cx + radius, cz + radius, (x, z, k) =>
         {
             float dn = MathF.Sqrt((x - cx) * (x - cx) + (z - cz) * (z - cz)) / radius;
-            if (dn < 1f) f.Heights[k] = fn(dn, f.Heights[k]);
+            if (dn >= 1f) return;
+            f.Heights[k] = fn(dn, f.Heights[k]);
+            extra?.Invoke(x, z, k);
         });
     }
 

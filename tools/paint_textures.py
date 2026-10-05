@@ -193,7 +193,8 @@ def paint_grass(c: Canvas):
     area = c.k * c.k
     # Palette deliberately dull: in-engine sun + sky + the vertex tint push saturation UP, and the first
     # pass (light 8DB04A, mute 0.14) rendered neon lime. Olive-leaning greens with blue kept near half of green.
-    base, light, deep, warm = hex_rgb("5F8640"), hex_rgb("86A24E"), hex_rgb("436A34"), hex_rgb("7A8F44")
+    # Wetlands turf: olive, yellow-leaning and dull; the dusk light and the violet ambient sit on top of it.
+    base, light, deep, warm = hex_rgb("5C6A36"), hex_rgb("7C8842"), hex_rgb("3F4D2A"), hex_rgb("7E7F44")
     mid = (base + light) * 0.5
     c.tint_by_noise(1.5, base * 0.92, warm, 0.6)
     c.underpaint([base, mid, deep, warm], [0.4, 0.2, 0.2, 0.2], int(300 * area), (24, 40), (18, 30), alpha=0.6, light=0.12)
@@ -223,7 +224,8 @@ def paint_grass(c: Canvas):
 
 def paint_meadow(c: Canvas):
     area = c.k * c.k
-    base, straw, deep, green = hex_rgb("8FA048"), hex_rgb("B8A050"), hex_rgb("6B7A36"), hex_rgb("7E9A42")
+    # Sedge band around the pools: straw-olive, greyer than a hay meadow, wind-combed.
+    base, straw, deep, green = hex_rgb("7E803E"), hex_rgb("A89C58"), hex_rgb("596038"), hex_rgb("6E7A3C")
     c.tint_by_noise(1.5, base * 0.95, straw * 0.95, 0.6)
     c.underpaint([base, straw, deep, green], [0.35, 0.3, 0.15, 0.2], int(300 * area), (24, 42), (16, 28), alpha=0.6, light=0.12)
     for _ in range(int(28 * area)):
@@ -237,7 +239,7 @@ def paint_meadow(c: Canvas):
               alpha=0.7, wobble=0.3, soft=0.8, light=0.2, shadow=0.2, shadow_offset=0.3)
     # Dry grass: long thin pale-straw blades all leaning the same general way, like wind has combed them.
     lean = c.u(-0.35, 0.35)
-    pale = hex_rgb("CDBB6E")
+    pale = hex_rgb("BFB270")
     for _ in range(int(70 * area)):
         x, y = c.pos()
         col = c.pick([straw, pale, straw * 0.92], [0.45, 0.35, 0.2])
@@ -247,7 +249,7 @@ def paint_meadow(c: Canvas):
                   alpha=0.72, wobble=0.1, soft=0.8, light=0.18)
     # Sparse flower specks in little groups (white, butter yellow, a touch of pink); 3-4.5 px so they
     # survive the final soften instead of vanishing.
-    flowers = [hex_rgb("F2EEDC"), hex_rgb("E9D36A"), hex_rgb("D98FA0"), hex_rgb("F0E6B0")]
+    flowers = [hex_rgb("E8E2CC"), hex_rgb("D8C66A"), hex_rgb("8C86C8"), hex_rgb("E0D8A8")]   # cream, straw, bog-blue
     for _ in range(int(7 * area)):
         gx, gy = c.pos()
         col = c.pick(flowers, [0.4, 0.35, 0.1, 0.15])
@@ -262,8 +264,9 @@ def paint_meadow(c: Canvas):
 
 def paint_forest_floor(c: Canvas):
     area = c.k * c.k
-    base, litter, litter_l, moss, root = hex_rgb("4A5630"), hex_rgb("6B5A3A"), hex_rgb("7E6B44"), hex_rgb("57683A"), hex_rgb("343622")
-    soil = hex_rgb("4F4A32")
+    # Peat: dark red-brown earth (the hummocks of the references) with olive moss cushions and straw litter.
+    base, litter, litter_l, moss, root = hex_rgb("463428"), hex_rgb("5E4A36"), hex_rgb("72603E"), hex_rgb("55602F"), hex_rgb("2C221C")
+    soil = hex_rgb("3E302A")
     c.tint_by_noise(1.5, base * 0.9, litter * 0.85, 0.55)
     c.underpaint([base, moss, soil, litter * 0.9], [0.4, 0.25, 0.2, 0.15], int(420 * area), (16, 30), (12, 22), alpha=0.55, light=0.12)
     # Root shadows: broad, soft, dark meanders under everything (a few, not a web).
@@ -288,7 +291,7 @@ def paint_forest_floor(c: Canvas):
         # A soft soil patch under the drift so the leaves sit in something.
         c.dab(gx, gy, c.px(26, 44) * spread, c.px(18, 30) * spread, c.u(0, math.pi), c.vary(soil * 1.1, 0.04), alpha=0.55, wobble=0.35, soft=1.0, light=0.06)
         for _ in range(c.rng.integers(4, int(10 + 12 * spread))):
-            col = c.pick([litter, litter_l, hex_rgb("5E5236")], [0.45, 0.3, 0.25])
+            col = c.pick([litter, litter_l, hex_rgb("6A5A3A")], [0.45, 0.3, 0.25])
             c.dab(gx + c.rng.normal(0, 16 * spread) * c.k, gy + c.rng.normal(0, 12 * spread) * c.k, c.px(7, 13), c.px(4.5, 7.5), c.u(0, math.pi), c.vary(col, 0.07),
                   alpha=0.8, wobble=0.25, soft=0.6, light=0.3, shadow=0.3, shadow_offset=0.4, edge_dark=0.12)
     c.shade_by_noise(2.0, 0.12)
@@ -299,7 +302,8 @@ def paint_dirt_road(c: Canvas):
     area = c.k * c.k
     # Pebbles keep the tan's hue AND saturation (greyer stones turn grey-violet confetti by simultaneous
     # contrast); only value, the lit top and the shadow pocket make them read.
-    base, worn, dark, pebble = hex_rgb("B8955E"), hex_rgb("CBAA72"), hex_rgb("9A7A4C"), hex_rgb("BBA070")
+    # Bog track: trodden grey-green mud, paler where it is worn, never tan.
+    base, worn, dark, pebble = hex_rgb("7A7E62"), hex_rgb("8F9272"), hex_rgb("5E6248"), hex_rgb("8A8C74")
     c.tint_by_noise(1.5, base * 0.96, worn, 0.6)
     c.underpaint([base, worn, dark * 1.05], [0.45, 0.35, 0.2], int(380 * area), (22, 40), (16, 30), alpha=0.5, light=0.08, soft=1.0, wobble=0.25)
     # Worn, lighter pools (the trodden centre) and soft darker pockets around them.
@@ -321,7 +325,7 @@ def paint_dirt_road(c: Canvas):
         gx, gy = c.pos()
         for _ in range(c.rng.integers(1, 3)):
             # Pebble tones sit close to the dirt value: only the lit top and the shadow pocket make them read.
-            col = c.pick([pebble, hex_rgb("C8AC78"), hex_rgb("A58A5E")], [0.4, 0.35, 0.25])
+            col = c.pick([pebble, hex_rgb("9A9C84"), hex_rgb("6E7058")], [0.4, 0.35, 0.25])
             r = c.px(8, 14)
             c.dab(gx + c.rng.normal(0, 22) * c.k, gy + c.rng.normal(0, 18) * c.k, r, r * c.u(0.65, 0.95), c.u(0, math.pi), c.vary(col, 0.05),
                   alpha=0.75, wobble=0.25, soft=0.6, light=0.2, shadow=0.3, shadow_offset=0.4, edge_dark=0.1)
@@ -334,8 +338,9 @@ def paint_rock(c: Canvas):
     area = c.k * c.k
     # Warm (yellow-leaning) stone: cool greys took a mauve cast next to the grass in-engine. Wide value
     # range between the lit slab faces and the cracks so the strata read as angular cliff, not cobbles.
-    light, mid, dark, crack = hex_rgb("9A8870"), hex_rgb("83755F"), hex_rgb("645846"), hex_rgb("3B332A")
-    top = hex_rgb("AE9C84")
+    # Pale violet-grey stone: the cliffs must sit close to the fog colour so they read as looming painted walls.
+    light, mid, dark, crack = hex_rgb("A89CA2"), hex_rgb("8E8489"), hex_rgb("6C636A"), hex_rgb("4A4349")
+    top = hex_rgb("BBB0B4")
     c.tint_by_noise(1.5, mid * 0.95, light, 0.6)
     c.underpaint([light, mid, dark], [0.3, 0.4, 0.3], int(200 * area), (30, 60), (12, 22), alpha=0.5, light=0.08, soft=1.0, wobble=0.2)
     # Strata: rows of flat, hard-edged slabs. Each slab gets a hard dark crack painted under its lip first,
@@ -368,7 +373,7 @@ def paint_rock(c: Canvas):
         x, y = c.pos()
         c.dab(x, y, c.px(2.5, 5), c.px(40, 90), math.pi / 2 + c.rng.normal(0, 0.12), crack, alpha=0.75, wobble=0.3, soft=0.5, light=0.0)
     # Warm/cool drift so cliffs do not read as one flat tone (kept on the warm side).
-    c.tint_by_noise(2.0, hex_rgb("7E6E5C"), hex_rgb("948876"), 0.2)
+    c.tint_by_noise(2.0, hex_rgb("7E7278"), hex_rgb("9A9092"), 0.2)
     c.shade_by_noise(2.0, 0.12)
     c.soften(0.6)
 
@@ -392,7 +397,7 @@ def paint_snow(c: Canvas):
 
 def paint_mud(c: Canvas):
     area = c.k * c.k
-    base, silt, dark, wet = hex_rgb("5E5A48"), hex_rgb("7A735A"), hex_rgb("46442F"), hex_rgb("51523E")
+    base, silt, dark, wet = hex_rgb("4E4C3E"), hex_rgb("6A6852"), hex_rgb("36362A"), hex_rgb("444838")
     c.tint_by_noise(1.5, base * 0.95, wet, 0.6)
     c.underpaint([base, wet, dark, silt * 0.9], [0.4, 0.25, 0.2, 0.15], int(380 * area), (22, 40), (14, 26), alpha=0.5, light=0.1, soft=1.0)
     # Silt streaks: a handful of long soft strokes laid along the current, each with a lit lip.
@@ -419,11 +424,11 @@ def paint_mud(c: Canvas):
 
 MATERIALS = {
     # name: (seed, base colour, painter)
-    "grass": (101, "5E8C3A", paint_grass),
-    "meadow": (202, "8FA048", paint_meadow),
-    "forest_floor": (303, "4A5630", paint_forest_floor),
-    "dirt_road": (404, "B8955E", paint_dirt_road),
-    "rock": (505, "7A6D5F", paint_rock),
+    "grass": (101, "5C6A36", paint_grass),
+    "meadow": (202, "7E803E", paint_meadow),
+    "forest_floor": (303, "463428", paint_forest_floor),
+    "dirt_road": (404, "7A7E62", paint_dirt_road),
+    "rock": (505, "8E8489", paint_rock),
     "snow": (606, "E8EEF4", paint_snow),
     "mud": (707, "5E5A48", paint_mud),
 }

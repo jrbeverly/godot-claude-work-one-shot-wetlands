@@ -3,50 +3,76 @@
  "mapSize": 1024,
  "cellSize": 2,
  "sun": {
-  "azimuthDeg": 250,
-  "elevationDeg": 28,
-  "color": "#FFE3B4",
-  "energy": 1.2
+  "azimuthDeg": 262,
+  "elevationDeg": 10,
+  "color": "#F2B48E",
+  "energy": 1.0,
+  "shadowOpacity": 0.3
  },
  "palette": {
-  "grass": "#6F9A3F",
-  "meadow": "#94AE52",
-  "forestFloor": "#4D5530",
-  "road": "#A88A5C",
-  "rock": "#857C70",
+  "grass": "#5C6A36",
+  "meadow": "#7E803E",
+  "forestFloor": "#463428",
+  "road": "#7A7E62",
+  "rock": "#9A8E96",
   "snow": "#D8DFE6",
-  "water": "#4A7E90",
-  "waterDeep": "#345F6F",
-  "skyTop": "#5E8EC4",
-  "skyHorizon": "#BCC9CF",
-  "fog": "#BCC9CF",
-  "ambient": "#9AA8B8",
-  "shadowTint": "#5A6A8C",
-  "roofTile": "#5E7079",
-  "timber": "#7E5A3A",
-  "plaster": "#E6D9B8",
-  "stone": "#8C8A80",
-  "leafWarm": "#7FA448",
-  "leafCool": "#4D7A3C",
-  "pine": "#35543E"
+  "water": "#5C6650",
+  "waterDeep": "#3F4838",
+  "skyTop": "#8A7CA4",
+  "skyHorizon": "#CDB0C4",
+  "fog": "#B9A0B8",
+  "ambient": "#9484A4",
+  "shadowTint": "#5A4E7A",
+  "cloudLight": "#D4B2C8",
+  "cloudShadow": "#8E7A9E",
+  "roofTile": "#4E5A60",
+  "timber": "#6A4E36",
+  "plaster": "#B8AEA4",
+  "stone": "#7E7A78",
+  "leafWarm": "#96A058",
+  "leafCool": "#56663A",
+  "pine": "#2F4436",
+  "waterSky": "#7E7A80",
+  "sunWarm": "#E8B49E",
+  "waterShore": "#7A8268",
+  "waterGlint": "#B9BCA6",
+  "tintSnow": "#CDB8C2"
  },
  "fog": {
-  "startM": 130,
-  "endM": 620,
-  "density": 0.0022,
+  "startM": 20,
+  "endM": 560,
+  "density": 0.95,
   "heightFogEnabled": true,
-  "heightFogLevel": 7
+  "heightFogLevel": 5.5,
+  "heightFogDensity": 0.008,
+  "ambientEnergy": 1.4,
+  "saturation": 0.92,
+  "contrast": 1.0,
+  "cloudOpacity": 0.0,
+  "cloudCoverage": 0.7,
+  "horizonWarmth": 0.08,
+  "skyCurve": 1.0,
+  "stars": 0.0,
+  "curve": 0.8,
+  "sunScatter": 0.08,
+  "sunDiscDeg": 4.5,
+  "sunDiscEnergy": 1.1,
+  "sunGlowPower": 50,
+  "sunGlowStrength": 0.8,
+  "sunHaloPower": 14,
+  "sunHaloStrength": 0.2
  },
  "terrain": {
-  "baseHeight": 6.0,
+  "baseHeight": 5.0,
   "rim": {
-   "startRadius": 400,
-   "edgeHeight": 155,
-   "roughness": 0.35,
-   "edgeHeightNorth": 215,
-   "edgeHeightSouth": 130,
-   "edgeHeightEast": 145,
-   "edgeHeightWest": 150
+   "startRadius": 360,
+   "edgeHeight": 185,
+   "roughness": 0.22,
+   "edgeHeightNorth": 250,
+   "edgeHeightSouth": 160,
+   "edgeHeightEast": 170,
+   "edgeHeightWest": 175,
+   "rampPower": 2.0
   },
   "hills": [
    {
@@ -66,14 +92,6 @@
     "shape": "dome"
    },
    {
-    "name": "Sawyer's Rise",
-    "x": -20,
-    "z": -225,
-    "radius": 110,
-    "height": 5,
-    "shape": "dome"
-   },
-   {
     "name": "Hob's Rise",
     "x": -225,
     "z": 50,
@@ -85,8 +103,8 @@
     "name": "Harrowfold Head",
     "x": 165,
     "z": 20,
-    "radius": 48,
-    "height": 22,
+    "radius": 55,
+    "height": 12,
     "shape": "dome"
    },
    {
@@ -102,7 +120,7 @@
     "x": 90,
     "z": 300,
     "radius": 110,
-    "height": 18,
+    "height": 9,
     "shape": "dome"
    }
   ],
@@ -198,7 +216,7 @@
     "x": 165,
     "z": 20,
     "radius": 20,
-    "height": 20
+    "height": 11
    },
    {
     "name": "Nine Sisters clearing",
@@ -220,8 +238,17 @@
     "z": 300,
     "radius": 24,
     "height": 23.5
+   },
+   {
+    "name": "Greywatch ledge",
+    "x": 445,
+    "z": -30,
+    "radius": 36,
+    "height": 30
    }
-  ]
+  ],
+  "snowLine": 60,
+  "snowBlend": 45
  },
  "lake": {
   "name": "The Mere",
@@ -679,6 +706,41 @@
    ],
    "width": 2.5,
    "kind": "path"
+  },
+  {
+   "name": "Keep Stair",
+   "points": [
+    [
+     392,
+     122
+    ],
+    [
+     412,
+     104
+    ],
+    [
+     430,
+     80
+    ],
+    [
+     442,
+     55
+    ],
+    [
+     447,
+     30
+    ],
+    [
+     447,
+     5
+    ],
+    [
+     440,
+     -18
+    ]
+   ],
+   "width": 2.5,
+   "kind": "path"
   }
  ],
  "biomes": [
@@ -688,33 +750,43 @@
    "z": -430,
    "radius": 240,
    "priority": 3,
-   "treeDensity": 0.45,
+   "treeDensity": 0.3,
    "clumpiness": 0.5,
    "trees": [
     {
      "model": "Pine_1",
-     "weight": 1.0,
+     "weight": 1,
      "scale": 1.2
     },
     {
      "model": "Pine_2",
-     "weight": 1.0,
+     "weight": 1,
      "scale": 1.2
     },
     {
      "model": "Pine_3",
-     "weight": 1.0,
+     "weight": 1,
      "scale": 1.2
     },
     {
      "model": "Pine_4",
-     "weight": 1.0,
+     "weight": 1,
      "scale": 1.2
     },
     {
      "model": "Pine_5",
-     "weight": 1.0,
+     "weight": 1,
      "scale": 1.2
+    },
+    {
+     "model": "DeadTree_1",
+     "weight": 0.4,
+     "scale": 0.8
+    },
+    {
+     "model": "DeadTree_3",
+     "weight": 0.3,
+     "scale": 0.8
     }
    ],
    "undergrowth": [
@@ -731,16 +803,11 @@
     {
      "model": "Grass_Wispy_Short",
      "weight": 1.0,
-     "density": 0.15
-    },
-    {
-     "model": "Mushroom_Laetiporus",
-     "weight": 1.0,
-     "density": 0.02
+     "density": 0.1
     }
    ],
    "groundTexture": "grass",
-   "leafTint": "#35543E"
+   "leafTint": "#2F4436"
   },
   {
    "name": "Greyhame Pines",
@@ -748,38 +815,43 @@
    "z": -300,
    "radius": 160,
    "priority": 3,
-   "treeDensity": 0.5,
+   "treeDensity": 0.3,
    "clumpiness": 0.5,
    "trees": [
     {
      "model": "Pine_1",
-     "weight": 1.0,
+     "weight": 1,
      "scale": 1.2
     },
     {
      "model": "Pine_2",
-     "weight": 1.0,
+     "weight": 1,
      "scale": 1.2
     },
     {
      "model": "Pine_3",
-     "weight": 1.0,
+     "weight": 1,
      "scale": 1.2
     },
     {
      "model": "Pine_4",
-     "weight": 1.0,
+     "weight": 1,
      "scale": 1.2
     },
     {
      "model": "Pine_5",
-     "weight": 1.0,
+     "weight": 1,
      "scale": 1.2
     },
     {
      "model": "DeadTree_1",
+     "weight": 0.4,
+     "scale": 0.8
+    },
+    {
+     "model": "DeadTree_3",
      "weight": 0.3,
-     "scale": 0.55
+     "scale": 0.8
     }
    ],
    "undergrowth": [
@@ -791,11 +863,11 @@
     {
      "model": "Grass_Wispy_Short",
      "weight": 1.0,
-     "density": 0.12
+     "density": 0.1
     }
    ],
    "groundTexture": "grass",
-   "leafTint": "#35543E"
+   "leafTint": "#2F4436"
   },
   {
    "name": "Eastfell Pines",
@@ -803,43 +875,48 @@
    "z": -320,
    "radius": 210,
    "priority": 3,
-   "treeDensity": 0.3,
+   "treeDensity": 0.22,
    "clumpiness": 0.6,
    "trees": [
     {
      "model": "Pine_1",
-     "weight": 1.0,
+     "weight": 1,
      "scale": 1.2
     },
     {
      "model": "Pine_2",
-     "weight": 1.0,
+     "weight": 1,
      "scale": 1.2
     },
     {
      "model": "Pine_3",
-     "weight": 1.0,
+     "weight": 1,
      "scale": 1.2
     },
     {
      "model": "Pine_4",
-     "weight": 1.0,
+     "weight": 1,
      "scale": 1.2
     },
     {
      "model": "Pine_5",
-     "weight": 1.0,
+     "weight": 1,
      "scale": 1.2
     },
     {
-     "model": "CommonTree_2",
-     "weight": 0.7,
-     "scale": 1.15
+     "model": "DeadTree_1",
+     "weight": 0.4,
+     "scale": 0.8
     },
     {
-     "model": "CommonTree_4",
-     "weight": 0.7,
-     "scale": 1.15
+     "model": "DeadTree_3",
+     "weight": 0.3,
+     "scale": 0.8
+    },
+    {
+     "model": "MossTree_1",
+     "weight": 0.5,
+     "scale": 0.9
     }
    ],
    "undergrowth": [
@@ -851,66 +928,76 @@
     {
      "model": "Grass_Wispy_Short",
      "weight": 1.0,
-     "density": 0.12
+     "density": 0.1
     }
    ],
    "groundTexture": "grass",
-   "leafTint": "#3B5A3E"
+   "leafTint": "#2F4436"
   },
   {
    "name": "North Shore",
    "x": -30,
    "z": -190,
-   "radius": 110,
+   "radius": 120,
    "priority": 4,
-   "treeDensity": 0.2,
-   "clumpiness": 0.9,
+   "treeDensity": 0.16,
+   "clumpiness": 0.55,
    "trees": [
     {
-     "model": "CommonTree_1",
-     "weight": 1.0,
-     "scale": 1.15
+     "model": "MossTree_1",
+     "weight": 1,
+     "scale": 1.0
     },
     {
-     "model": "CommonTree_3",
-     "weight": 1.0,
-     "scale": 1.15
+     "model": "MossTree_2",
+     "weight": 1,
+     "scale": 1.0
     },
     {
-     "model": "CommonTree_5",
-     "weight": 1.0,
-     "scale": 1.15
+     "model": "MossTree_3",
+     "weight": 1,
+     "scale": 1.0
     },
     {
-     "model": "Pine_2",
-     "weight": 0.7,
-     "scale": 1.2
+     "model": "BogOak_1",
+     "weight": 0.12,
+     "scale": 1.0
     },
     {
-     "model": "Pine_4",
-     "weight": 0.7,
-     "scale": 1.2
+     "model": "DeadTree_3",
+     "weight": 0.2,
+     "scale": 1.0
     }
    ],
    "undergrowth": [
     {
-     "model": "Clover_1",
+     "model": "Reeds_1",
      "weight": 1.0,
-     "density": 0.08
+     "density": 0.55
     },
     {
-     "model": "Grass_Wispy_Short",
+     "model": "Reeds_2",
      "weight": 1.0,
-     "density": 0.2
+     "density": 0.55
+    },
+    {
+     "model": "Reeds_3",
+     "weight": 1.0,
+     "density": 0.35
+    },
+    {
+     "model": "Grass_Wispy_Tall",
+     "weight": 1.0,
+     "density": 0.1
     },
     {
      "model": "Pebble_Round_1",
      "weight": 1.0,
-     "density": 0.04
+     "density": 0.03
     }
    ],
    "groundTexture": "grass",
-   "leafTint": "#6F9A3F"
+   "leafTint": "#96A058"
   },
   {
    "name": "Hollin Wood",
@@ -918,64 +1005,56 @@
    "z": 100,
    "radius": 125,
    "priority": 5,
-   "treeDensity": 1.0,
-   "clumpiness": 0.0,
+   "treeDensity": 0.32,
+   "clumpiness": 0.2,
    "trees": [
     {
-     "model": "CommonTree_1",
-     "weight": 1.0,
-     "scale": 1.5
+     "model": "BogOak_1",
+     "weight": 1,
+     "scale": 1.0
     },
     {
-     "model": "CommonTree_2",
-     "weight": 1.0,
-     "scale": 1.5
+     "model": "BogOak_2",
+     "weight": 1,
+     "scale": 1.0
     },
     {
-     "model": "CommonTree_3",
-     "weight": 1.0,
-     "scale": 1.5
+     "model": "BogOak_3",
+     "weight": 1,
+     "scale": 1.0
     },
     {
-     "model": "CommonTree_4",
-     "weight": 1.0,
-     "scale": 1.5
+     "model": "MossTree_2",
+     "weight": 0.7,
+     "scale": 1.0
     },
     {
-     "model": "CommonTree_5",
-     "weight": 1.0,
-     "scale": 1.5
-    },
-    {
-     "model": "DeadTree_3",
-     "weight": 0.25,
-     "scale": 0.72
+     "model": "DeadTree_5",
+     "weight": 0.4,
+     "scale": 1.1
     }
    ],
    "undergrowth": [
     {
      "model": "Fern_1",
-     "weight": 1.0,
-     "density": 0.7
+     "weight": 1,
+     "density": 0.4,
+     "tint": "#6E7E4A"
     },
     {
      "model": "Mushroom_Common",
-     "weight": 1.0,
-     "density": 0.08
+     "weight": 1,
+     "density": 0.05
     },
     {
-     "model": "Mushroom_Laetiporus",
-     "weight": 1.0,
-     "density": 0.02
-    },
-    {
-     "model": "Bush_Common",
-     "weight": 1.0,
-     "density": 0.1
+     "model": "Reeds_2",
+     "weight": 1,
+     "density": 0.2,
+     "tint": "#96A058"
     }
    ],
    "groundTexture": "forestFloor",
-   "leafTint": "#2E4F2C"
+   "leafTint": "#3A4A2E"
   },
   {
    "name": "Candlehill Flank",
@@ -983,49 +1062,54 @@
    "z": 150,
    "radius": 135,
    "priority": 4,
-   "treeDensity": 0.22,
+   "treeDensity": 0.18,
    "clumpiness": 0.7,
    "trees": [
     {
      "model": "Pine_1",
-     "weight": 1.0,
+     "weight": 1,
      "scale": 1.15
     },
     {
      "model": "Pine_3",
-     "weight": 1.0,
+     "weight": 1,
      "scale": 1.15
     },
     {
      "model": "Pine_5",
-     "weight": 1.0,
+     "weight": 1,
      "scale": 1.15
     },
     {
-     "model": "CommonTree_2",
-     "weight": 0.7,
-     "scale": 1.1
+     "model": "MossTree_1",
+     "weight": 0.6,
+     "scale": 0.95
     },
     {
-     "model": "CommonTree_4",
-     "weight": 0.7,
-     "scale": 1.1
+     "model": "DeadTree_1",
+     "weight": 0.4,
+     "scale": 0.9
     }
    ],
    "undergrowth": [
     {
      "model": "Grass_Wispy_Short",
      "weight": 1.0,
-     "density": 0.15
+     "density": 0.12
     },
     {
      "model": "Rock_Medium_2",
      "weight": 1.0,
      "density": 0.02
+    },
+    {
+     "model": "Reeds_1",
+     "weight": 1.0,
+     "density": 0.15
     }
    ],
    "groundTexture": "grass",
-   "leafTint": "#4F7A3C"
+   "leafTint": "#3E5240"
   },
   {
    "name": "Candlehill Top (bald)",
@@ -1040,7 +1124,7 @@
     {
      "model": "Grass_Wispy_Tall",
      "weight": 1.0,
-     "density": 0.2
+     "density": 0.18
     },
     {
      "model": "Rock_Medium_1",
@@ -1049,7 +1133,7 @@
     }
    ],
    "groundTexture": "grass",
-   "leafTint": "#7FA448"
+   "leafTint": "#8A9452"
   },
   {
    "name": "Harrowfold Head",
@@ -1057,34 +1141,42 @@
    "z": 20,
    "radius": 62,
    "priority": 6,
-   "treeDensity": 0.1,
+   "treeDensity": 0.08,
    "clumpiness": 0.5,
    "trees": [
     {
-     "model": "CommonTree_4",
+     "model": "BogOak_2",
      "weight": 1,
-     "scale": 1.1
+     "scale": 1.0
     },
     {
      "model": "DeadTree_5",
-     "weight": 0.5,
-     "scale": 0.6
+     "weight": 0.6,
+     "scale": 0.9
     }
    ],
    "undergrowth": [
     {
      "model": "Rock_Medium_1",
      "weight": 1.0,
-     "density": 0.012
+     "density": 0.012,
+     "tint": "#96A058"
     },
     {
      "model": "Grass_Wispy_Tall",
      "weight": 1.0,
-     "density": 0.2
+     "density": 0.15,
+     "tint": "#96A058"
+    },
+    {
+     "model": "Reeds_3",
+     "weight": 1.0,
+     "density": 0.2,
+     "tint": "#96A058"
     }
    ],
    "groundTexture": "grass",
-   "leafTint": "#6F9A3F"
+   "leafTint": "#3A4A2E"
   },
   {
    "name": "Gap Meadow",
@@ -1096,55 +1188,45 @@
    "clumpiness": 0.85,
    "trees": [
     {
-     "model": "CommonTree_1",
-     "weight": 1.0,
-     "scale": 1.35
+     "model": "MossTree_3",
+     "weight": 1,
+     "scale": 1.0
     },
     {
-     "model": "CommonTree_2",
-     "weight": 1.0,
-     "scale": 1.35
+     "model": "MossTree_1",
+     "weight": 0.7,
+     "scale": 0.95
     },
     {
-     "model": "CommonTree_3",
-     "weight": 1.0,
-     "scale": 1.35
-    },
-    {
-     "model": "CommonTree_4",
-     "weight": 1.0,
-     "scale": 1.35
-    },
-    {
-     "model": "CommonTree_5",
-     "weight": 1.0,
-     "scale": 1.35
+     "model": "DeadTree_1",
+     "weight": 0.3,
+     "scale": 0.8
     }
    ],
    "undergrowth": [
     {
-     "model": "Flower_3_Group",
+     "model": "Reeds_1",
      "weight": 1.0,
-     "density": 0.12
-    },
-    {
-     "model": "Flower_4_Group",
-     "weight": 1.0,
-     "density": 0.12
-    },
-    {
-     "model": "Bush_Common_Flowers",
-     "weight": 1.0,
-     "density": 0.015
+     "density": 0.3
     },
     {
      "model": "Grass_Common_Tall",
      "weight": 1.0,
-     "density": 0.12
+     "density": 0.1
+    },
+    {
+     "model": "Flower_3_Group",
+     "weight": 1.0,
+     "density": 0.05
+    },
+    {
+     "model": "Bush_Common_Flowers",
+     "weight": 1.0,
+     "density": 0.01
     }
    ],
    "groundTexture": "meadow",
-   "leafTint": "#7FA448"
+   "leafTint": "#96A058"
   },
   {
    "name": "Hob's Rise (bald crest)",
@@ -1156,95 +1238,108 @@
    "clumpiness": 0.9,
    "trees": [
     {
-     "model": "CommonTree_3",
-     "weight": 1.0,
-     "scale": 1.3
+     "model": "MossTree_2",
+     "weight": 1,
+     "scale": 1.0
     },
     {
-     "model": "CommonTree_4",
-     "weight": 1.0,
-     "scale": 1.3
+     "model": "DeadTree_1",
+     "weight": 0.6,
+     "scale": 0.9
     }
    ],
    "undergrowth": [
     {
      "model": "Grass_Wispy_Short",
      "weight": 1.0,
-     "density": 0.25
+     "density": 0.2
     },
     {
      "model": "Grass_Wispy_Tall",
      "weight": 1.0,
      "density": 0.1
+    },
+    {
+     "model": "Reeds_2",
+     "weight": 1.0,
+     "density": 0.15
     }
    ],
    "groundTexture": "grass",
-   "leafTint": "#7FA448"
+   "leafTint": "#8A9452"
   },
   {
-   "name": "Mere Parkland",
-   "x": 25,
-   "z": -35,
-   "radius": 230,
+   "name": "Mere Bog",
+   "x": 0,
+   "z": 20,
+   "radius": 330,
    "priority": 2,
-   "treeDensity": 0.2,
-   "clumpiness": 0.9,
+   "treeDensity": 0.09,
+   "clumpiness": 0.75,
    "trees": [
     {
-     "model": "CommonTree_1",
-     "weight": 1.0,
-     "scale": 1.2
+     "model": "MossTree_1",
+     "weight": 1,
+     "scale": 1.0
     },
     {
-     "model": "CommonTree_2",
-     "weight": 1.0,
-     "scale": 1.2
+     "model": "MossTree_2",
+     "weight": 1,
+     "scale": 1.0
     },
     {
-     "model": "CommonTree_3",
-     "weight": 1.0,
-     "scale": 1.2
+     "model": "MossTree_3",
+     "weight": 1,
+     "scale": 1.0
     },
     {
-     "model": "CommonTree_4",
-     "weight": 1.0,
-     "scale": 1.2
+     "model": "BogOak_1",
+     "weight": 0.1,
+     "scale": 1.0
     },
     {
-     "model": "CommonTree_5",
-     "weight": 1.0,
-     "scale": 1.2
+     "model": "DeadTree_3",
+     "weight": 0.15,
+     "scale": 1.0
     }
    ],
    "undergrowth": [
     {
-     "model": "Grass_Common_Short",
+     "model": "Reeds_1",
      "weight": 1.0,
-     "density": 0.3
+     "density": 0.55
     },
     {
-     "model": "Clover_1",
+     "model": "Reeds_2",
      "weight": 1.0,
-     "density": 0.06
+     "density": 0.55
     },
     {
-     "model": "Bush_Common",
+     "model": "Reeds_3",
      "weight": 1.0,
-     "density": 0.05
+     "density": 0.35
+    },
+    {
+     "model": "Grass_Wispy_Tall",
+     "weight": 1.0,
+     "density": 0.1,
+     "tint": "#D8C47A",
+     "scale": 1.3
+    },
+    {
+     "model": "Rock_Medium_2",
+     "weight": 1.0,
+     "density": 0.008
     },
     {
      "model": "Flower_4_Group",
      "weight": 1.0,
-     "density": 0.04
-    },
-    {
-     "model": "Pebble_Round_1",
-     "weight": 1.0,
-     "density": 0.05
+     "density": 0.03,
+     "tint": "#6F7FD0"
     }
    ],
    "groundTexture": "grass",
-   "leafTint": "#6F9A3F"
+   "leafTint": "#96A058"
   },
   {
    "name": "Thistle Moor",
@@ -1252,44 +1347,49 @@
    "z": 250,
    "radius": 210,
    "priority": 2,
-   "treeDensity": 0.035,
+   "treeDensity": 0.05,
    "clumpiness": 0.9,
    "trees": [
     {
-     "model": "CommonTree_3",
+     "model": "MossTree_2",
      "weight": 1,
-     "scale": 1.45
+     "scale": 1.0
     },
     {
-     "model": "CommonTree_5",
+     "model": "MossTree_3",
      "weight": 0.7,
-     "scale": 1.4
+     "scale": 1.0
     },
     {
      "model": "DeadTree_1",
-     "weight": 0.2,
-     "scale": 0.6
+     "weight": 0.3,
+     "scale": 0.9
     }
    ],
    "undergrowth": [
     {
-     "model": "Grass_Wispy_Tall",
+     "model": "Reeds_1",
+     "weight": 1.0,
+     "density": 0.35
+    },
+    {
+     "model": "Reeds_3",
      "weight": 1.0,
      "density": 0.25
     },
     {
-     "model": "Grass_Wispy_Short",
+     "model": "Grass_Wispy_Tall",
      "weight": 1.0,
-     "density": 0.2
+     "density": 0.15
     },
     {
      "model": "Rock_Medium_3",
      "weight": 1.0,
-     "density": 0.012
+     "density": 0.01
     }
    ],
    "groundTexture": "meadow",
-   "leafTint": "#8FAE4C"
+   "leafTint": "#96A058"
   },
   {
    "name": "The Throat",
@@ -1349,7 +1449,7 @@
     }
    ],
    "groundTexture": "rock",
-   "leafTint": "#35503E"
+   "leafTint": "#2F4436"
   },
   {
    "name": "Southfell",
@@ -1357,33 +1457,43 @@
    "z": 440,
    "radius": 220,
    "priority": 2,
-   "treeDensity": 0.2,
+   "treeDensity": 0.15,
    "clumpiness": 0.7,
    "trees": [
     {
      "model": "Pine_1",
-     "weight": 1.0,
-     "scale": 1.15
+     "weight": 1,
+     "scale": 1.2
+    },
+    {
+     "model": "Pine_2",
+     "weight": 1,
+     "scale": 1.2
     },
     {
      "model": "Pine_3",
-     "weight": 1.0,
-     "scale": 1.15
+     "weight": 1,
+     "scale": 1.2
+    },
+    {
+     "model": "Pine_4",
+     "weight": 1,
+     "scale": 1.2
     },
     {
      "model": "Pine_5",
-     "weight": 1.0,
-     "scale": 1.15
+     "weight": 1,
+     "scale": 1.2
     },
     {
-     "model": "CommonTree_1",
-     "weight": 1.0,
-     "scale": 1.1
+     "model": "DeadTree_1",
+     "weight": 0.4,
+     "scale": 0.8
     },
     {
-     "model": "CommonTree_3",
-     "weight": 1.0,
-     "scale": 1.1
+     "model": "DeadTree_3",
+     "weight": 0.3,
+     "scale": 0.8
     }
    ],
    "undergrowth": [
@@ -1399,7 +1509,7 @@
     }
    ],
    "groundTexture": "grass",
-   "leafTint": "#5F8E3C"
+   "leafTint": "#2F4436"
   },
   {
    "name": "Westfell",
@@ -1407,78 +1517,48 @@
    "z": -130,
    "radius": 180,
    "priority": 2,
-   "treeDensity": 0.18,
-   "clumpiness": 0.7,
-   "trees": [
-    {
-     "model": "Pine_2",
-     "weight": 1.0,
-     "scale": 1.15
-    },
-    {
-     "model": "Pine_4",
-     "weight": 1.0,
-     "scale": 1.15
-    },
-    {
-     "model": "CommonTree_2",
-     "weight": 1.0,
-     "scale": 1.1
-    },
-    {
-     "model": "CommonTree_4",
-     "weight": 1.0,
-     "scale": 1.1
-    }
-   ],
-   "undergrowth": [
-    {
-     "model": "Rock_Medium_1",
-     "weight": 1.0,
-     "density": 0.02
-    },
-    {
-     "model": "Grass_Wispy_Short",
-     "weight": 1.0,
-     "density": 0.1
-    }
-   ],
-   "groundTexture": "grass",
-   "leafTint": "#5F8E3C"
-  },
-  {
-   "name": "Eastfell",
-   "x": 455,
-   "z": 40,
-   "radius": 160,
-   "priority": 2,
-   "treeDensity": 0.18,
+   "treeDensity": 0.15,
    "clumpiness": 0.7,
    "trees": [
     {
      "model": "Pine_1",
-     "weight": 1.0,
-     "scale": 1.15
+     "weight": 1,
+     "scale": 1.2
+    },
+    {
+     "model": "Pine_2",
+     "weight": 1,
+     "scale": 1.2
+    },
+    {
+     "model": "Pine_3",
+     "weight": 1,
+     "scale": 1.2
     },
     {
      "model": "Pine_4",
-     "weight": 1.0,
-     "scale": 1.15
+     "weight": 1,
+     "scale": 1.2
     },
     {
-     "model": "CommonTree_1",
-     "weight": 1.0,
-     "scale": 1.1
+     "model": "Pine_5",
+     "weight": 1,
+     "scale": 1.2
     },
     {
-     "model": "CommonTree_5",
-     "weight": 1.0,
-     "scale": 1.1
+     "model": "DeadTree_1",
+     "weight": 0.4,
+     "scale": 0.8
+    },
+    {
+     "model": "DeadTree_3",
+     "weight": 0.3,
+     "scale": 0.8
     }
    ],
    "undergrowth": [
     {
-     "model": "Rock_Medium_3",
+     "model": "Rock_Medium_2",
      "weight": 1.0,
      "density": 0.02
     },
@@ -1489,7 +1569,133 @@
     }
    ],
    "groundTexture": "grass",
-   "leafTint": "#5F8E3C"
+   "leafTint": "#2F4436"
+  },
+  {
+   "name": "Eastfell",
+   "x": 470,
+   "z": -160,
+   "radius": 150,
+   "priority": 2,
+   "treeDensity": 0.15,
+   "clumpiness": 0.7,
+   "trees": [
+    {
+     "model": "Pine_1",
+     "weight": 1,
+     "scale": 1.2
+    },
+    {
+     "model": "Pine_2",
+     "weight": 1,
+     "scale": 1.2
+    },
+    {
+     "model": "Pine_3",
+     "weight": 1,
+     "scale": 1.2
+    },
+    {
+     "model": "Pine_4",
+     "weight": 1,
+     "scale": 1.2
+    },
+    {
+     "model": "Pine_5",
+     "weight": 1,
+     "scale": 1.2
+    },
+    {
+     "model": "DeadTree_1",
+     "weight": 0.4,
+     "scale": 0.8
+    },
+    {
+     "model": "DeadTree_3",
+     "weight": 0.3,
+     "scale": 0.8
+    }
+   ],
+   "undergrowth": [
+    {
+     "model": "Rock_Medium_2",
+     "weight": 1.0,
+     "density": 0.02
+    },
+    {
+     "model": "Grass_Wispy_Short",
+     "weight": 1.0,
+     "density": 0.1
+    }
+   ],
+   "groundTexture": "grass",
+   "leafTint": "#2F4436"
+  },
+  {
+   "name": "East Fen",
+   "x": 330,
+   "z": -60,
+   "radius": 150,
+   "priority": 3,
+   "treeDensity": 0.1,
+   "clumpiness": 0.85,
+   "trees": [
+    {
+     "model": "MossTree_2",
+     "weight": 1,
+     "scale": 1.1
+    },
+    {
+     "model": "MossTree_3",
+     "weight": 1,
+     "scale": 1.15
+    },
+    {
+     "model": "BogOak_2",
+     "weight": 0.1,
+     "scale": 1.0
+    }
+   ],
+   "undergrowth": [
+    {
+     "model": "Reeds_1",
+     "weight": 1,
+     "density": 0.5
+    },
+    {
+     "model": "Reeds_2",
+     "weight": 1,
+     "density": 0.5
+    },
+    {
+     "model": "Grass_Wispy_Tall",
+     "weight": 1,
+     "density": 0.1,
+     "tint": "#D8C47A",
+     "scale": 1.3
+    }
+   ],
+   "groundTexture": "grass",
+   "leafTint": "#96A058"
+  },
+  {
+   "name": "Greywatch Ledge",
+   "x": 445,
+   "z": -30,
+   "radius": 42,
+   "priority": 7,
+   "treeDensity": 0.0,
+   "clumpiness": 0.5,
+   "trees": [],
+   "undergrowth": [
+    {
+     "model": "Rock_Medium_1",
+     "weight": 1,
+     "density": 0.02
+    }
+   ],
+   "groundTexture": "rock",
+   "leafTint": "#2F4436"
   }
  ],
  "sites": [
@@ -1580,11 +1786,11 @@
    "pieces": [
     {
      "kind": "tree",
-     "model": "TwistedTree_1",
+     "model": "BogOak_3",
      "x": 0,
      "z": 0,
      "scale": 1.0,
-     "leafTint": "#5E7A3A"
+     "leafTint": "#3A4A2E"
     },
     {
      "kind": "fence",
@@ -1630,7 +1836,8 @@
      "x": -4,
      "z": -5,
      "rotationDeg": 250,
-     "scale": 10.0
+     "scale": 10.0,
+     "tint": "#9C9698"
     },
     {
      "kind": "cottage",
@@ -1641,7 +1848,7 @@
       2,
       2
      ],
-     "style": "plaster",
+     "style": "stone",
      "chimney": true,
      "storeys": 1
     },
@@ -1720,16 +1927,8 @@
      "x": 45,
      "z": -60,
      "rotationDeg": 90,
-     "scale": 8.0
-    },
-    {
-     "kind": "pier",
-     "x": 61,
-     "z": -60,
-     "rotationDeg": 0,
-     "lengthM": 16,
-     "widthM": 2.4,
-     "heightM": 1.4
+     "scale": 8.0,
+     "tint": "#9C9698"
     },
     {
      "kind": "cottage",
@@ -1763,7 +1962,8 @@
      "x": 2,
      "z": -7,
      "rotationDeg": 0,
-     "scale": 8.0
+     "scale": 8.0,
+     "tint": "#9C9698"
     },
     {
      "kind": "cottage",
@@ -1787,7 +1987,7 @@
       2,
       2
      ],
-     "style": "plaster",
+     "style": "stone",
      "chimney": true,
      "storeys": 1
     },
@@ -1816,102 +2016,6 @@
      "style": "stone",
      "chimney": true,
      "storeys": 1
-    },
-    {
-     "kind": "tree",
-     "model": "CommonTree_2",
-     "x": 55,
-     "z": 31,
-     "scale": 0.7,
-     "leafTint": "#D08C3C"
-    },
-    {
-     "kind": "tree",
-     "model": "CommonTree_2",
-     "x": 55,
-     "z": 37,
-     "scale": 0.7,
-     "leafTint": "#D08C3C"
-    },
-    {
-     "kind": "tree",
-     "model": "CommonTree_2",
-     "x": 55,
-     "z": 43,
-     "scale": 0.7,
-     "leafTint": "#D08C3C"
-    },
-    {
-     "kind": "tree",
-     "model": "CommonTree_2",
-     "x": 61,
-     "z": 31,
-     "scale": 0.7,
-     "leafTint": "#D08C3C"
-    },
-    {
-     "kind": "tree",
-     "model": "CommonTree_2",
-     "x": 61,
-     "z": 37,
-     "scale": 0.7,
-     "leafTint": "#D08C3C"
-    },
-    {
-     "kind": "tree",
-     "model": "CommonTree_2",
-     "x": 61,
-     "z": 43,
-     "scale": 0.7,
-     "leafTint": "#D08C3C"
-    },
-    {
-     "kind": "tree",
-     "model": "CommonTree_2",
-     "x": 67,
-     "z": 31,
-     "scale": 0.7,
-     "leafTint": "#D08C3C"
-    },
-    {
-     "kind": "tree",
-     "model": "CommonTree_2",
-     "x": 67,
-     "z": 37,
-     "scale": 0.7,
-     "leafTint": "#D08C3C"
-    },
-    {
-     "kind": "tree",
-     "model": "CommonTree_2",
-     "x": 67,
-     "z": 43,
-     "scale": 0.7,
-     "leafTint": "#D08C3C"
-    },
-    {
-     "kind": "tree",
-     "model": "CommonTree_2",
-     "x": 73,
-     "z": 31,
-     "scale": 0.7,
-     "leafTint": "#D08C3C"
-    },
-    {
-     "kind": "tree",
-     "model": "CommonTree_2",
-     "x": 73,
-     "z": 37,
-     "scale": 0.7,
-     "leafTint": "#D08C3C"
-    },
-    {
-     "kind": "tree",
-     "model": "CommonTree_2",
-     "x": 73,
-     "z": 43,
-     "scale": 0.7,
-     "leafTint": "#D08C3C"
     },
     {
      "kind": "fence",
@@ -1963,37 +2067,6 @@
        43
       ]
      ]
-    },
-    {
-     "kind": "fence",
-     "points": [
-      [
-       -27,
-       51
-      ],
-      [
-       -3,
-       53
-      ]
-     ]
-    },
-    {
-     "kind": "field",
-     "x": -15,
-     "z": 61,
-     "rotationDeg": 10,
-     "widthM": 26,
-     "depthM": 16,
-     "crop": "wheat"
-    },
-    {
-     "kind": "field",
-     "x": 19,
-     "z": 65,
-     "rotationDeg": 5,
-     "widthM": 22,
-     "depthM": 14,
-     "crop": "fallow"
     },
     {
      "kind": "prop",
@@ -2093,19 +2166,59 @@
     },
     {
      "kind": "tree",
-     "model": "CommonTree_4",
-     "x": -11,
-     "z": -15,
-     "scale": 1.4,
-     "leafTint": "#D08C3C"
+     "model": "MossTree_1",
+     "x": 58,
+     "z": 36,
+     "scale": 1.0,
+     "leafTint": "#96A058"
     },
     {
      "kind": "tree",
-     "model": "CommonTree_1",
-     "x": 9,
-     "z": 21,
-     "scale": 1.3,
-     "leafTint": "#D08C3C"
+     "model": "MossTree_2",
+     "x": -12,
+     "z": -16,
+     "scale": 0.9,
+     "leafTint": "#96A058"
+    },
+    {
+     "kind": "tree",
+     "model": "MossTree_3",
+     "x": 10,
+     "z": 22,
+     "scale": 0.85,
+     "leafTint": "#96A058"
+    },
+    {
+     "kind": "boardwalk",
+     "x": 61,
+     "z": -60,
+     "rotationDeg": 0,
+     "lengthM": 30,
+     "widthM": 2.4,
+     "heightM": 1.2
+    },
+    {
+     "kind": "boardwalk",
+     "x": 40,
+     "z": -72,
+     "rotationDeg": 90,
+     "lengthM": 18,
+     "widthM": 2.0,
+     "heightM": 1.2
+    },
+    {
+     "kind": "brazier",
+     "x": 75,
+     "z": -60,
+     "rotationDeg": 0,
+     "heightM": 1.5
+    },
+    {
+     "kind": "brazier",
+     "x": 40,
+     "z": -80,
+     "rotationDeg": 0,
+     "heightM": 1.5
     }
    ]
   },
@@ -2119,11 +2232,11 @@
    "pieces": [
     {
      "kind": "tree",
-     "model": "TwistedTree_3",
+     "model": "MossTree_3",
      "x": 0,
      "z": 0,
-     "scale": 1.0,
-     "leafTint": "#45603A"
+     "scale": 1.1,
+     "leafTint": "#96A058"
     },
     {
      "kind": "standingStone",
@@ -2229,54 +2342,6 @@
      "heightM": 1.1
     },
     {
-     "kind": "prop",
-     "model": "RockPath_Square_Thin",
-     "x": -6,
-     "z": 0,
-     "rotationDeg": -36,
-     "scale": 1.0
-    },
-    {
-     "kind": "prop",
-     "model": "RockPath_Square_Thin",
-     "x": -3.6,
-     "z": 0,
-     "rotationDeg": -36,
-     "scale": 1.0
-    },
-    {
-     "kind": "prop",
-     "model": "RockPath_Square_Thin",
-     "x": -1.2,
-     "z": 0,
-     "rotationDeg": -36,
-     "scale": 1.0
-    },
-    {
-     "kind": "prop",
-     "model": "RockPath_Square_Thin",
-     "x": 1.2,
-     "z": 0,
-     "rotationDeg": -36,
-     "scale": 1.0
-    },
-    {
-     "kind": "prop",
-     "model": "RockPath_Square_Thin",
-     "x": 3.6,
-     "z": 0,
-     "rotationDeg": -36,
-     "scale": 1.0
-    },
-    {
-     "kind": "prop",
-     "model": "RockPath_Square_Thin",
-     "x": 6,
-     "z": 0,
-     "rotationDeg": -36,
-     "scale": 1.0
-    },
-    {
      "kind": "standingStone",
      "x": -11,
      "z": 3,
@@ -2302,6 +2367,15 @@
        3
       ]
      ]
+    },
+    {
+     "kind": "boardwalk",
+     "x": 0,
+     "z": 0,
+     "rotationDeg": 0,
+     "lengthM": 26,
+     "widthM": 2.0,
+     "heightM": 1.2
     }
    ]
   },
@@ -2387,35 +2461,35 @@
     },
     {
      "kind": "tree",
-     "model": "TwistedTree_1",
+     "model": "MossTree_2",
      "x": 21.7,
      "z": 12.5,
-     "scale": 1.3,
-     "leafTint": "#3F6A38"
+     "scale": 1.0,
+     "leafTint": "#96A058"
     },
     {
      "kind": "tree",
-     "model": "TwistedTree_3",
+     "model": "MossTree_3",
      "x": -12.5,
      "z": 21.7,
-     "scale": 1.3,
-     "leafTint": "#3F6A38"
+     "scale": 1.0,
+     "leafTint": "#96A058"
     },
     {
      "kind": "tree",
-     "model": "TwistedTree_5",
+     "model": "MossTree_1",
      "x": -21.7,
      "z": -12.5,
-     "scale": 1.3,
-     "leafTint": "#3F6A38"
+     "scale": 1.0,
+     "leafTint": "#96A058"
     },
     {
      "kind": "tree",
-     "model": "TwistedTree_1",
+     "model": "MossTree_2",
      "x": 12.5,
      "z": -21.7,
-     "scale": 1.3,
-     "leafTint": "#3F6A38"
+     "scale": 1.0,
+     "leafTint": "#96A058"
     }
    ]
   },
@@ -2429,11 +2503,11 @@
    "pieces": [
     {
      "kind": "tree",
-     "model": "TwistedTree_5",
+     "model": "BogOak_2",
      "x": 0,
      "z": 0,
      "scale": 1.0,
-     "leafTint": "#3F6A38"
+     "leafTint": "#3A4A2E"
     }
    ]
   },
@@ -2491,31 +2565,32 @@
      "x": -15,
      "z": -10,
      "rotationDeg": 0,
-     "scale": 7.0
+     "scale": 7.0,
+     "tint": "#9C9698"
     },
     {
      "kind": "tree",
-     "model": "TwistedTree_1",
+     "model": "BogOak_1",
      "x": -3,
      "z": -15,
-     "scale": 1.35,
-     "leafTint": "#D08C3C"
+     "scale": 1.0,
+     "leafTint": "#3A4A2E"
     },
     {
      "kind": "tree",
-     "model": "TwistedTree_3",
+     "model": "BogOak_2",
      "x": 10,
      "z": 12,
-     "scale": 1.35,
-     "leafTint": "#D08C3C"
+     "scale": 1.0,
+     "leafTint": "#3A4A2E"
     },
     {
      "kind": "tree",
-     "model": "TwistedTree_5",
+     "model": "BogOak_3",
      "x": -17,
      "z": 10,
-     "scale": 1.35,
-     "leafTint": "#D08C3C"
+     "scale": 1.0,
+     "leafTint": "#3A4A2E"
     },
     {
      "kind": "tree",
@@ -2523,7 +2598,7 @@
      "x": -24,
      "z": -2,
      "scale": 1.35,
-     "leafTint": "#D08C3C"
+     "leafTint": "#4E5E34"
     },
     {
      "kind": "tree",
@@ -2531,7 +2606,7 @@
      "x": -22,
      "z": -13,
      "scale": 1.35,
-     "leafTint": "#D08C3C"
+     "leafTint": "#4E5E34"
     },
     {
      "kind": "prop",
@@ -2587,7 +2662,8 @@
      "x": 0,
      "z": 0,
      "rotationDeg": 0,
-     "scale": 9.0
+     "scale": 9.0,
+     "tint": "#9C9698"
     },
     {
      "kind": "ruinWall",
@@ -2722,11 +2798,11 @@
     },
     {
      "kind": "tree",
-     "model": "CommonTree_3",
+     "model": "MossTree_2",
      "x": 16,
      "z": -10,
-     "scale": 1.6,
-     "leafTint": "#8FAE4C"
+     "scale": 1.0,
+     "leafTint": "#96A058"
     },
     {
      "kind": "fence",
@@ -2782,7 +2858,8 @@
      "x": 3,
      "z": -2,
      "rotationDeg": 90,
-     "scale": 8.0
+     "scale": 8.0,
+     "tint": "#9C9698"
     },
     {
      "kind": "prop",
@@ -2871,7 +2948,8 @@
      "x": 0,
      "z": 0,
      "rotationDeg": 135,
-     "scale": 8.0
+     "scale": 8.0,
+     "tint": "#9C9698"
     },
     {
      "kind": "prop",
@@ -2951,6 +3029,210 @@
      "heightM": 1.2
     }
    ]
+  },
+  {
+   "name": "Greywatch",
+   "type": "landmark",
+   "x": 445,
+   "z": -30,
+   "rotationDeg": 0,
+   "clearRadius": 40,
+   "pieces": [
+    {
+     "kind": "landmark",
+     "model": "tower",
+     "x": 6,
+     "z": -4,
+     "rotationDeg": 0,
+     "scale": 13.0,
+     "tint": "#9A9298"
+    },
+    {
+     "kind": "ruinWall",
+     "x": -7,
+     "z": 0,
+     "rotationDeg": 90,
+     "lengthM": 10,
+     "heightM": 9.4,
+     "intact": true
+    },
+    {
+     "kind": "ruinWall",
+     "x": 0,
+     "z": -5,
+     "rotationDeg": 0,
+     "lengthM": 14,
+     "heightM": 9.4,
+     "intact": true
+    },
+    {
+     "kind": "ruinWall",
+     "x": 0,
+     "z": 5,
+     "rotationDeg": 0,
+     "lengthM": 14,
+     "heightM": 9.4,
+     "intact": true
+    },
+    {
+     "kind": "windowRow",
+     "x": -7.4,
+     "z": 0,
+     "rotationDeg": 90,
+     "heightM": 5.0,
+     "count": 5,
+     "spacingM": 1.9
+    },
+    {
+     "kind": "windowRow",
+     "x": 0,
+     "z": 5.4,
+     "rotationDeg": 0,
+     "heightM": 5.0,
+     "count": 5,
+     "spacingM": 2.4
+    },
+    {
+     "kind": "brazier",
+     "x": 6,
+     "z": -4,
+     "rotationDeg": 0,
+     "heightM": 27.5
+    },
+    {
+     "kind": "brazier",
+     "x": -11,
+     "z": 7,
+     "rotationDeg": 0,
+     "heightM": 1.6
+    },
+    {
+     "kind": "standingStone",
+     "x": -14,
+     "z": -9,
+     "rotationDeg": 30,
+     "heightM": 1.6
+    },
+    {
+     "kind": "prop",
+     "model": "crate",
+     "x": -10,
+     "z": -3,
+     "rotationDeg": 20,
+     "scale": 1.0
+    },
+    {
+     "kind": "tree",
+     "model": "DeadTree_5",
+     "x": 18,
+     "z": 12,
+     "scale": 0.9
+    },
+    {
+     "kind": "windowRow",
+     "x": -7.4,
+     "z": 0,
+     "rotationDeg": 90,
+     "heightM": 7.8,
+     "count": 4,
+     "spacingM": 2.2
+    },
+    {
+     "kind": "windowRow",
+     "x": 0,
+     "z": 5.4,
+     "rotationDeg": 0,
+     "heightM": 7.8,
+     "count": 4,
+     "spacingM": 2.8
+    }
+   ]
+  },
+  {
+   "name": "Channel Oak",
+   "type": "grove",
+   "x": 152,
+   "z": 80,
+   "rotationDeg": 0,
+   "clearRadius": 12,
+   "pieces": [
+    {
+     "kind": "tree",
+     "model": "BogOak_1",
+     "x": 0,
+     "z": 0,
+     "scale": 1.0,
+     "leafTint": "#2E3A26"
+    },
+    {
+     "kind": "tree",
+     "model": "MossTree_2",
+     "x": -24,
+     "z": 16,
+     "scale": 1.0,
+     "leafTint": "#96A058"
+    }
+   ]
+  },
+  {
+   "name": "Road Oak",
+   "type": "grove",
+   "x": 58,
+   "z": 106,
+   "rotationDeg": 0,
+   "clearRadius": 12,
+   "pieces": [
+    {
+     "kind": "tree",
+     "model": "BogOak_2",
+     "x": 0,
+     "z": 0,
+     "scale": 1.0,
+     "leafTint": "#2E3A26"
+    },
+    {
+     "kind": "tree",
+     "model": "MossTree_1",
+     "x": -28,
+     "z": -36,
+     "scale": 1.0,
+     "leafTint": "#96A058"
+    }
+   ]
+  },
+  {
+   "name": "Dawn Stand",
+   "type": "grove",
+   "x": 275,
+   "z": -70,
+   "rotationDeg": 0,
+   "clearRadius": 12,
+   "pieces": [
+    {
+     "kind": "tree",
+     "model": "MossTree_3",
+     "x": 0,
+     "z": 0,
+     "scale": 1.1,
+     "leafTint": "#96A058"
+    },
+    {
+     "kind": "tree",
+     "model": "MossTree_1",
+     "x": 25,
+     "z": -48,
+     "scale": 1.0,
+     "leafTint": "#96A058"
+    },
+    {
+     "kind": "tree",
+     "model": "BogOak_3",
+     "x": 55,
+     "z": 30,
+     "scale": 1.0,
+     "leafTint": "#2E3A26"
+    }
+   ]
   }
  ],
  "spawn": {
@@ -2960,20 +3242,100 @@
  },
  "shots": [
   {
-   "name": "spawn",
+   "name": "dawn_keep",
    "from": [
-    -436,
+    258,
     0,
-    131
+    -104
    ],
    "lookAt": [
-    -225,
+    405,
     0,
-    50
+    -62
    ],
-   "fovDeg": 62,
+   "fovDeg": 56,
    "fromAboveGround": 1.7,
-   "lookAtAboveGround": 22
+   "lookAtAboveGround": 16
+  },
+  {
+   "name": "giant",
+   "from": [
+    200,
+    0,
+    100
+   ],
+   "lookAt": [
+    100,
+    0,
+    88
+   ],
+   "fovDeg": 56,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 5
+  },
+  {
+   "name": "road",
+   "from": [
+    -10,
+    0,
+    100
+   ],
+   "lookAt": [
+    96,
+    0,
+    80
+   ],
+   "fovDeg": 58,
+   "fromAboveGround": 1.5,
+   "lookAtAboveGround": 2.5
+  },
+  {
+   "name": "willows",
+   "from": [
+    -95,
+    0,
+    -125
+   ],
+   "lookAt": [
+    -30,
+    0,
+    -215
+   ],
+   "fovDeg": 58,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 9
+  },
+  {
+   "name": "hythe",
+   "from": [
+    -24,
+    0,
+    44
+   ],
+   "lookAt": [
+    -62,
+    0,
+    8
+   ],
+   "fovDeg": 56,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 5
+  },
+  {
+   "name": "causeway",
+   "from": [
+    152,
+    0,
+    94
+   ],
+   "lookAt": [
+    128,
+    0,
+    66
+   ],
+   "fovDeg": 56,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 2
   },
   {
    "name": "reveal",
@@ -2988,7 +3350,7 @@
     10
    ],
    "fovDeg": 56,
-   "fromAboveGround": 6,
+   "fromAboveGround": 3,
    "lookAtAboveGround": 4
   },
   {
@@ -3021,7 +3383,39 @@
    ],
    "fovDeg": 58,
    "fromAboveGround": 2.4,
-   "lookAtAboveGround": 14
+   "lookAtAboveGround": 10
+  },
+  {
+   "name": "postcard",
+   "from": [
+    -86,
+    0,
+    -12
+   ],
+   "lookAt": [
+    -42,
+    0,
+    -200
+   ],
+   "fovDeg": 52,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 10
+  },
+  {
+   "name": "spawn",
+   "from": [
+    -436,
+    0,
+    131
+   ],
+   "lookAt": [
+    -225,
+    0,
+    50
+   ],
+   "fovDeg": 62,
+   "fromAboveGround": 1.7,
+   "lookAtAboveGround": 22
   },
   {
    "name": "candle",
@@ -3038,6 +3432,22 @@
    "fovDeg": 62,
    "fromAboveGround": 15,
    "lookAtAboveGround": 6
+  },
+  {
+   "name": "sisters",
+   "from": [
+    214,
+    0,
+    149
+   ],
+   "lookAt": [
+    215,
+    0,
+    161
+   ],
+   "fovDeg": 66,
+   "fromAboveGround": 3.2,
+   "lookAtAboveGround": 0.5
   },
   {
    "name": "wood",
@@ -3070,86 +3480,115 @@
    "fovDeg": 60,
    "fromAboveGround": 2.5,
    "lookAtAboveGround": 12
-  },
-  {
-   "name": "postcard",
-   "from": [
-    -86,
-    0,
-    -12
-   ],
-   "lookAt": [
-    -42,
-    0,
-    -200
-   ],
-   "fovDeg": 52,
-   "fromAboveGround": 1.7,
-   "lookAtAboveGround": 10
-  },
-  {
-   "name": "harrowfold",
-   "from": [
-    130,
-    0,
-    50
-   ],
-   "lookAt": [
-    165,
-    0,
-    20
-   ],
-   "fovDeg": 58,
-   "fromAboveGround": 5,
-   "lookAtAboveGround": 10
-  },
-  {
-   "name": "sisters",
-   "from": [
-    214,
-    0,
-    149
-   ],
-   "lookAt": [
-    215,
-    0,
-    161
-   ],
-   "fovDeg": 66,
-   "fromAboveGround": 3.2,
-   "lookAtAboveGround": 0.5
-  },
-  {
-   "name": "candle_tower",
-   "from": [
-    318,
-    0,
-    162
-   ],
-   "lookAt": [
-    300,
-    0,
-    150
-   ],
-   "fovDeg": 55,
-   "fromAboveGround": 1.7,
-   "lookAtAboveGround": 9
-  },
-  {
-   "name": "gap",
-   "from": [
-    -454,
-    0,
-    129
-   ],
-   "lookAt": [
-    -428,
-    0,
-    121
-   ],
-   "fovDeg": 62,
-   "fromAboveGround": 1.7,
-   "lookAtAboveGround": 2
   }
- ]
+ ],
+ "marsh": {
+  "name": "The Mere (drowned)",
+  "x": 0,
+  "z": 20,
+  "radius": 330,
+  "waterLevel": 4.0,
+  "floorAbove": 0.9,
+  "floorStrength": 0.85,
+  "floorNoise": 1.5,
+  "pools": [
+   {
+    "name": "Sundown Pool",
+    "x": -150,
+    "z": 165,
+    "radiusX": 48,
+    "radiusZ": 30,
+    "depth": 1.6
+   },
+   {
+    "name": "Bluegill Pool",
+    "x": 130,
+    "z": 215,
+    "radiusX": 40,
+    "radiusZ": 34,
+    "depth": 1.5
+   },
+   {
+    "name": "Black Channel (west)",
+    "x": -230,
+    "z": -70,
+    "radiusX": 55,
+    "radiusZ": 26,
+    "depth": 1.4
+   },
+   {
+    "name": "Black Channel (east)",
+    "x": -150,
+    "z": -120,
+    "radiusX": 60,
+    "radiusZ": 24,
+    "depth": 1.4
+   },
+   {
+    "name": "Mosshide Pool",
+    "x": 60,
+    "z": 210,
+    "radiusX": 30,
+    "radiusZ": 42,
+    "depth": 1.3
+   },
+   {
+    "name": "Sawyer's Pool",
+    "x": -20,
+    "z": -260,
+    "radiusX": 34,
+    "radiusZ": 26,
+    "depth": 1.4
+   },
+   {
+    "name": "Span Pool",
+    "x": 100,
+    "z": 120,
+    "radiusX": 30,
+    "radiusZ": 22,
+    "depth": 1.5
+   },
+   {
+    "name": "Rook Pool",
+    "x": 10,
+    "z": 300,
+    "radiusX": 44,
+    "radiusZ": 30,
+    "depth": 1.4
+   },
+   {
+    "name": "Dawn Pool",
+    "x": 300,
+    "z": -82,
+    "radiusX": 40,
+    "radiusZ": 28,
+    "depth": 1.2
+   },
+   {
+    "name": "Night Pool",
+    "x": 28,
+    "z": 122,
+    "radiusX": 30,
+    "radiusZ": 18,
+    "depth": 1.0
+   },
+   {
+    "name": "Channel Pool",
+    "x": 160,
+    "z": 100,
+    "radiusX": 25,
+    "radiusZ": 18,
+    "depth": 1.0
+   }
+  ],
+  "hummocks": {
+   "enabled": true,
+   "spacing": 36,
+   "radiusMin": 9,
+   "radiusMax": 24,
+   "heightMin": 1.2,
+   "heightMax": 3.4,
+   "coverage": 0.6
+  }
+ }
 }
