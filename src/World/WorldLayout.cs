@@ -39,8 +39,10 @@ public sealed class WorldLayout
 
     public static WorldLayout Load(string resPath = "res://assets/world/layout.json")
     {
-        var abs = ProjectSettings.GlobalizePath(resPath);
-        var text = File.ReadAllText(abs);
+        // Godot's FileAccess reads res:// from the exported PCK as well as from disk; System.IO cannot.
+        using var file = Godot.FileAccess.Open(resPath, Godot.FileAccess.ModeFlags.Read)
+                         ?? throw new FileNotFoundException($"Could not open {resPath}: {Godot.FileAccess.GetOpenError()}");
+        var text = file.GetAsText();
         return JsonSerializer.Deserialize<WorldLayout>(text, JsonOptions)
                ?? throw new InvalidDataException($"Could not parse {resPath}");
     }
