@@ -1,0 +1,57 @@
+{
+  "id": "waterways-net",
+  "path": "references/godot/roads/waterways-net",
+  "url": "https://github.com/Tshmofen/waterways-net",
+  "commit": "37ed6fe45a0431d7b8c88e7fabc9e5d984f3d19f",
+  "archive_url": "https://codeload.github.com/Tshmofen/waterways-net/tar.gz/37ed6fe45a0431d7b8c88e7fabc9e5d984f3d19f",
+  "archive_bytes": 1670276,
+  "kept_files": 33,
+  "kept_bytes": 99930,
+  "omitted": [
+    {
+      "path": "addons/waterways_net/Textures/flow_offset_noise.png",
+      "bytes": 257602,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/waterways_net/Textures/foam_noise.png",
+      "bytes": 225622,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/waterways_net/Textures/foam_noise.png~",
+      "bytes": 269709,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/waterways_net/Textures/water_normal_bump.png",
+      "bytes": 891681,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/waterways_net/Icons/float.svg",
+      "bytes": 3505,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/waterways_net/Icons/select.svg",
+      "bytes": 665,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/waterways_net/Icons/create.svg",
+      "bytes": 605,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/waterways_net/Icons/river.svg",
+      "bytes": 2357,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/waterways_net/Icons/delete.svg",
+      "bytes": 685,
+      "reason": "image asset"
+    }
+  ]
+}

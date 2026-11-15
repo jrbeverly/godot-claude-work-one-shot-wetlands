@@ -1,0 +1,11 @@
+{
+  "id": "wow-1121-client-internals",
+  "path": "references/classic-terrain-analysis/wow-1121-client-internals",
+  "url": "https://github.com/samwhosung/wow-1121-client-internals",
+  "commit": "d7e639fab1a022af86eaa30180b3056011d42b4f",
+  "archive_url": "https://codeload.github.com/samwhosung/wow-1121-client-internals/tar.gz/d7e639fab1a022af86eaa30180b3056011d42b4f",
+  "archive_bytes": 194303,
+  "kept_files": 37,
+  "kept_bytes": 481041,
+  "omitted": []
+}

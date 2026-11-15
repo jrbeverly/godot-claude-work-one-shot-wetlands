@@ -1,0 +1,25 @@
+{
+ "_comment": "Night mood overlay for the Wetlands zone (the third reference frame): deep teal sky with stars, moonlight, the road the palest ground value. Render with EXTRA=--palette=res://assets/world/palette_night.json tools/screenshot.sh road",
+ "palette": {
+  "skyTop": "#062030",
+  "skyHorizon": "#1E5A76",
+  "fog": "#17465A",
+  "ambient": "#3C6270",
+  "sunWarm": "#6E9AA8",
+  "water": "#34463E",
+  "waterDeep": "#1E2C28",
+  "waterShore": "#4A5A50",
+  "waterGlint": "#8CA496",
+  "waterSky": "#4C6670",
+  "tintGrass": "#8EA8A0",
+  "tintMeadow": "#92A89A",
+  "tintForest": "#8CA0A0",
+  "tintRoad": "#C4D4C8",
+  "tintRock": "#8098A4",
+  "tintSnow": "#6E8692"
+ },
+ "sun": { "azimuthDeg": 120, "elevationDeg": 35, "color": "#9CC2CC", "energy": 0.45, "shadowOpacity": 0.0 },
+ "fog": { "startM": 25, "endM": 520, "curve": 0.9, "density": 0.9, "heightFogEnabled": true, "heightFogLevel": 6.0, "heightFogDensity": 0.08,
+          "ambientEnergy": 1.5, "saturation": 0.95, "contrast": 1.02, "cloudOpacity": 0.0, "cloudCoverage": 0.7, "horizonWarmth": 0.05, "skyCurve": 0.7, "stars": 0.9,
+          "sunScatter": 0.05, "sunDiscDeg": 2.2, "sunDiscEnergy": 0.5, "sunGlowPower": 80, "sunGlowStrength": 0.4, "sunHaloPower": 20, "sunHaloStrength": 0.12 }
+}

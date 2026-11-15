@@ -1,0 +1,21 @@
+[configuration]
+
+entry_symbol = "meshoptimizer_gdext_init"
+compatibility_minimum = 4.3
+
+[libraries]
+
+; Editor builds (use template_debug for editor since we don't have separate editor build)
+windows.editor.x86_64 = "res://addons/meshoptimizer/bin/libmeshoptimizer.windows.template_debug.x86_64.dll"
+linux.editor.x86_64 = "res://addons/meshoptimizer/bin/libmeshoptimizer.linux.template_debug.x86_64.so"
+macos.editor = "res://addons/meshoptimizer/bin/libmeshoptimizer.macos.template_debug.framework"
+
+; Template builds (for exported games)
+windows.template_debug.x86_64 = "res://addons/meshoptimizer/bin/libmeshoptimizer.windows.template_debug.x86_64.dll"
+windows.template_release.x86_64 = "res://addons/meshoptimizer/bin/libmeshoptimizer.windows.template_release.x86_64.dll"
+
+linux.template_debug.x86_64 = "res://addons/meshoptimizer/bin/libmeshoptimizer.linux.template_debug.x86_64.so"
+linux.template_release.x86_64 = "res://addons/meshoptimizer/bin/libmeshoptimizer.linux.template_release.x86_64.so"
+
+macos.template_debug = "res://addons/meshoptimizer/bin/libmeshoptimizer.macos.template_debug.framework"
+macos.template_release = "res://addons/meshoptimizer/bin/libmeshoptimizer.macos.template_release.framework"

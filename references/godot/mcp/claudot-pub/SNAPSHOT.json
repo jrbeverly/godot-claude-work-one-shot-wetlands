@@ -1,0 +1,42 @@
+{
+  "id": "claudot-pub",
+  "path": "references/godot/mcp/claudot-pub",
+  "url": "https://github.com/Claudot-Code/claudot-pub",
+  "commit": "d6fc621af26a0d4b1d8985268409888d78035955",
+  "archive_url": "https://codeload.github.com/Claudot-Code/claudot-pub/tar.gz/d6fc621af26a0d4b1d8985268409888d78035955",
+  "archive_bytes": 367216,
+  "kept_files": 62,
+  "kept_bytes": 553831,
+  "omitted": [
+    {
+      "path": "claudot_ui_examples/clear_button.JPG",
+      "bytes": 25574,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "claudot_ui_examples/connect_button.JPG",
+      "bytes": 30960,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "claudot_ui_examples/docs_checked.JPG",
+      "bytes": 32226,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "claudot_ui_examples/editor_screenshot.png",
+      "bytes": 169508,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "claudot_ui_examples/node_selected.JPG",
+      "bytes": 34861,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "claudot_ui_examples/scene_checked.JPG",
+      "bytes": 37941,
+      "reason": "asset or binary"
+    }
+  ]
+}

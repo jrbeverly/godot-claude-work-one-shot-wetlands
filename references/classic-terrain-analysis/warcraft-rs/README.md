@@ -1,0 +1,174 @@
+# warcraft-rs
+
+A Rust library and CLI toolset for parsing, manipulating, and creating World of Warcraft file formats.
+
+<div align="center">
+
+[![Discord](https://img.shields.io/discord/1394228766414471219?logo=discord&style=flat-square)](https://discord.gg/Jj4uWy3DGP)
+[![Sponsor](https://img.shields.io/github/sponsors/danielsreichenbach?logo=github&style=flat-square)](https://github.com/sponsors/danielsreichenbach)
+[![CI Status](https://github.com/wowemulation-dev/warcraft-rs/workflows/CI/badge.svg)](https://github.com/wowemulation-dev/warcraft-rs/actions)
+[![docs.rs](https://img.shields.io/docsrs/warcraft-rs)](https://docs.rs/warcraft-rs)
+[![Rust Version](https://img.shields.io/badge/rust-1.92+-orange.svg)](https://www.rust-lang.org)
+[![Crates.io Version](https://img.shields.io/crates/v/warcraft-rs)](https://crates.io/crates/warcraft-rs)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE-APACHE)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE-MIT)
+
+</div>
+
+## Overview
+
+Part of the [awesome-wow-rust](https://github.com/arlyon/awesome-wow-rust) community.
+
+Supports World of Warcraft versions **1.12.1 through 5.4.8**:
+
+| Version | Expansion | Status |
+|---------|-----------|--------|
+| 1.12.1 | Vanilla | Full Support |
+| 2.4.3 | Burning Crusade | Full Support |
+| 3.3.5a | Wrath of the Lich King | Full Support |
+| 4.3.4 | Cataclysm | Full Support |
+| 5.4.8 | Mists of Pandaria | Full Support |
+
+## Features
+
+- **MPQ Archives** - Game data archives with StormLib compatibility and
+  parallel processing
+- **DBC** - Client database files containing game data
+- **BLP Textures** - Compressed texture format with DXT and palette support
+- **M2 Models** - Character, creature, and object 3D models
+- **WMO Objects** - World map objects (buildings, structures)
+- **ADT Terrain** - Terrain chunks with heightmaps and textures
+- **WDT Maps** - World definitions and tile layouts
+- **WDL Maps** - Low-resolution terrain heightmaps
+
+## Quick Start
+
+### Command-Line Usage
+
+```bash
+# Extract files from MPQ archives (uses parallel processing by default)
+warcraft-rs mpq extract patch.mpq --output ./extracted
+
+# Extract with custom thread count
+warcraft-rs mpq extract patch.mpq --output ./extracted --threads 4
+
+# Get information about any file format
+warcraft-rs mpq info archive.mpq
+warcraft-rs blp info texture.blp
+warcraft-rs wdt info map.wdt
+
+# Validate archive integrity (parallel by default)
+warcraft-rs mpq validate archive.mpq --check-checksums
+
+# Convert between formats and versions
+warcraft-rs blp convert texture.blp texture.png
+warcraft-rs wmo convert classic.wmo modern.wmo --version cataclysm
+```
+
+### Library Usage
+
+```rust
+use wow_mpq::Archive;
+use wow_blp::parser::load_blp;
+
+// Read files from MPQ archives
+let mut archive = Archive::open("patch.mpq")?;
+let file_data = archive.read_file("Interface\\Icons\\spell.blp")?;
+
+// List files in archive (from listfile)
+let files = archive.list()?;
+for entry in files {
+    println!("{}: {} bytes", entry.name, entry.size);
+}
+
+// Parse BLP textures
+let blp_image = load_blp("texture.blp")?;
+println!("Texture: {}x{}", blp_image.header.width, blp_image.header.height);
+```
+
+Add to your `Cargo.toml`:
+
+```toml
+[dependencies]
+wow-mpq = "0.6"
+wow-blp = "0.6"
+wow-adt = "0.6"
+# ... other formats as needed
+```
+
+## Installation
+
+### Binary Releases
+
+Pre-built binaries are available for Linux, macOS, and Windows:
+
+```bash
+# Unix/Linux/macOS
+curl -fsSL https://raw.githubusercontent.com/wowemulation-dev/warcraft-rs/main/install.sh | bash
+
+# Windows PowerShell
+irm https://raw.githubusercontent.com/wowemulation-dev/warcraft-rs/main/install.ps1 | iex
+```
+
+### From crates.io
+
+```bash
+# Install the CLI tool
+cargo install warcraft-rs
+
+# Add specific crates as dependencies
+cargo add wow-mpq wow-blp wow-adt
+```
+
+### Build from source
+
+```bash
+git clone https://github.com/wowemulation-dev/warcraft-rs
+cd warcraft-rs
+cargo install --path warcraft-rs
+```
+
+## Documentation
+
+- [Getting Started Guide](docs/src/getting-started/quick-start.md)
+- [Format Documentation](docs/src/formats/)
+- [API Reference](docs/src/api/)
+- [Usage Examples](docs/src/guides/)
+
+## Support the Project
+
+If you find this project useful, please consider
+[sponsoring the project](https://github.com/sponsors/danielsreichenbach).
+
+This is currently a nights-and-weekends effort by one person. Funding goals:
+
+- **20 hours/week** - Sustained funding to dedicate real development time
+  instead of squeezing it into spare hours
+- **Public CDN mirror** - Host a community mirror for World of Warcraft builds,
+  ensuring long-term availability of historical game data
+
+## Contributing
+
+See the [Contributing Guide](CONTRIBUTING.md) for development setup and
+guidelines. Thanks to all [contributors](CONTRIBUTORS.md).
+
+## License
+
+This project is dual-licensed under either:
+
+- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or <http://www.apache.org/licenses/LICENSE-2.0>)
+- MIT license ([LICENSE-MIT](LICENSE-MIT) or <http://opensource.org/licenses/MIT>)
+
+You may choose to use either license at your option.
+
+### Contribution
+
+Unless you explicitly state otherwise, any contribution intentionally submitted
+for inclusion in the work by you, as defined in the Apache-2.0 license, shall
+be dual licensed as above, without any additional terms or conditions.
+
+---
+
+**Note**: This project is not affiliated with Blizzard Entertainment. It is
+an independent implementation based on reverse engineering by the World of
+Warcraft emulation community.

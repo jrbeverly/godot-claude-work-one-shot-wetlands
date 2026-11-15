@@ -1,0 +1,62 @@
+{
+  "id": "godot_spatial_gardener",
+  "path": "references/godot/editing/godot_spatial_gardener",
+  "url": "https://github.com/dreadpon/godot_spatial_gardener",
+  "commit": "77b822f50ded7211f91c0f0588d7b7c8bedac5f6",
+  "archive_url": "https://codeload.github.com/dreadpon/godot_spatial_gardener/tar.gz/77b822f50ded7211f91c0f0588d7b7c8bedac5f6",
+  "archive_bytes": 2432056,
+  "kept_files": 261,
+  "kept_bytes": 2290448,
+  "omitted": [
+    {
+      "path": "addons/dreadpon.spatial_gardener/controls/input_fields/action_thumbnail/fonts/OpenSans-Semibold.ttf",
+      "bytes": 108220,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/dreadpon.spatial_gardener/icons/gardener_icon.png",
+      "bytes": 1512,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/dreadpon.spatial_gardener/utility/console/fonts/ttf/AnonymousPro-Regular.ttf",
+      "bytes": 112280,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/dreadpon.spatial_gardener/utility/console/fonts/ttf/Urbanist-Regular.ttf",
+      "bytes": 60784,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "testing/assets/landscape/foliage_tool_test_landscape_LOD_2.obj",
+      "bytes": 5503134,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "testing/assets/landscape/foliage_tool_test_landscape_LOD_3.obj",
+      "bytes": 500451,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "testing/assets/suzanne/suzanne_LOD0_suzanne_LOD0.mesh",
+      "bytes": 234392,
+      "reason": "binary content"
+    },
+    {
+      "path": "testing/assets/suzanne/suzanne_LOD1_suzanne_LOD1.mesh",
+      "bytes": 42088,
+      "reason": "binary content"
+    },
+    {
+      "path": "testing/assets/suzanne/suzanne_LOD2_suzanne_LOD2.mesh",
+      "bytes": 11509,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/dreadpon.spatial_gardener/icons/gardener_icon.svg",
+      "bytes": 809,
+      "reason": "image asset"
+    }
+  ]
+}

@@ -1,0 +1,4285 @@
+## NativeStreamingManager - Simplified World Streaming using Godot Native Features
+##
+## This replaces the complex WorldStreamingManager + DistanceTierManager + ObjectStreamer
+## architecture with a clean implementation using Godot's native visibility_range.
+##
+## PHILOSOPHY:
+## The engine is the visibility authority. We set visibility_range properties once per
+## object and let Godot handle LOD transitions, culling, and crossfades in C++.
+##
+## WHAT THIS CLASS DOES:
+## - Coordinates cell loading via CellManager
+## - Spawns objects with native visibility_range properties
+## - Manages impostor rendering for FAR tier
+## - Provides simple public API for world streaming
+##
+## WHAT THE ENGINE DOES (zero GDScript overhead):
+## - Distance culling via visibility_range_begin/end
+## - LOD transitions via visibility_range_fade_mode
+## - Frustum culling (automatic)
+## - Hysteresis via visibility_range_*_margin
+##
+## Lines of code: ~1,200 (vs ~2,235 in old WorldStreamingManager)
+class_name NativeStreamingManager
+extends Node3D
+
+## Static singleton instance for easy access without Autoload
+static var instance: NativeStreamingManager = null
+
+const DU := preload("res://src/core/world/distance_utils.gd")
+const SC := preload("res://src/core/world/streaming_config.gd")
+const StreamingProfilerScript := preload("res://src/core/world/streaming_profiler.gd")
+const CellManagerScript := preload("res://src/core/world/cell_manager.gd")
+const ModelLoaderScript := preload("res://src/core/world/model_loader.gd")
+const CrashBreadcrumb := preload("res://src/core/logging/crash_breadcrumb.gd")
+const NativeImpostorRendererScript := preload("res://src/core/world/native_impostor_renderer.gd")
+const ChunkProxyRendererScript := preload("res://src/core/world/chunk_proxy_renderer.gd")
+const ImpostorCandidatesScript := preload("res://src/core/world/impostor_candidates.gd")
+const MeshVisibilityUtils := preload("res://src/core/world/mesh_visibility_utils.gd")
+const CS := preload("res://src/core/coordinate_system.gd")
+const BackgroundProcessorScript := preload("res://src/core/streaming/background_processor.gd")
+const StaticObjectRendererScript := preload("res://src/core/world/static_object_renderer.gd")
+const DistantLightManagerScript := preload("res://src/core/world/distant_light_manager.gd")
+const CellPreloaderScript := preload("res://src/core/world/cell_preloader.gd")
+const LightTuning := preload("res://src/core/world/light_tuning.gd")
+const PipelineCompileMonitorScript := preload("res://src/core/diagnostics/pipeline_compile_monitor.gd")
+const StreamingPublicationBudgetScript := preload("res://src/core/world/streaming_publication_budget.gd")
+const HLOD_MODEL_WARMUP_BUDGET_USEC: int = 2000
+const PUBLICATION_LANE_NEAR_GAMEPLAY := "near_gameplay"
+const PUBLICATION_LANE_STATIC_VISUALS := "static_visuals"
+const PUBLICATION_LANE_HLOD := "hlod"
+const PUBLICATION_LANE_FAR_IMPOSTORS := "far_impostors"
+const PUBLICATION_LANE_DISTANT_LIGHTS := "distant_lights"
+const PUBLICATION_LANE_UNLOAD := "unload"
+const HLOD_PUBLICATION_BUDGET_USEC: int = 1500
+const FAR_IMPOSTOR_PUBLICATION_BUDGET_USEC: int = 4000
+const DISTANT_LIGHT_PUBLICATION_BUDGET_USEC: int = 2400
+## CHUNK tier per-frame drive budget: one load poll + occasional rescan.
+const CHUNK_TIER_BUDGET_USEC: int = 1000
+const STREAMING_CUSTOM_PERFORMANCE_MONITORS := {
+	&"godotwind/streaming/queue_size": "queue_size",
+	&"godotwind/streaming/loaded_cells": "loaded_cells",
+	&"godotwind/streaming/visual_ready_cells": "visual_ready_cells",
+	&"godotwind/streaming/async_requests": "async_requests",
+	&"godotwind/streaming/startup_phase": "startup_phase",
+	&"godotwind/streaming/first_playable_reached": "first_playable_reached",
+	&"godotwind/streaming/stream_total_ms": "stream_total_ms",
+}
+# MidTierBatchPool removed — StaticObjectRenderer now owns MID statics via
+# server-direct instances and spatially local CellStaticBucket batches.
+
+#region Signals
+
+## Emitted when a cell starts loading
+signal cell_loading(grid: Vector2i)
+
+## Emitted when a cell finishes loading
+signal cell_loaded(grid: Vector2i, object_count: int)
+
+## Emitted when a cell is unloaded
+signal cell_unloaded(grid: Vector2i)
+
+## Emitted when streaming stats are updated
+signal stats_updated(stats: Dictionary)
+
+## Emitted during startup phase with loading progress (0-100)
+## Allows parent (e.g., world_explorer) to show loading UI
+signal startup_progress(progress: float, loaded_cells: int, total_cells: int, queued_objects: int)
+
+## Emitted when startup phase completes
+signal startup_complete()
+
+## Phase 8 — fires on the same frame `_teleport_detected` becomes true
+## (camera jumped > TELEPORT_DETECT_THRESHOLD = 500 m between two
+## frames). Arguments describe the jump so consumers can classify it
+## (e.g. fast-travel vs respawn vs debug teleport). Paired with
+## LoadingStateMachine to show the fade-to-black overlay during the
+## post-teleport streaming burst.
+signal teleport_happened(from_position: Vector3, to_position: Vector3, distance: float)
+
+#endregion
+
+
+#region Configuration
+
+## Radius (in cells) to keep loaded around camera.
+## 1 = 3×3 grid = 9 cells (`exterior cell load distance=1` default,
+## matches NEAR-tier visible footprint of ~150 m at CELL=117 m).
+## See docs/plans/distant_rendering_2026_04/near_tier_refactor.md §8.1 #1.
+@export var view_distance_meters: int = SC.DEFAULT_VIEW_DISTANCE_METERS:
+	set(value):
+		view_distance_meters = SC.clamp_view_distance_meters(value)
+
+@export var load_radius_cells: int = SC.DEFAULT_LOAD_RADIUS_CELLS:
+	set(value):
+		load_radius_cells = SC.clamp_load_radius_cells(value)
+## Scene cells are capped to the fixed NEAR/MID bridge. HLOD and FAR stream from
+## world data directly and do not expand this radius.
+
+## Maximum distance at which to load scene cells (in meters).
+@export var max_load_distance: float = SC.scene_load_distance_cap_for_view_distance_meters(SC.DEFAULT_VIEW_DISTANCE_METERS)
+
+## Whether to use native visibility_range (should always be true)
+@export var use_native_visibility: bool = true
+
+## Enable debug logging
+@export var debug_enabled: bool = false
+
+## Time budget per frame for loading (ms)
+## Uses StreamingConfig.INSTANTIATION_BUDGET_MS as the single source of truth
+@export var frame_budget_ms: float = SC.INSTANTIATION_BUDGET_MS
+
+## Enable async loading (uses CellManager's async API)
+## When disabled, falls back to synchronous loading
+@export var async_loading_enabled: bool = true
+
+## Maximum radius for FAR impostors and distant-light sprites. Runtime scans are
+## capped by the user-facing view distance.
+@export var impostor_radius_cells: int = 45
+
+## View distance in cells (alias for load_radius_cells, backwards compatibility)
+@export var view_distance_cells: int = SC.DEFAULT_LOAD_RADIUS_CELLS:
+	set(value):
+		var clamped := SC.clamp_load_radius_cells(value)
+		view_distance_cells = clamped
+		view_distance_meters = int(round(SC.distant_render_end_for_load_radius_cells(clamped)))
+		load_radius_cells = SC.scene_load_radius_cells_for_view_distance_meters(view_distance_meters, _cell_size_meters())
+
+## Enable/disable distant rendering (backwards compatibility)
+## Controls impostor rendering
+@export var distant_rendering_enabled: bool = true:
+	set(value):
+		distant_rendering_enabled = value
+		if _impostor_renderer:
+			_impostor_renderer.set_enabled(value)
+
+#endregion
+
+
+#region Internal State
+
+## Static object renderer for MID-tier + flora (RenderingServer direct, no Node3D)
+## Now with per-instance LOD visibility_range (replaces broken MultiMesh batch pool)
+var _static_renderer: StaticObjectRendererScript = null
+
+
+## Native Impostor Renderer
+var _impostor_renderer: Node3D = null
+
+## CHUNK tier renderer (offline-baked merged proxies, 400-1200m)
+var _chunk_renderer: Node3D = null
+
+## Impostor candidates manager
+var _impostor_candidates: RefCounted = null
+
+var _distant_render_end_m: float = float(SC.DEFAULT_VIEW_DISTANCE_METERS)
+var _impostors_requested_visible: bool = true
+var _distant_lights_requested_visible: bool = true
+var _sync_fallback_frames: int = 0
+var _sync_fallback_cells_loaded: int = 0
+var _sync_fallback_last_frame: int = -1
+var _mid_tier_visible: bool = true
+## Streaming POLICY for static visuals (Phase 0, 2026-07-05): governs the
+## scene-cell ring radius, load profiles, publish gates, and unload
+## hysteresis. Split from `_mid_tier_visible` so the `static_visuals`
+## benchmark toggle is a pure render ablation — flipping visibility must not
+## change what streams. Mode isolation (--near-only / --far-only /
+## --hlod-only) parks this via set_static_streaming_enabled(false).
+var _static_streaming_enabled: bool = true
+var _dev_mid_object_paging_visible: bool = false
+var _world_source: RefCounted = null
+var _world_object_source: RefCounted = null
+var _world_object_spawn_adapter: RefCounted = null
+var _coordinate_mapper: RefCounted = null
+var _asset_provider: RefCounted = null
+
+## Loaded cells: grid -> Node3D container
+var _loaded_cells: Dictionary = {}
+
+## Cells currently being loaded (async)
+var _loading_cells: Dictionary = {}
+
+## Async request tracking: grid -> request_id
+var _async_requests: Dictionary[Vector2i, int] = {}
+var _loaded_cell_has_gameplay: Dictionary[Vector2i, bool] = {}
+var _gameplay_upgrade_requests: Dictionary[Vector2i, int] = {}
+var _pending_gameplay_upgrade_merges: Array[Dictionary] = []
+var _pending_gameplay_upgrade_merge_cells: Dictionary[Vector2i, bool] = {}
+
+## Pending cells to load (priority queue, sorted farthest-first so pop_back gets nearest)
+var _pending_load_queue: Array[Vector2i] = []
+## O(1) membership check for pending queue (mirrors _pending_load_queue contents)
+var _pending_load_set: Dictionary[Vector2i, bool] = {}
+
+## Pending cells to begin unloading. Starting an unload fires notifications and
+## preloader drains, so starts are budgeted separately from child/RID cleanup.
+var _pending_unload_queue: Array[Vector2i] = []
+var _pending_unload_set: Dictionary[Vector2i, bool] = {}
+
+## Cells being gradually unloaded: grid -> Node3D (hidden, children being removed over frames)
+var _unloading_cells: Dictionary[Vector2i, Node3D] = {}
+var _unloading_hold_frames: Dictionary[Vector2i, int] = {}
+## Per-bible 2026-05-01 §"Cleanup Order" + auditor2 finding (chat msg 40):
+## reclaim is valid only BEFORE destructive cleanup begins. This flag flips to
+## true the first frame `_process_budgeted_unloading` does any destructive work
+## on the grid (first child queue_free OR first RS instance hide). Once frozen,
+## reclaim is rejected and the cell drains to completion; a fresh load runs
+## after the cell exits `_unloading_cells`. Cleared when the cell finalizes.
+var _unloading_frozen: Dictionary[Vector2i, bool] = {}
+const MAX_LIFECYCLE_EVENTS := 256
+var debug_lifecycle_capture_enabled: bool = false
+var _lifecycle_events: Array[Dictionary] = []
+var _lifecycle_event_write_index: int = 0
+
+## Verification-only hook for stress tests that need a deterministic
+## unload-limbo reclaim window. Default 0 keeps production behavior.
+var debug_unload_limbo_hold_frames: int = 0
+
+## Verification-only hook for stress tests that need to deterministically
+## widen the destructive-cleanup window so the boomerang route can actually
+## attempt reclaim before destruction begins. When > 0, the budgeted unloader
+## holds off on child queue_free + RS hide for that many frames per grid
+## after the grid enters `_unloading_cells`. Default 0 keeps production
+## behavior. Counter decrements once per `_process_budgeted_unloading` frame.
+var debug_unload_destructive_hold_frames: int = 0
+## Per-grid remaining destructive hold (frames). Initialized from
+## `debug_unload_destructive_hold_frames` at `_unload_cell` time.
+var _unloading_destructive_holds: Dictionary[Vector2i, int] = {}
+
+## Request IDs of cells currently in unload-container limbo. Canonical
+## state-reversal pattern (UE5 World Partition, deferred unref queue): keep the
+## async request alive while the cell sits in limbo so reclaim can reverse
+## the transition without losing in-flight instantiation work. Moved out of
+## `_async_requests` at `_unload_cell` time; moved BACK to `_async_requests`
+## at reclaim time; finalized via `cell_manager.finalize_unloaded_cell()`
+## when the cell drains to empty in `_process_budgeted_unloading`.
+## Fix landed 2026-04-19 for the missing-objects-on-return bug.
+var _unloading_request_ids: Dictionary[Vector2i, int] = {}
+
+## Hidden container for cells being unloaded (keeps them out of rendering)
+var _unload_container: Node3D = null
+
+## I.6 — orphan registry for nodes that must survive cell unload
+## (held / carried items, future: dropped items, NPC corpses, etc.).
+## Persistent across cell unloads. Keyed by registered node → entry
+## struct holding origin grid + timestamps so Phase 2 can re-home on
+## cell reload and expire stale orphans per the §13 Q7 bound policy.
+## Per `docs/INTERACTION_SYSTEM.md` §9 ownership note: this is a child
+## of NativeStreamingManager, NOT a fourth singleton. Registration API
+## is `register_persistent_node()` / `unregister_persistent_node()`.
+var _orphan_container: Node3D = null
+# Untyped Dictionary intentional — typed `Dictionary[Node3D, ...]` crashes
+# the iterator if a key has been freed (Godot 4.6 strict typed dict
+# validation). Lazy pruning via `is_instance_valid` requires us to iterate
+# past possibly-freed keys, which only the untyped dict allows.
+var _persistent_nodes: Dictionary = {}
+
+# I.6 Phase 2 — bound policy tuning. Spec §13 Q7: orphans expire after
+# 5 min OR once the player has walked 8 cells away (whichever first).
+# Both limits are applied conservatively — the first to trip wins, so
+# a long session doesn't leak memory and a quick walk-away doesn't
+# trap the item if the player teleports across the map.
+const ORPHAN_EXPIRY_MS: int = 5 * 60 * 1000        # 5 minutes wall time
+const ORPHAN_EXPIRY_CELL_DISTANCE: int = 8          # Chebyshev cells
+# Prune tick rate — we don't need per-frame checks. 1 Hz is plenty
+# because neither expiry condition is latency-sensitive.
+const ORPHAN_PRUNE_INTERVAL_S: float = 1.0
+var _orphan_prune_accum: float = 0.0
+
+## Phase 2 persistent-node entry. Holds the origin grid (re-home key
+## on cell reload), creation timestamp (wall-clock expiry), and last-
+## known player grid at registration (walk-away expiry). Inner class so
+## it's trivially constructable and type-checked.
+class PersistentNodeEntry:
+	var original_grid: Vector2i
+	var created_ms: int
+	var last_known_player_grid: Vector2i
+
+## Background processor for async NIF parsing
+var _background_processor: BackgroundProcessorScript = null
+
+## Container node for all cell content
+var _world_container: Node3D = null
+
+## Cell manager for loading cells
+var _cell_manager: CellManagerScript = null
+
+## Phase 3 (2026-04-22) — velocity-extrapolated cell preloader. Warms the
+## ResourceLoader PackedScene cache + dispatches Phase F prototype prereg for
+## cells the camera is heading toward. Owned here; wired to `teleport_happened`
+## (abort_all + reset) and `cell_loaded` / `cell_unloaded` signals.
+var _cell_preloader: CellPreloaderScript = null
+
+## Phase 2 stutter diag (2026-04-25) — RenderingServer pipeline compile counter
+## delta tracker. Three usage sites: (a) heartbeat for steady-state rate, (b)
+## per-cell-load delta on cell_loaded.emit, (c) per-preload-completion delta in
+## CellPreloader._poll_completions. The (b) vs (c) split tells us whether
+## ResourceLoader.load alone triggers MESH/SURFACE pre-compile or whether
+## explicit instantiation is required (§2.2/§2.3 of phase 2 plan).
+var _pipeline_compile_monitor: PipelineCompileMonitorScript = null
+## Per-cell-load delta tracker — independent baseline from heartbeat so the
+## delta on cell_loaded reflects only the cell-load window, not the 5s slice.
+var _pipeline_compile_per_cell: PipelineCompileMonitorScript = null
+
+## Current camera position
+var _camera_position: Vector3 = Vector3.ZERO
+
+## Current camera cell
+var _camera_cell: Vector2i = Vector2i.ZERO
+
+## Classic interior travel freezes exterior tracking without pausing async work.
+var _world_tracking_frozen: bool = false
+var _frozen_camera_position: Vector3 = Vector3.ZERO
+var _frozen_camera_cell: Vector2i = Vector2i.ZERO
+
+## Tracked camera node
+var _camera: Camera3D = null
+
+## True only after the caller explicitly starts camera tracking.
+## `initialize(null)` must not auto-discover the viewport camera while boot
+## isolation flags are still being applied.
+var _tracking_enabled: bool = false
+
+## Statistics
+var _stats: Dictionary = {
+	"loaded_cells": 0,
+	"total_objects": 0,
+	"load_time_ms": 0.0,
+	"mid_to_near_promotions": 0,
+	"near_to_mid_demotions": 0,
+}
+var _streaming_custom_monitors_registered: bool = false
+
+## Whether the manager has been initialized
+var _initialized: bool = false
+
+## Frame budget overrun tracking
+var _frame_overrun_count: int = 0
+var _last_overrun_log_frame: int = 0
+
+## Per-frame phase timing (usec) — set every frame, readable by benchmark/profiler.
+## Indices: 0=unload, 1=async_complete, 2=instantiate, 3=promote,
+## 4=collision, 5=deferred, 6=queue, 7=cell_update, 8=static_cull
+var _last_phase_times: PackedFloat64Array = PackedFloat64Array()
+var _last_frame_total_ms: float = 0.0
+var _last_impostor_update_usec: float = 0.0
+var _last_hlod_merger_usec: float = 0.0
+var _last_distant_light_usec: float = 0.0
+var _publication_budget: RefCounted = StreamingPublicationBudgetScript.new()
+
+## Startup phase state - controls staggered loading during initial population
+var _startup_phase: bool = true
+var _startup_frames: int = 0
+var _first_playable_reached: bool = false
+const STARTUP_PHASE_FRAMES: int = 20  # ~0.33 seconds at 60 FPS — matches exit condition
+
+## Phase 7 finish (2026-04-17) — teleport detection.
+## A camera translation between consecutive _process frames larger than
+## TELEPORT_DETECT_THRESHOLD re-enters the startup burst mode (aggressive
+## 25ms instantiation budget, higher HLOD merge throughput) so the post-
+## teleport ring loads without the ~50 FPS steady-state budget caps.
+## Threshold = 500m matches ObjectPaging.TELEPORT_THRESHOLD so both
+## systems enter warmup in lockstep.
+const TELEPORT_DETECT_THRESHOLD: float = 500.0
+const HLOD_UPDATE_DISTANCE: float = 25.0
+var _teleport_detected: bool = false  ## Consumed by _process to re-arm startup mode
+
+## Deferred impostor update — set when camera cell changes, processed next frame
+## Prevents impostor scan (170ms+ on first call) from stacking with cell load/unload
+var _impostor_update_pending: bool = false
+
+## Distant light manager — billboard sprites for lights beyond NEAR tier (150m–5km)
+var _distant_light_manager: DistantLightManager = null
+
+## Runtime HLOD merger — optional cell-level merged meshes for the 400-1000m band.
+## Loaded lazily so `--no-hlod` / impostor-only runs do not initialize ObjectPaging.
+var _object_paging_script: Script = null
+var _hlod_merger: RefCounted = null
+var _hlod_requested_visible: bool = false
+var _hlod_far_coverage_revision: int = -1
+
+## Sun elevation in radians (set externally by world_explorer via set_sun_elevation)
+var _sun_elevation_rad: float = 0.5  # Default: daytime
+
+## Predictive loading — pre-queue cells in the camera's movement direction
+var _prev_camera_position: Vector3 = Vector3.ZERO
+var _camera_velocity_xz: Vector2 = Vector2.ZERO  # EMA-smoothed, XZ plane only
+
+## HLOD needs initial population on first frame after startup
+var _hlod_needs_initial_update: bool = true
+var _hlod_last_update_position: Vector3 = Vector3.INF
+
+## Queue drain tracker: time when loading screen hid (startup_complete), 0 = not yet fired
+var _post_startup_start_ms: int = 0
+## Whether we've logged the queue-empty event post startup (one-shot)
+var _queue_drain_logged: bool = false
+## Accumulator for post-startup audit logging (seconds since last log)
+var _post_startup_audit_accum: float = 0.0
+## Tracks whether camera crossed a cell boundary this frame
+var _cell_changed_this_frame: bool = false
+
+## DIAGNOSTIC (2026-04-15, silent-crash pin): heartbeat emitter. Log tail
+## distinguishes silent native death from clean shutdown: if the last line of
+## the log is recent-ish and has no `heartbeat` suffix, the main thread froze
+## or the process was killed between heartbeats. Interval is coarse (5 s) —
+## crash resolution still relies on per-instantiate sentinels.
+var _last_heartbeat_sec: int = -1
+var _last_heartbeat_frame: int = -1
+
+## Per-phase profiler. Created lazily on first access when SC.ENABLE_PROFILING is true.
+## External consumers (benchmark, debug overlay) read via get_profiler().
+var _profiler: StreamingProfilerScript = null
+
+#endregion
+
+
+#region Initialization
+
+## Fast cleanup for quit — frees only RS resources, skips slow node tree ops
+## Called from world_explorer's _do_fast_quit() before get_tree().quit()
+func fast_cleanup() -> void:
+	# Stop and drain background work before dropping task-bound state.
+	if _background_processor:
+		_background_processor.drain_all()
+
+	# Phase 3 — drain CellPreloader BEFORE the cell_manager drain. The preloader
+	# owns its own WorkerThreadPool warm tasks (ResourceLoader.load); they must
+	# finish before static_renderer.clear() runs and before the WTP itself is
+	# torn down. Same shutdown-race shape as Phase F; same remedy.
+	if _cell_preloader:
+		_cell_preloader.drain_all()
+
+	# Phase F — drain in-flight prototype pre-registration workers BEFORE
+	# clearing the static renderer. Without this, workers mid-`register_from_
+	# prototype` hold pointers into `_mesh_types` that `_static_renderer.clear()`
+	# frees, producing the shutdown sig 11 cluster flagged by @builder in the
+	# Phase F review. Bounded: < 50 pending tasks × ~20ms worst case = < 1s.
+	if _cell_manager:
+		_cell_manager.fast_cleanup()
+
+	# Free GPU resources in dependency order. HLOD owns merged RS instances and
+	# mesh refs sourced from static prototypes, so release it before prototypes.
+	_teardown_hlod_merger()
+	Log.info("shutdown", "NativeStreamingManager fast_cleanup: HLOD merger cleared")
+	if _static_renderer:
+		_static_renderer.clear()
+		Log.info("shutdown", "NativeStreamingManager fast_cleanup: static renderer cleared")
+	if _impostor_renderer and _impostor_renderer.has_method("fast_cleanup"):
+		_impostor_renderer.fast_cleanup()
+		Log.info("shutdown", "NativeStreamingManager fast_cleanup: impostor renderer stopped")
+	elif _impostor_renderer and _impostor_renderer.has_method("clear"):
+		_impostor_renderer.clear()
+		Log.info("shutdown", "NativeStreamingManager fast_cleanup: impostor renderer cleared")
+	if _distant_light_manager:
+		_distant_light_manager.cleanup()
+		_distant_light_manager = null
+		Log.info("shutdown", "NativeStreamingManager fast_cleanup: distant lights cleared")
+
+
+func _exit_tree() -> void:
+	if instance == self:
+		instance = null
+	_unregister_streaming_custom_monitors()
+
+	# If quitting, fast_cleanup() already freed everything — bail immediately
+	if Engine.has_meta("_quitting"):
+		return
+
+	# Force-clear RS instances first (before cell tree cleanup)
+	# StaticObjectRenderer holds thousands of RenderingServer RIDs that must be freed
+	if _static_renderer:
+		_static_renderer.clear()
+
+	# Clear tracking dictionaries — let Godot's tree cleanup handle the Node3D children
+	# Manually freeing thousands of nodes in _exit_tree causes a long freeze
+	# and Godot produces misleading "leaked dependency" warnings from ordering issues
+	_unloading_cells.clear()
+	_unloading_hold_frames.clear()
+	_unloading_frozen.clear()
+	_unloading_destructive_holds.clear()
+	_pending_unload_queue.clear()
+	_pending_unload_set.clear()
+	_pending_rs_hide_cells.clear()
+	_pending_rs_hide_set.clear()
+	_pending_rs_cleanup_cells.clear()
+	_pending_rs_cleanup_set.clear()
+	_lifecycle_events.clear()
+	_lifecycle_event_write_index = 0
+	_loaded_cells.clear()
+
+
+func _ready() -> void:
+	instance = self
+	_register_streaming_custom_monitors()
+
+	# Phase 8 — LoadingStateMachine pauses SceneTree during boot and big
+	# teleports, but the streaming pipeline HAS TO keep loading cells
+	# during that pause (otherwise the ring never completes and the
+	# predicate never returns true). PROCESS_MODE_ALWAYS keeps this
+	# node's _process firing regardless of tree.paused state. Gameplay
+	# nodes (player controller, NPCs, physics bodies) stay on the
+	# default PAUSABLE so they freeze as expected.
+	process_mode = Node.PROCESS_MODE_ALWAYS
+
+	# Create world container
+	_world_container = Node3D.new()
+	_world_container.name = "WorldContainer"
+	add_child(_world_container)
+
+	# Create hidden container for cells being gradually unloaded
+	_unload_container = Node3D.new()
+	_unload_container.name = "UnloadContainer"
+	_unload_container.visible = false
+	add_child(_unload_container)
+
+	# I.6 — orphan registry container. Persistent across cell unloads.
+	# Visible (held items rendered through this parent when cell unloads
+	# mid-hold). Per `docs/INTERACTION_SYSTEM.md` §9 — owned by streaming
+	# manager, NOT a separate autoload.
+	_orphan_container = Node3D.new()
+	_orphan_container.name = "OrphanedCarriedItems"
+	add_child(_orphan_container)
+
+	# Create static object renderer for MID-tier objects and flora
+	# Uses RenderingServer directly — no Node3D overhead for distant objects
+	_static_renderer = StaticObjectRendererScript.new()
+	_static_renderer.name = "StaticRenderer"
+	add_child(_static_renderer)
+
+	# NOTE: MidTierBatchPool removed — StaticObjectRenderer now handles MID-tier
+	# with per-instance RS visibility_range (see STREAMING_FIX_PLAN.md)
+
+	# Create impostor renderer (renamed to match old API)
+	_impostor_renderer = NativeImpostorRendererScript.new()
+	_impostor_renderer.name = "ImpostorManager"  # Use old name for backwards compatibility
+	add_child(_impostor_renderer)
+	_impostor_renderer.set_process(false)
+
+	# CHUNK tier (Phase 2 revised, 2026-07-05): offline-baked merged proxies
+	# for the 400-1200m ring. Dormant unless a bake exists on disk. When
+	# active, impostors retreat to CHUNK_END (see _apply_impostor_request).
+	_chunk_renderer = ChunkProxyRendererScript.new()
+	_chunk_renderer.name = "ChunkProxyRenderer"
+	add_child(_chunk_renderer)
+	var chunk_count: int = _chunk_renderer.initialize_from_cache()
+	_chunk_renderer.set_enabled(chunk_count > 0)
+	# MID↔CHUNK content selection (2026-07-06): per-cell bucket presence
+	# drives the proxy swap, and covered bucket types run band-free while
+	# the chunk tier is active (their far cutoff is the streaming-ring
+	# unload). See chunk_proxy_renderer.gd header for the full contract.
+	_static_renderer.cell_static_presence_changed = _on_cell_static_presence_changed
+	_apply_paged_coverage()
+
+	# Create fallback impostor candidates helper
+	if _impostor_candidates == null:
+		_impostor_candidates = ImpostorCandidatesScript.new()
+	_impostor_renderer.set_impostor_candidates(_impostor_candidates)
+
+	# Create background processor for async loading
+	_background_processor = BackgroundProcessorScript.new()
+	_background_processor.name = "BackgroundProcessor"
+	add_child(_background_processor)
+
+	# Create distant light manager for billboard lights beyond NEAR tier
+	_distant_light_manager = DistantLightManagerScript.new()
+	_distant_light_manager.setup(_world_container)
+	if _coordinate_mapper != null and _distant_light_manager.has_method("set_coordinate_mapper"):
+		_distant_light_manager.call("set_coordinate_mapper", _coordinate_mapper)
+
+	if _world_source != null:
+		set_world_source(_world_source)
+	elif _world_object_source != null:
+		set_world_object_source(_world_object_source)
+
+
+## Initialize the streaming manager
+## cell_manager: CellManager instance for loading cell data
+## camera: Camera3D to track for streaming
+func initialize(cell_manager: CellManagerScript, camera: Camera3D = null) -> Error:
+	if _initialized:
+		return OK
+
+	if not cell_manager:
+		push_error("[NativeStreamingManager] cell_manager is required")
+		return ERR_INVALID_PARAMETER
+
+	if _world_object_source == null:
+		push_error("[NativeStreamingManager] world source/object source must be injected before initialize()")
+		return ERR_INVALID_PARAMETER
+	if _world_object_spawn_adapter == null:
+		push_error("[NativeStreamingManager] world object spawn adapter must be injected before initialize()")
+		return ERR_INVALID_PARAMETER
+	if _coordinate_mapper == null:
+		push_error("[NativeStreamingManager] coordinate mapper must be injected before initialize()")
+		return ERR_INVALID_PARAMETER
+	if _asset_provider == null:
+		push_error("[NativeStreamingManager] asset provider must be injected before initialize()")
+		return ERR_INVALID_PARAMETER
+
+	_cell_manager = cell_manager
+	if _world_source != null and _cell_manager.has_method("set_world_source"):
+		_cell_manager.call("set_world_source", _world_source)
+	elif _cell_manager.has_method("set_world_object_source"):
+		_cell_manager.call("set_world_object_source", _world_object_source)
+		if _cell_manager.has_method("set_world_object_spawn_adapter"):
+			_cell_manager.call("set_world_object_spawn_adapter", _world_object_spawn_adapter)
+		if _cell_manager.has_method("set_asset_provider"):
+			_cell_manager.call("set_asset_provider", _asset_provider)
+	_cell_manager.set_static_renderer(_static_renderer)
+	_camera = camera
+	_tracking_enabled = _camera != null
+
+	# Phase 3 (2026-04-22) — CellPreloader. Warms predicted-cell model paths
+	# through the model loader's bounded async lane.
+	_cell_preloader = CellPreloaderScript.new()
+	_cell_preloader.configure(_cell_manager.get_model_loader())
+	if _cell_preloader.has_method("set_world_object_source"):
+		_cell_preloader.call("set_world_object_source", _world_object_source)
+	if _cell_preloader.has_method("set_coordinate_mapper"):
+		_cell_preloader.call("set_coordinate_mapper", _coordinate_mapper)
+	_cell_preloader.set_debug(debug_enabled)
+
+	# Phase 2 stutter diag — see field declarations above.
+	_pipeline_compile_monitor = PipelineCompileMonitorScript.new()
+	_pipeline_compile_per_cell = PipelineCompileMonitorScript.new()
+	# Hand the per-cell tracker to CellPreloader so its LOADING→READY transition
+	# can log its own delta on the same baseline. The heartbeat tracker stays here.
+	if _cell_preloader.has_method("set_pipeline_compile_monitor"):
+		_cell_preloader.set_pipeline_compile_monitor(PipelineCompileMonitorScript.new())
+
+	# Phase 2 stutter diag — force-create the StreamingProfiler so the
+	# slow-frame autopsy actually has data to dump. Previously _profiler was
+	# lazily created by `get_profiler()`, called only by the benchmark HUD or
+	# debug overlay; in normal interactive play the profiler stayed null and
+	# every `if prof:` bracket no-op'd. The autopsy needs the profiler from
+	# frame 0. Plan §11.4.
+	if _profiler == null:
+		_profiler = StreamingProfilerScript.new()
+		_profiler.enabled = SC.ENABLE_PROFILING
+
+	# Wire up background processor for async loading
+	if _background_processor and async_loading_enabled:
+		_cell_manager.set_background_processor(_background_processor)
+		_debug("Async loading enabled with BackgroundProcessor")
+	else:
+		_debug("Async loading disabled, using synchronous loading")
+
+	# Sync debug flag
+	if _impostor_renderer:
+		_impostor_renderer.set("debug_enabled", debug_enabled)
+		if _impostor_renderer.has_method("set_coordinate_mapper"):
+			_impostor_renderer.call("set_coordinate_mapper", _coordinate_mapper)
+		# Startup burst: 15ms impostor budget while loading screen is visible
+		# Normal budget (4ms) is restored when startup phase completes
+		_impostor_renderer.set_load_budget_usec(15000.0)
+
+	# HLOD follows the owning toggle. ObjectPaging is still created lazily, so
+	# `--near-only` / `--no-hlod` runs do not pay the setup cost.
+	set_hlod_visible(_hlod_requested_visible)
+
+	_initialized = true
+	set_process(_tracking_enabled)
+	Log.info("streaming", "Initialized with native visibility_range streaming")
+
+	# Only start tracking if camera was explicitly provided
+	# If camera is null, wait for set_camera() to be called later
+	# This allows caller to control when streaming actually starts
+	if _camera:
+		_camera_position = _camera.global_position
+		_camera_cell = _world_to_cell(_camera_position)
+		Log.info("streaming", "Initial camera cell: %s (position: %s)" % [_camera_cell, _camera_position])
+		_update_loaded_cells()
+	else:
+		Log.info("streaming", "No camera provided - streaming will start when set_camera() is called")
+
+	return OK
+
+
+## Set the camera to track
+func set_camera(camera: Camera3D) -> void:
+	_camera = camera
+	_tracking_enabled = _camera != null
+	set_process(_tracking_enabled)
+	# Trigger initial update if system is initialized and camera is set
+	if _initialized and _camera:
+		_camera_position = _camera.global_position
+		_camera_cell = _world_to_cell(_camera_position)
+		_debug("Camera set, initial cell: %s" % _camera_cell)
+		_update_loaded_cells()
+
+
+func set_world_tracking_frozen(enabled: bool, anchor_position: Vector3 = Vector3.INF) -> void:
+	_world_tracking_frozen = enabled
+	if enabled:
+		_frozen_camera_position = anchor_position if anchor_position != Vector3.INF else _camera_position
+		_frozen_camera_cell = _world_to_cell(_frozen_camera_position)
+		_camera_position = _frozen_camera_position
+		_camera_cell = _frozen_camera_cell
+		_camera_velocity_xz = Vector2.ZERO
+		_teleport_detected = false
+		Log.info("streaming", "World tracking frozen at cell %s position %s" % [_camera_cell, _camera_position])
+	else:
+		_prev_camera_position = Vector3.ZERO
+		_camera_velocity_xz = Vector2.ZERO
+		if _camera:
+			_camera_position = _camera.global_position
+			_camera_cell = _world_to_cell(_camera_position)
+		Log.info("streaming", "World tracking unfrozen at cell %s position %s" % [_camera_cell, _camera_position])
+
+
+func is_world_tracking_frozen() -> bool:
+	return _world_tracking_frozen
+
+
+func _enter_post_teleport_burst() -> void:
+	if _startup_phase:
+		return
+	Log.info("streaming", "Streaming origin jump - re-entering startup burst mode")
+	_startup_phase = true
+	_first_playable_reached = false
+	_startup_frames = 0
+	_post_startup_start_ms = 0
+	_queue_drain_logged = false
+	_post_startup_audit_accum = 0.0
+	if _impostor_renderer:
+		_impostor_renderer.set_load_budget_usec(15000.0)
+
+
+func commit_streaming_origin(position: Vector3) -> void:
+	_world_tracking_frozen = false
+	_frozen_camera_position = Vector3.ZERO
+	_frozen_camera_cell = Vector2i.ZERO
+	_prev_camera_position = Vector3.ZERO
+	_camera_velocity_xz = Vector2.ZERO
+	_camera_position = position
+	_camera_cell = _world_to_cell(position)
+	_enter_post_teleport_burst()
+	if _cell_preloader != null:
+		_cell_preloader.abort_all()
+		_cell_preloader.reset(_camera_cell)
+	refresh_cells()
+	Log.info("streaming", "Streaming origin committed at cell %s position %s" % [_camera_cell, _camera_position])
+
+
+func set_world_source(source: RefCounted) -> void:
+	_world_source = source
+	if source == null:
+		_coordinate_mapper = null
+		_asset_provider = null
+		_world_object_spawn_adapter = null
+		set_world_object_source(null)
+		set_impostor_candidates(null)
+		if _cell_manager and _cell_manager.has_method("set_world_source"):
+			_cell_manager.call("set_world_source", null)
+		return
+	if source.has_method("get_coordinate_mapper"):
+		set_coordinate_mapper(source.call("get_coordinate_mapper") as RefCounted)
+	if source.has_method("get_asset_provider"):
+		set_asset_provider(source.call("get_asset_provider") as RefCounted)
+	if source.has_method("get_object_source"):
+		set_world_object_source(source.call("get_object_source") as RefCounted)
+	if source.has_method("get_object_spawn_adapter"):
+		set_world_object_spawn_adapter(source.call("get_object_spawn_adapter") as RefCounted)
+	if source.has_method("get_impostor_candidates"):
+		set_impostor_candidates(source.call("get_impostor_candidates") as RefCounted)
+	if _cell_manager and _cell_manager.has_method("set_world_source"):
+		_cell_manager.call("set_world_source", source)
+
+
+func set_world_object_source(source: RefCounted) -> void:
+	_world_object_source = source
+	if _cell_manager and _cell_manager.has_method("set_world_object_source"):
+		_cell_manager.call("set_world_object_source", source)
+	if _cell_preloader and _cell_preloader.has_method("set_world_object_source"):
+		_cell_preloader.call("set_world_object_source", source)
+	if _impostor_renderer and _impostor_renderer.has_method("set_world_object_source"):
+		_impostor_renderer.call("set_world_object_source", source)
+	if _distant_light_manager and _distant_light_manager.has_method("set_world_object_source"):
+		_distant_light_manager.call("set_world_object_source", source)
+	if _hlod_merger and _hlod_merger.has_method("set_world_object_source"):
+		_hlod_merger.call("set_world_object_source", source)
+
+
+func set_world_object_spawn_adapter(adapter: RefCounted) -> void:
+	_world_object_spawn_adapter = adapter
+	if _cell_manager and _cell_manager.has_method("set_world_object_spawn_adapter"):
+		_cell_manager.call("set_world_object_spawn_adapter", adapter)
+
+
+func set_impostor_candidates(candidates: RefCounted) -> void:
+	_impostor_candidates = candidates
+	if _impostor_renderer and _impostor_renderer.has_method("set_impostor_candidates"):
+		_impostor_renderer.call("set_impostor_candidates", candidates)
+	if _cell_manager and _cell_manager.has_method("set_impostor_candidates"):
+		_cell_manager.call("set_impostor_candidates", candidates)
+
+
+func set_coordinate_mapper(mapper: RefCounted) -> void:
+	_coordinate_mapper = mapper
+	load_radius_cells = SC.scene_load_radius_cells_for_view_distance_meters(view_distance_meters, _cell_size_meters())
+	max_load_distance = SC.scene_load_distance_cap_for_view_distance_meters(view_distance_meters, _cell_size_meters())
+	if _cell_preloader and _cell_preloader.has_method("set_coordinate_mapper"):
+		_cell_preloader.call("set_coordinate_mapper", mapper)
+	if _impostor_renderer and _impostor_renderer.has_method("set_coordinate_mapper"):
+		_impostor_renderer.call("set_coordinate_mapper", mapper)
+	if _distant_light_manager and _distant_light_manager.has_method("set_coordinate_mapper"):
+		_distant_light_manager.call("set_coordinate_mapper", mapper)
+	if _hlod_merger and _hlod_merger.has_method("set_coordinate_mapper"):
+		_hlod_merger.call("set_coordinate_mapper", mapper)
+
+
+func set_asset_provider(provider: RefCounted) -> void:
+	_asset_provider = provider
+	if _cell_manager and _cell_manager.has_method("set_asset_provider"):
+		_cell_manager.call("set_asset_provider", provider)
+
+
+func get_world_source() -> RefCounted:
+	return _world_source
+
+
+func get_coordinate_mapper() -> RefCounted:
+	return _coordinate_mapper
+
+
+func get_asset_provider() -> RefCounted:
+	return _asset_provider
+
+
+func _world_to_cell(world_pos: Vector3) -> Vector2i:
+	if _coordinate_mapper != null and _coordinate_mapper.has_method("world_to_cell"):
+		var mapped: Variant = _coordinate_mapper.call("world_to_cell", world_pos)
+		if mapped is Vector2i:
+			return mapped
+	return DU.world_to_cell(world_pos)
+
+
+func _cell_distance_squared(cell_a: Vector2i, cell_b: Vector2i) -> float:
+	if _coordinate_mapper != null and _coordinate_mapper.has_method("cell_distance_squared"):
+		return float(_coordinate_mapper.call("cell_distance_squared", cell_a, cell_b))
+	return DU.cell_distance_squared(cell_a, cell_b)
+
+
+func _cell_size_meters() -> float:
+	if _coordinate_mapper != null and _coordinate_mapper.has_method("get_cell_size_meters"):
+		return float(_coordinate_mapper.call("get_cell_size_meters"))
+	return DU.CELL_SIZE_METERS
+
+
+## Set the active exterior streaming radius. Returns the clamped value.
+func set_load_radius_cells(radius: int, refresh: bool = true) -> int:
+	return set_view_distance_meters(int(round(SC.distant_render_end_for_load_radius_cells(radius))), refresh)
+
+
+func set_view_distance_meters(distance_m: int, refresh: bool = true) -> int:
+	if _initialized:
+		Log.info("streaming", "Ignoring runtime view-distance change to %dm; edit graphics/view_distance_meters and relaunch" % distance_m)
+		return view_distance_meters
+	var clamped := SC.clamp_view_distance_meters(distance_m)
+	var changed := clamped != view_distance_meters
+	view_distance_meters = clamped
+	load_radius_cells = SC.scene_load_radius_cells_for_view_distance_meters(clamped, _cell_size_meters())
+	# Do not assign the legacy `view_distance_cells` alias here. Its setter
+	# converts cells back into meters and would collapse a distant view cap
+	# (for example 1100m) down to the capped scene-cell radius (~250m).
+	_apply_view_distance_cap()
+	if refresh and _initialized:
+		refresh_cells()
+	if changed and _initialized:
+		_reconcile_distant_tier_loading()
+	return clamped
+
+
+func get_distant_render_end_m() -> float:
+	return _distant_render_end_m
+
+
+func _apply_distant_render_distance_for_load_radius() -> void:
+	_apply_view_distance_cap()
+
+
+func _apply_view_distance_cap() -> void:
+	_distant_render_end_m = float(SC.clamp_view_distance_meters(view_distance_meters))
+	max_load_distance = SC.scene_load_distance_cap_for_view_distance_meters(view_distance_meters, _cell_size_meters())
+	_apply_static_renderer_tier_visibility()
+	_apply_hlod_request()
+	_apply_impostor_request()
+	_sync_hlod_far_coverage(true)
+
+
+func _impostor_streaming_enabled() -> bool:
+	return _impostor_renderer != null \
+		and _impostor_renderer.has_method("is_enabled") \
+		and bool(_impostor_renderer.call("is_enabled"))
+
+
+func _distant_stream_radius_cells() -> int:
+	return SC.distant_stream_radius_cells_for_view_distance_meters(view_distance_meters, impostor_radius_cells, _cell_size_meters())
+
+
+func _effective_scene_load_radius_cells() -> int:
+	return load_radius_cells if _static_streaming_enabled else SC.NEAR_ONLY_SCENE_LOAD_RADIUS_CELLS
+
+
+func _effective_scene_load_distance_cap() -> float:
+	return max_load_distance if _static_streaming_enabled else SC.NEAR_ONLY_SCENE_LOAD_DISTANCE_CAP
+
+
+func _is_near_scene_cell(grid: Vector2i) -> bool:
+	if not _near_tier_visible:
+		return false
+	if absi(grid.x - _camera_cell.x) > SC.NEAR_ONLY_SCENE_LOAD_RADIUS_CELLS:
+		return false
+	if absi(grid.y - _camera_cell.y) > SC.NEAR_ONLY_SCENE_LOAD_RADIUS_CELLS:
+		return false
+	var near_cap := SC.NEAR_ONLY_SCENE_LOAD_DISTANCE_CAP
+	return _cell_bounds_distance_squared_to_position(grid, _camera_position) <= near_cap * near_cap
+
+
+func _load_profile_for_cell(grid: Vector2i) -> Variant:
+	if _is_near_scene_cell(grid):
+		return CellManagerScript.LoadProfile.exterior_default()
+	if _static_streaming_enabled:
+		return CellManagerScript.LoadProfile.exterior_static_visuals_only()
+	return CellManagerScript.LoadProfile.exterior_default()
+
+
+func _reconcile_distant_tier_loading() -> void:
+	if not _camera:
+		return
+	var tracking_frozen := _world_tracking_frozen
+	_camera_position = _frozen_camera_position if tracking_frozen else _camera.global_position
+	_camera_cell = _world_to_cell(_camera_position)
+	if _object_paging_requested_visible() and _hlod_merger:
+		_hlod_merger.call("update_for_camera", _camera_cell, _camera_position, _camera_velocity_xz)
+		_hlod_needs_initial_update = false
+		_hlod_last_update_position = _camera_position
+		_sync_hlod_far_coverage(true)
+	if _impostor_streaming_enabled():
+		if _first_playable_reached:
+			_impostor_update_pending = true
+	else:
+		_impostor_update_pending = false
+	if _distant_light_manager:
+		_distant_light_manager.scan_cells_around(_camera_cell, _distant_stream_radius_cells())
+
+
+## Set sun elevation for distant light time-of-day visibility.
+## Called by world_explorer from sky_manager.celestial.sun_altitude.
+func set_sun_elevation(elevation_rad: float) -> void:
+	_sun_elevation_rad = elevation_rad
+
+
+## Set cell manager
+func set_cell_manager(cell_manager: CellManagerScript) -> void:
+	_cell_manager = cell_manager
+
+#endregion
+
+
+func _begin_publication_budget_frame() -> void:
+	if _publication_budget == null:
+		return
+	var budget_ms := frame_budget_ms
+	if _startup_phase or _near_burst_drain:
+		budget_ms = maxf(budget_ms, 25.0)
+	_publication_budget.begin_frame(int(budget_ms * 1000.0))
+
+
+func _claim_publication_slice(lane: String, requested_usec: int) -> Dictionary:
+	if requested_usec <= 0:
+		return {}
+	if _publication_budget == null:
+		return {
+			"lane": lane,
+			"granted_usec": requested_usec,
+			"deadline_usec": Time.get_ticks_usec() + requested_usec,
+		}
+	if not _publication_budget.has_method("make_slice"):
+		var fallback_grant := int(_publication_budget.call("claim", lane, requested_usec))
+		if fallback_grant <= 0:
+			return {}
+		return {
+			"lane": lane,
+			"granted_usec": fallback_grant,
+			"deadline_usec": Time.get_ticks_usec() + fallback_grant,
+		}
+	return _publication_budget.call("make_slice", lane, requested_usec) as Dictionary
+
+
+func _finish_publication_slice(lane: String, slice: Dictionary, elapsed_usec: int) -> void:
+	if _publication_budget == null or slice.is_empty():
+		return
+	_publication_budget.call("record_actual", lane, maxi(0, elapsed_usec))
+	var granted := int(slice.get("granted_usec", 0))
+	var unused := maxi(0, granted - elapsed_usec)
+	if unused > 0 and _publication_budget.has_method("refund"):
+		_publication_budget.call("refund", lane, unused)
+
+
+#region Main Update Loop
+
+func _process(delta: float) -> void:
+	if not _initialized:
+		if debug_enabled and Engine.get_frames_drawn() % 60 == 0:
+			Log.debug("streaming", "_process skipped: not initialized")
+		return
+
+	_begin_publication_budget_frame()
+
+	if not _tracking_enabled:
+		return
+
+	if not _camera:
+		_camera = get_viewport().get_camera_3d()
+		if not _camera:
+			if debug_enabled and Engine.get_frames_drawn() % 60 == 0:
+				Log.debug("streaming", "_process skipped: no camera")
+			return
+
+	# DIAGNOSTIC heartbeat (2026-04-15, silent-crash pin). 5 s cadence, main-thread only.
+	# Crash triage: last heartbeat line marks the frame range where the main
+	# thread was alive; the last `instantiate_attempt`/`instantiate_done` pair
+	# in model_loader pins the PackedScene at the instant of the crash.
+	var now_sec: int = int(Time.get_ticks_msec() / 1000)
+	if now_sec >= _last_heartbeat_sec + 5:
+		var elapsed := now_sec - _last_heartbeat_sec if _last_heartbeat_sec >= 0 else 0
+		var frames_since := Engine.get_frames_drawn() - _last_heartbeat_frame if _last_heartbeat_frame >= 0 else 0
+		var fps_est := float(frames_since) / float(elapsed) if elapsed > 0 else 0.0
+		_last_heartbeat_sec = now_sec
+		_last_heartbeat_frame = Engine.get_frames_drawn()
+		var p := Performance
+		var process_ms := p.get_monitor(p.TIME_PROCESS) * 1000.0
+		var physics_ms := p.get_monitor(p.TIME_PHYSICS_PROCESS) * 1000.0
+		var draws := int(p.get_monitor(p.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
+		var objects := int(p.get_monitor(p.RENDER_TOTAL_OBJECTS_IN_FRAME))
+		var prims := int(p.get_monitor(p.RENDER_TOTAL_PRIMITIVES_IN_FRAME))
+
+		# Draw-call audit (2026-04-22) — split totals into VISIBLE vs SHADOW
+		# passes. The total monitor above is sum-over-all-passes, which
+		# conflates main-camera draws with shadow-cascade re-draws. Splitting
+		# reveals the true shadow-pass multiplier.
+		var draws_visible: int = 0
+		var draws_shadow: int = 0
+		var objs_visible: int = 0
+		var objs_shadow: int = 0
+		var vp := get_viewport()
+		if vp != null:
+			draws_visible = int(vp.get_render_info(
+				Viewport.RENDER_INFO_TYPE_VISIBLE,
+				Viewport.RENDER_INFO_DRAW_CALLS_IN_FRAME,
+			))
+			draws_shadow = int(vp.get_render_info(
+				Viewport.RENDER_INFO_TYPE_SHADOW,
+				Viewport.RENDER_INFO_DRAW_CALLS_IN_FRAME,
+			))
+			objs_visible = int(vp.get_render_info(
+				Viewport.RENDER_INFO_TYPE_VISIBLE,
+				Viewport.RENDER_INFO_OBJECTS_IN_FRAME,
+			))
+			objs_shadow = int(vp.get_render_info(
+				Viewport.RENDER_INFO_TYPE_SHADOW,
+				Viewport.RENDER_INFO_OBJECTS_IN_FRAME,
+			))
+		# T.0 baseline instrumentation — Jolt broadphase workload proxies.
+		# `active` = dynamic RigidBody3Ds being simulated (carryables, NPCs).
+		# `pairs` = collision pairs broadphase is tracking — this is the
+		# direct proxy for per-object StaticBody3D cost. Before-number target
+		# per §6: pairs should drop ~100× post-T.2 (merged cell trimesh).
+		var phys_active := int(p.get_monitor(p.PHYSICS_3D_ACTIVE_OBJECTS))
+		var phys_pairs := int(p.get_monitor(p.PHYSICS_3D_COLLISION_PAIRS))
+		# Phase 2 stutter diag — pipeline compile delta over the 5s heartbeat
+		# window. DRAW > 0 = first-visibility shader stutter source. MESH/SURFACE
+		# spread between heartbeats vs cell-load events tells us where in the
+		# load pipeline the engine pre-compiles. Plan §2.2.
+		var pcd_str: String = ""
+		if _pipeline_compile_monitor != null:
+			var pcd: PackedInt64Array = _pipeline_compile_monitor.delta_and_update()
+			pcd_str = " pipe=" + PipelineCompileMonitorScript.format_delta(pcd)
+		# Render CPU/GPU split (2026-07-05 audit) — the one metric the harness
+		# stack was missing. `viewport_set_measure_render_time` is idempotent;
+		# values are last-frame, in milliseconds, Vulkan-backed on this target.
+		var render_split_str: String = ""
+		if vp != null:
+			var vp_rid: RID = vp.get_viewport_rid()
+			RenderingServer.viewport_set_measure_render_time(vp_rid, true)
+			render_split_str = " render_cpu=%.1fms render_gpu=%.1fms" % [
+				RenderingServer.viewport_get_measured_render_time_cpu(vp_rid),
+				RenderingServer.viewport_get_measured_render_time_gpu(vp_rid),
+			]
+		# Split `loading` into truly-in-flight vs deferred-tail cells (visual
+		# playable, request held open only by proximity-deferred interactives).
+		# A steady nonzero tail near the ring edge is by design, not a stall.
+		var deferred_tail := 0
+		if _cell_manager != null and _cell_manager.has_method("is_async_visual_playable"):
+			for loading_grid: Vector2i in _loading_cells:
+				var rid_val: int = int(_async_requests.get(loading_grid, -1))
+				if rid_val >= 0 and bool(_cell_manager.call("is_async_visual_playable", rid_val)):
+					deferred_tail += 1
+		Log.info("streaming", "heartbeat sec=%d frame=%d fps=%.1f proc=%.1fms phys=%.1fms draws=%d (vis=%d shad=%d) objs=%d (vis=%d shad=%d) prims=%dk loaded=%d loading=%d (tail=%d) phys_active=%d phys_pairs=%d%s%s" % [
+			now_sec,
+			Engine.get_frames_drawn(),
+			fps_est,
+			process_ms,
+			physics_ms,
+			draws,
+			draws_visible,
+			draws_shadow,
+			objects,
+			objs_visible,
+			objs_shadow,
+			prims / 1000,
+			_loaded_cells.size(),
+			_loading_cells.size(),
+			deferred_tail,
+			phys_active,
+			phys_pairs,
+			pcd_str,
+			render_split_str,
+		])
+
+	# Start timing for frame budget telemetry
+	var frame_start_usec := Time.get_ticks_usec()
+	var phase_times: PackedFloat64Array = PackedFloat64Array()  # usec per phase
+	phase_times.resize(9)  # 0:unload, 1:async_complete, 2:instantiate, 3:promote, 4:collision, 5:deferred, 6:queue, 7:cell_update, 8:static_cull
+	var budget_usec := frame_budget_ms * 1000.0
+	var impostor_update_usec: float = 0.0
+	var hlod_merger_usec: float = 0.0
+	var distant_light_usec: float = 0.0
+
+	# Per-phase profiler — lightweight begin/end section pairs.
+	# Gated by SC.ENABLE_PROFILING; zero overhead when disabled.
+	var prof: StreamingProfilerScript = _profiler
+	if prof:
+		prof.begin_frame()
+
+	var tracking_frozen := _world_tracking_frozen
+
+	# Update camera position and velocity. Fix B (streaming_stutter_2026_04_25
+	# §11.4) — bracket cell_manager.set_camera_position; cheap in theory but
+	# walks the proximity-deferred list internally on some paths.
+	_camera_position = _frozen_camera_position if tracking_frozen else _camera.global_position
+	if _cell_manager:
+		if prof: prof.begin_section("cm_set_camera_position")
+		_cell_manager.set_camera_position(_camera_position)
+		if prof: prof.end_section("cm_set_camera_position")
+		_cell_manager.tick_proximity_deferred(_camera_position)
+	var new_cell := _frozen_camera_cell if tracking_frozen else _world_to_cell(_camera_position)
+
+	# Phase 7 finish (2026-04-17) — teleport detection. A single-frame camera
+	# jump beyond TELEPORT_DETECT_THRESHOLD re-enters startup_phase so the
+	# post-teleport ring loads at the aggressive 25ms budget instead of
+	# post-startup 4ms. Must run BEFORE the _camera_velocity_xz update so
+	# the teleport jump doesn't poison the EMA-smoothed velocity.
+	if not tracking_frozen and _prev_camera_position != Vector3.ZERO \
+			and _camera_position.distance_to(_prev_camera_position) > TELEPORT_DETECT_THRESHOLD:
+		_teleport_detected = true
+		# Phase 2 stutter diag — bracket the teleport handler so the slow-frame
+		# autopsy attributes the 1+ second teleport hitch to its actual sources
+		# (signal-emit subscribers + CellPreloader.abort_all blocking wait).
+		# Plan §11.4. Sub-brackets isolate signal vs preloader-drain.
+		if prof: prof.begin_section("teleport:total")
+		# Phase 8 — emit BEFORE the startup_phase re-arm below so a
+		# LoadingStateMachine consumer can fade to black and pause the
+		# tree on the same frame the jump happens. NativeStreamingManager
+		# is PROCESS_MODE_ALWAYS so the post-teleport streaming burst
+		# will keep running while the tree is paused.
+		if prof: prof.begin_section("teleport:emit_signal")
+		teleport_happened.emit(
+			_prev_camera_position,
+			_camera_position,
+			_camera_position.distance_to(_prev_camera_position)
+		)
+		if prof: prof.end_section("teleport:emit_signal")
+
+		# Phase 3 (§8.8) — abort in-flight preloads for cells the camera just
+		# jumped away from; re-anchor at the new grid so the next update()
+		# tick re-warms around the destination. Post Fix C.1 (plan §12.6),
+		# `abort_all` is non-blocking: cooperative cancellation flag, no
+		# `wait_for_task_completion`. Was up to 1 sec block; now O(N entries)
+		# bookkeeping (~µs).
+		if _cell_preloader != null:
+			if prof: prof.begin_section("teleport:preloader_abort")
+			_cell_preloader.abort_all()
+			_cell_preloader.reset(_world_to_cell(_camera_position))
+			if prof: prof.end_section("teleport:preloader_abort")
+		if prof: prof.end_section("teleport:total")
+
+	# EMA-smoothed velocity on XZ plane (for predictive cell loading).
+	# Teleport frames skip the EMA so the huge jump doesn't throw predictive
+	# pre-queue into a nonsense direction for the following seconds.
+	if not tracking_frozen and delta > 0.0 and _prev_camera_position != Vector3.ZERO and not _teleport_detected:
+		var raw_vel := Vector2(
+			(_camera_position.x - _prev_camera_position.x) / delta,
+			(_camera_position.z - _prev_camera_position.z) / delta
+		)
+		_camera_velocity_xz = _camera_velocity_xz.lerp(raw_vel, 0.3)
+	if not tracking_frozen:
+		_prev_camera_position = _camera_position
+
+	# On teleport, re-arm startup_phase so the instantiation/merge budget
+	# switches back to burst mode. ObjectPaging has its own TELEPORT_THRESHOLD
+	# (500m, identical) which primes the HLOD warmup queue — the two systems
+	# enter burst mode on the same frame.
+	if _teleport_detected:
+		_teleport_detected = false
+		if not _startup_phase:
+			Log.info("streaming", "Teleport detected — re-entering startup burst mode")
+			_startup_phase = true
+			_first_playable_reached = false
+			_startup_frames = 0
+			_post_startup_start_ms = 0
+			_queue_drain_logged = false
+			_post_startup_audit_accum = 0.0
+			if _impostor_renderer:
+				_impostor_renderer.set_load_budget_usec(15000.0)
+
+# Track startup frames for staggered loading.
+	# Fix B — bracket the startup tick so the unattributed teleport autopsy
+	# (2326 ms / 1941 ms unattributed in baseline) stops being mysterious.
+	# After teleport, _startup_phase is re-armed and _check_startup_complete
+	# can call into cell_manager which is the suspected source of the gap.
+	if _startup_phase:
+		if prof: prof.begin_section("startup_tick")
+		_startup_frames += 1
+		_emit_startup_progress()
+		_check_startup_complete()
+		if prof: prof.end_section("startup_tick")
+
+	# Check if we moved to a new cell
+	var cell_update_usec: float = 0.0
+	_cell_changed_this_frame = (not tracking_frozen and new_cell != _camera_cell)
+	if _cell_changed_this_frame:
+		_debug("Camera moved to new cell: %s (was %s)" % [new_cell, _camera_cell])
+		_camera_cell = new_cell
+		if prof:
+			prof.begin_section("cell_update")
+		var cu_start := Time.get_ticks_usec()
+		_update_loaded_cells()
+		cell_update_usec = float(Time.get_ticks_usec() - cu_start)
+		if prof:
+			prof.end_section("cell_update")
+	elif not tracking_frozen and _impostor_update_pending and not _startup_phase and _first_playable_reached:
+		# Deferred impostor update — runs on the frame AFTER cell change
+		# Prevents impostor scan (170ms+ initial) from stacking with cell load/unload
+		var impostors_on := _impostor_streaming_enabled()
+		if impostors_on and prof:
+			prof.begin_section("impostor_update")
+		var imp_slice := _claim_publication_slice(PUBLICATION_LANE_FAR_IMPOSTORS, FAR_IMPOSTOR_PUBLICATION_BUDGET_USEC)
+		var imp_start := Time.get_ticks_usec()
+		if impostors_on and not imp_slice.is_empty():
+			var area_done := bool(_impostor_renderer.update_impostor_area(
+				_camera_cell,
+				_distant_stream_radius_cells(),
+				int(imp_slice.get("deadline_usec", 0))
+			))
+			if area_done:
+				_sync_hlod_far_coverage(true)
+				_impostor_update_pending = false
+		elif not impostors_on:
+			_impostor_update_pending = false
+		impostor_update_usec = float(Time.get_ticks_usec() - imp_start)
+		_finish_publication_slice(PUBLICATION_LANE_FAR_IMPOSTORS, imp_slice, int(impostor_update_usec))
+		var imp_ms := impostor_update_usec / 1000.0
+		if impostors_on and prof:
+			prof.end_section("impostor_update")
+		if impostors_on and imp_ms > 2.0:
+			Log.info("streaming", "Deferred impostor update: %.1fms" % imp_ms)
+
+	if _impostor_renderer and _impostor_streaming_enabled():
+		var far_slice := _claim_publication_slice(PUBLICATION_LANE_FAR_IMPOSTORS, FAR_IMPOSTOR_PUBLICATION_BUDGET_USEC)
+		if not far_slice.is_empty():
+			if prof: prof.begin_section("far_impostor_publish")
+			var far_start := Time.get_ticks_usec()
+			if _impostor_renderer.has_method("process_publication_slice"):
+				_impostor_renderer.call("process_publication_slice", delta, int(far_slice.get("deadline_usec", 0)))
+			var far_elapsed := Time.get_ticks_usec() - far_start
+			impostor_update_usec += float(far_elapsed)
+			_finish_publication_slice(PUBLICATION_LANE_FAR_IMPOSTORS, far_slice, int(far_elapsed))
+			if prof: prof.end_section("far_impostor_publish")
+
+	# CHUNK tier: poll the single in-flight load + rescan on camera travel.
+	# Cheap by design (server-direct, one threaded request at a time).
+	if _chunk_renderer and _chunk_renderer.call("is_enabled"):
+		if prof: prof.begin_section("chunk_tier")
+		_chunk_renderer.call("update", _camera_position, Time.get_ticks_usec() + CHUNK_TIER_BUDGET_USEC)
+		if prof: prof.end_section("chunk_tier")
+
+	# Runtime HLOD merger: process completed merges every frame, update on cell change
+	# Phase 2 stutter diag — bracket each unbracketed _process subsystem so the
+	# autopsy can attribute the BIG unattributed spikes (1.7s+) to whichever
+	# of these is actually responsible. Plan §11.4.
+	if _object_paging_requested_visible() and _hlod_merger:
+		if prof: prof.begin_section("hlod_merger")
+		var hlod_slice := _claim_publication_slice(PUBLICATION_LANE_HLOD, HLOD_PUBLICATION_BUDGET_USEC)
+		var hlod_start := Time.get_ticks_usec()
+		if not hlod_slice.is_empty():
+			var hlod_deadline := int(hlod_slice.get("deadline_usec", 0))
+			if _cell_manager and _cell_manager.has_method("process_async_disk_loads"):
+				_cell_manager.call("process_async_disk_loads", mini(HLOD_MODEL_WARMUP_BUDGET_USEC, maxi(0, hlod_deadline - Time.get_ticks_usec())))
+			if Time.get_ticks_usec() < hlod_deadline and not tracking_frozen and _should_update_hlod():
+				_hlod_merger.call("update_for_camera", _camera_cell, _camera_position, _camera_velocity_xz)
+				_hlod_needs_initial_update = false
+				_hlod_last_update_position = _camera_position
+			if Time.get_ticks_usec() < hlod_deadline:
+				_hlod_merger.call("process_merge_queue", hlod_deadline)  # Staggered: max 2 cells/frame
+			if Time.get_ticks_usec() < hlod_deadline:
+				_hlod_merger.call("process_completions", hlod_deadline)
+			_sync_hlod_far_coverage(false)
+		hlod_merger_usec = float(Time.get_ticks_usec() - hlod_start)
+		_finish_publication_slice(PUBLICATION_LANE_HLOD, hlod_slice, int(hlod_merger_usec))
+		if prof: prof.end_section("hlod_merger")
+
+	# Update distant light manager (camera pos + time-of-day)
+	if _distant_light_manager and not tracking_frozen:
+		if prof: prof.begin_section("distant_light_manager")
+		var light_slice := _claim_publication_slice(PUBLICATION_LANE_DISTANT_LIGHTS, DISTANT_LIGHT_PUBLICATION_BUDGET_USEC)
+		var distant_light_start := Time.get_ticks_usec()
+		if not light_slice.is_empty():
+			_distant_light_manager.update(_camera_position, _sun_elevation_rad, int(light_slice.get("deadline_usec", 0)))
+		distant_light_usec = float(Time.get_ticks_usec() - distant_light_start)
+		_finish_publication_slice(PUBLICATION_LANE_DISTANT_LIGHTS, light_slice, int(distant_light_usec))
+		if prof: prof.end_section("distant_light_manager")
+
+	# I.6 Phase 2 — orphan expiry tick. Off the frame-budget hot path
+	# because it runs at 1 Hz max, and the walk is bounded by the tiny
+	# size of `_persistent_nodes` (a handful of held items, if that).
+	_orphan_prune_accum += delta
+	if _orphan_prune_accum >= ORPHAN_PRUNE_INTERVAL_S:
+		if prof: prof.begin_section("orphan_prune")
+		_orphan_prune_accum = 0.0
+		_prune_expired_orphans()
+		if prof: prof.end_section("orphan_prune")
+
+	# Predictive loading — velocity-extrapolated two-phase CellPreloader (§8).
+	# Warms ResourceLoader + dispatches Phase F prereg for cells the camera is
+	# heading toward. Skipped during startup burst so the initial ring finishes
+	# with its own aggressive budget first.
+	if not tracking_frozen and not _startup_phase and _cell_preloader != null:
+		if prof: prof.begin_section("cell_preloader_update")
+		# Phase 1 (2026-07-05): hard 1ms deadline — the preloader's model
+		# warmup drains incrementally instead of bursting a whole cell's
+		# file I/O (53-60ms observed) into one frame.
+		_cell_preloader.update(_camera_cell, _camera_position, _camera_velocity_xz,
+			Time.get_ticks_usec() + CellPreloaderScript.DEFAULT_UPDATE_BUDGET_USEC)
+		if prof: prof.end_section("cell_preloader_update")
+
+	# Phase 0: Budgeted unloading — free children of departing cells gradually
+	# Runs BEFORE loading so freed memory is available for new cells
+	var phase_start := Time.get_ticks_usec()
+	if prof:
+		prof.begin_section("unload")
+	if not tracking_frozen and (not _pending_unload_queue.is_empty() or not _unloading_cells.is_empty() or not _pending_rs_hide_cells.is_empty() or not _pending_rs_cleanup_cells.is_empty()):
+		CrashBreadcrumb.write("nsm::unload_tick_begin", "queued=%d cells=%d hide=%d clean=%d" % [
+			_pending_unload_queue.size(), _unloading_cells.size(), _pending_rs_hide_cells.size(), _pending_rs_cleanup_cells.size()
+		])
+		var unload_slice := _claim_publication_slice(PUBLICATION_LANE_UNLOAD, int(SC.UNLOAD_BUDGET_MS * 1000.0))
+		var unload_start := Time.get_ticks_usec()
+		if not unload_slice.is_empty():
+			_process_budgeted_unloading(int(unload_slice.get("deadline_usec", 0)))
+		_finish_publication_slice(PUBLICATION_LANE_UNLOAD, unload_slice, Time.get_ticks_usec() - unload_start)
+		CrashBreadcrumb.write("nsm::unload_tick_done", "queued=%d cells=%d hide=%d clean=%d" % [
+			_pending_unload_queue.size(), _unloading_cells.size(), _pending_rs_hide_cells.size(), _pending_rs_cleanup_cells.size()
+		])
+	if prof:
+		prof.end_section("unload")
+	phase_times[0] = float(Time.get_ticks_usec() - phase_start)
+
+	# Process async loading.
+	# Architecture: Phase 1 (completions) always runs — finalizes in-flight BG
+	# requests and keeps _async_requests from stalling. Phases 2-4 are gated on
+	# _near_tier_visible as a single block: no scattered per-function checks.
+	# When near is off ALL per-frame near work stops: no instantiation, no
+	# promotions, no collision re-enable, no new load submissions.
+	if async_loading_enabled:
+		# Phase 1: completions — always runs (even when near is off)
+		phase_start = Time.get_ticks_usec()
+		if prof:
+			prof.begin_section("async_complete")
+		var completion_slice := _claim_publication_slice(PUBLICATION_LANE_NEAR_GAMEPLAY, int(SC.CELL_QUEUE_BUDGET_MS * 1000.0))
+		var completion_start := Time.get_ticks_usec()
+		if not completion_slice.is_empty():
+			_process_async_completions()
+		_finish_publication_slice(PUBLICATION_LANE_NEAR_GAMEPLAY, completion_slice, Time.get_ticks_usec() - completion_start)
+		if prof:
+			prof.end_section("async_complete")
+		phase_times[1] = float(Time.get_ticks_usec() - phase_start)
+
+		if _near_tier_visible or _static_streaming_enabled:
+			# Phase 2: instantiation
+			# During startup / burst drain: 25ms budget.
+			# Post-startup normal: 4ms — prevents 48%-of-frame death spiral.
+			phase_start = Time.get_ticks_usec()
+			var instantiation_budget_ms: float
+			if _startup_phase or _near_burst_drain or tracking_frozen:
+				instantiation_budget_ms = 25.0
+			else:
+				instantiation_budget_ms = SC.POST_STARTUP_INSTANTIATION_BUDGET_MS
+			var camera_fwd := -_camera.global_transform.basis.z if _camera else Vector3.FORWARD
+			var allow_collision_finalize := _unloading_cells.is_empty() \
+				and _pending_rs_hide_cells.is_empty() \
+				and _pending_rs_cleanup_cells.is_empty()
+			var payload_publish_budget_us := int(SC.STATIC_PREPARE_BUDGET_MS * 1000.0)
+			var payload_slice := _claim_publication_slice(PUBLICATION_LANE_STATIC_VISUALS, payload_publish_budget_us)
+			var payload_publish_start_us := Time.get_ticks_usec()
+			var payload_published := 0
+			if not payload_slice.is_empty():
+				payload_published = _process_payload_publish_steps(int(payload_slice.get("granted_usec", 0)))
+			var payload_publish_us := Time.get_ticks_usec() - payload_publish_start_us
+			_finish_publication_slice(PUBLICATION_LANE_STATIC_VISUALS, payload_slice, payload_publish_us)
+			# Phase 2 stutter diag — bracket the instantiate call into the profiler
+			# so the slow-frame autopsy can attribute spike time. Plan §11.4.
+			var near_requested_usec := int(maxf(0.1, instantiation_budget_ms - (float(payload_publish_us) / 1000.0)) * 1000.0)
+			var instantiated := 0
+			if _near_tier_visible:
+				if prof: prof.begin_section("instantiate")
+				var near_slice := _claim_publication_slice(PUBLICATION_LANE_NEAR_GAMEPLAY, near_requested_usec)
+				var near_start := Time.get_ticks_usec()
+				if not near_slice.is_empty():
+					instantiated = _cell_manager.process_async_instantiation(
+						float(int(near_slice.get("granted_usec", 0))) / 1000.0,
+						_camera_position,
+						camera_fwd,
+						allow_collision_finalize,
+					)
+				_finish_publication_slice(PUBLICATION_LANE_NEAR_GAMEPLAY, near_slice, Time.get_ticks_usec() - near_start)
+				if prof: prof.end_section("instantiate")
+			phase_times[2] = float(Time.get_ticks_usec() - phase_start)
+			if payload_published > 0 and debug_enabled:
+				_debug("Published %d payload items this frame" % payload_published)
+			if instantiated > 0 and debug_enabled:
+				_debug("Instantiated %d objects this frame" % instantiated)
+
+			# Burst drain: clear when queue is empty
+			if _near_tier_visible and _near_burst_drain and _cell_manager:
+				if _cell_manager.get_instantiation_queue_size() == 0 and _async_requests.is_empty():
+					_near_burst_drain = false
+					Log.info("streaming", "NEAR burst drain complete")
+
+			# Post-startup queue drain telemetry
+			if not _startup_phase and not _queue_drain_logged and _post_startup_start_ms > 0 and _cell_manager:
+				var q := _cell_manager.get_instantiation_queue_size()
+				if q == 0:
+					var elapsed_ms := Time.get_ticks_msec() - _post_startup_start_ms
+					Log.info("streaming", "Post-startup queue drained in %.1fs (%d frames since loading screen)" % [
+						elapsed_ms / 1000.0, Engine.get_frames_drawn()])
+					_queue_drain_logged = true
+
+			# Skip remaining phases if budget already exceeded
+			# S.1: Phase 3 (MID→NEAR promote) / 3a (collision enable) / 3b
+			# (deferred NEAR instantiate) deleted — per-cell tier FSM in S.7+
+			# replaces the per-actor promotion dance. phase_times[3..5] stay
+			# zero; the HUD still reads the slots but values will be 0.
+			var total_elapsed_usec := Time.get_ticks_usec() - frame_start_usec
+			if total_elapsed_usec < budget_usec:
+				# Phase 4: Queue new cell requests (non-blocking).
+				# Fix B (streaming_stutter_2026_04_25 plan §11.4) — bracket so the
+				# autopsy attributes the suspected 800 ms spike. The normal source
+				# path now queues world manifests; legacy exterior requests still
+				# fall back to source cells when no manifest provider is available.
+				phase_start = Time.get_ticks_usec()
+				if prof: prof.begin_section("pending_loads_async")
+				if not tracking_frozen:
+					_process_pending_loads_async()
+				if prof: prof.end_section("pending_loads_async")
+				phase_times[6] = float(Time.get_ticks_usec() - phase_start)
+
+	else:
+		# Fallback: synchronous loading (blocks frame)
+		if _near_tier_visible and not tracking_frozen:
+			if prof: prof.begin_section("pending_loads_sync")
+			_process_pending_loads_sync(delta)
+			if prof: prof.end_section("pending_loads_sync")
+
+
+	# Store per-phase timing for external consumers (benchmark, profiler)
+	phase_times[7] = cell_update_usec
+	_last_phase_times = phase_times
+	_last_impostor_update_usec = impostor_update_usec
+	_last_hlod_merger_usec = hlod_merger_usec
+	_last_distant_light_usec = distant_light_usec
+
+	# Frame budget telemetry — detect when combined streaming work exceeds budget
+	var total_ms := float(Time.get_ticks_usec() - frame_start_usec) / 1000.0
+	_last_frame_total_ms = total_ms
+	if total_ms > frame_budget_ms * 1.5:
+		_frame_overrun_count += 1
+		# Log with per-phase breakdown (at most once per 60 frames)
+		if Engine.get_frames_drawn() - _last_overrun_log_frame > 60:
+			Log.warn("streaming", "Frame overrun: %.1fms [cellupd:%.1f unload:%.1f async:%.1f inst:%.1f promo:%.1f coll:%.1f defer:%.1f queue:%.1f static:%.1f imp:%.1f hlod:%.1f light:%.1f] (budget:%.1fms, overruns:%d)" % [
+				total_ms,
+				cell_update_usec / 1000.0,
+				phase_times[0] / 1000.0, phase_times[1] / 1000.0, phase_times[2] / 1000.0,
+				phase_times[3] / 1000.0, phase_times[4] / 1000.0, phase_times[5] / 1000.0,
+				phase_times[6] / 1000.0,
+				phase_times[8] / 1000.0,
+				impostor_update_usec / 1000.0,
+				hlod_merger_usec / 1000.0,
+				distant_light_usec / 1000.0,
+				frame_budget_ms, _frame_overrun_count])
+			_last_overrun_log_frame = Engine.get_frames_drawn()
+
+	# Phase 2 stutter diag — close the per-frame profiler window and
+	# auto-dump a sorted per-section breakdown for any frame > 16 ms.
+	# Dropped from 100 ms (2026-04-26) so the autopsy fires on the routine
+	# 12-25 ms overruns visible during walking traversal, not just catastrophic
+	# stalls. 16 ms = one 60 fps frame. Plan §11.4.
+	if prof:
+		prof.end_frame()
+		prof.dump_overrun_breakdown(16.0, "stream_proc")
+
+	# Post-startup audit — auto-logs every 5s for 60s so FPS/queue/phase breakdown
+	# is captured during the slow loading period without requiring user interaction.
+	# Key output: proc_ms vs frame_ms tells GPU vs GDScript; inst vs frame tells budget violation.
+	if not _startup_phase and _post_startup_start_ms > 0:
+		_post_startup_audit_accum += delta
+		if _post_startup_audit_accum >= 5.0:
+			_post_startup_audit_accum = 0.0
+			var elapsed_s := float(Time.get_ticks_msec() - _post_startup_start_ms) / 1000.0
+			if elapsed_s < 60.0 and _cell_manager:
+				var q := _cell_manager.get_instantiation_queue_size()
+				var fps := Engine.get_frames_per_second()
+				var proc_ms := Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0
+				var burst := _cell_manager.is_burst_loading()
+				var pt := _last_phase_times
+				var n := pt.size()
+				Log.info("streaming", "[audit +%.0fs] fps=%d proc=%.1fms frame=%.1fms queue=%d burst=%s | unload=%.1f async=%.1f inst=%.1f promo=%.1f coll=%.1f defer=%.1f static=%.1f imp=%.1f hlod=%.1f light=%.1f (ms)" % [
+					elapsed_s, fps, proc_ms, total_ms, q, "Y" if burst else "N",
+					pt[0]/1000.0 if n > 0 else 0.0,
+					pt[1]/1000.0 if n > 1 else 0.0,
+					pt[2]/1000.0 if n > 2 else 0.0,
+					pt[3]/1000.0 if n > 3 else 0.0,
+					pt[4]/1000.0 if n > 4 else 0.0,
+					pt[5]/1000.0 if n > 5 else 0.0,
+					pt[8]/1000.0 if n > 8 else 0.0,
+					_last_impostor_update_usec / 1000.0,
+					_last_hlod_merger_usec / 1000.0,
+					_last_distant_light_usec / 1000.0
+				])
+				if _object_paging_requested_visible() and _hlod_merger:
+					var hs: Dictionary = get_hlod_stats()
+					Log.info("streaming", "[audit HLOD +%.0fs] visual=%d desired=%d queued=%d preparing=%d pending=%d negative=%d warmup=%d warmup_async=%d warmup_pending=%d warmup_failed=%d merged=%d surfaces=%d refs=%d" % [
+						elapsed_s,
+						int(hs.get("active_visual_chunks", 0)),
+						int(hs.get("desired_chunks", 0)),
+						int(hs.get("merge_queue_size", 0)),
+						int(hs.get("preparing_chunks", 0)),
+						int(hs.get("pending_merges", 0)),
+						int(hs.get("negative_chunks", 0)),
+						int(hs.get("warmup_queue_size", 0)),
+						int(hs.get("warmup_async_requests", 0)),
+						int(hs.get("warmup_pending_async", 0)),
+						int(hs.get("warmup_failed", 0)),
+						int(hs.get("total_merges_completed", 0)),
+						int(hs.get("total_chunk_surfaces", 0)),
+						int(hs.get("active_covered_refs", 0)),
+					])
+
+
+## Returns true when any cell-lifecycle path still occupies the grid: live,
+## currently loading, in unload limbo, mid-hide, or with pending RS free work.
+## Load gates use this so a fresh load can't publish under a grid whose old
+## buckets are still scheduled for hide/free — auditor2 finding 2026-05-01.
+func _is_cell_occupied(grid: Vector2i) -> bool:
+	if grid in _loaded_cells:
+		return true
+	if grid in _loading_cells:
+		return true
+	if grid in _pending_unload_set:
+		return true
+	if grid in _unloading_cells:
+		return true
+	if grid in _pending_rs_hide_set:
+		return true
+	if grid in _pending_rs_cleanup_set:
+		return true
+	return false
+
+
+## Update which cells should be loaded based on camera position
+func _update_loaded_cells() -> void:
+	# Freeze scene-cell streaming only when NEAR gameplay is off AND static
+	# streaming policy is parked. Render-visibility toggles must NOT gate this
+	# scheduler — hidden tiers keep streaming so benchmark toggles stay pure
+	# render ablations.
+	if not _near_tier_visible and not _static_streaming_enabled:
+		return
+	var ulc_start := Time.get_ticks_usec()
+
+	# Calculate which cells should be loaded
+	var cells_to_load := _get_cells_in_radius(_camera_cell, load_radius_cells)
+	var t_grid := Time.get_ticks_usec()
+
+	# Reclaim cells that re-entered radius while still being unloaded.
+	# State-reversal window closes here: move the async request back out of
+	# `_unloading_request_ids` limbo into `_async_requests` so pending queue
+	# entries resume draining into the (now-active) cell_node.
+	#
+	# Reclaim is valid ONLY before destructive cleanup begins. Once the
+	# budgeted unloader has freed any child or hidden any RS instance for the
+	# grid, `_unloading_frozen[grid]` is true and reclaim is rejected — the
+	# cell drains to completion and gets a fresh load on the next pass.
+	# Without this gate, a reclaimed cell would lose its static RS instances
+	# (still queued in `_pending_rs_hide_cells` / `_pending_rs_cleanup_cells`)
+	# a few frames after "rescue", which the user perceives as parts of the
+	# rescued cell disappearing. (Auditor2 finding, chat msg 40, 2026-05-01.)
+	var reclaimed: Array[Vector2i] = []
+	for grid: Vector2i in _unloading_cells:
+		if grid in cells_to_load:
+			if _unloading_frozen.get(grid, false):
+				_record_lifecycle_event("reclaim_rejected", grid, "reason=frozen")
+				continue
+			var cell_ref: Variant = _unloading_cells[grid]
+			if not is_instance_valid(cell_ref):
+				continue
+			var cell_node: Node3D = cell_ref as Node3D
+			if cell_node.get_child_count() > 0 or grid in _unloading_request_ids:
+				# Cell_node never left _world_container (see _unload_cell note);
+				# re-activate by flipping visible. No reparent.
+				cell_node.visible = _near_tier_visible
+				_set_near_gameplay_active(cell_node, _near_tier_visible)
+				_loaded_cells[grid] = cell_node
+				reclaimed.append(grid)
+				# Restore the async request from limbo so in-flight queue
+				# entries continue landing in the now-live cell.
+				if grid in _unloading_request_ids:
+					_async_requests[grid] = _unloading_request_ids[grid]
+					if _cell_manager != null and _cell_manager.has_method("resume_request_publish"):
+						_cell_manager.resume_request_publish(_unloading_request_ids[grid])
+					_unloading_request_ids.erase(grid)
+				# Drop the grid from the pending RS hide/cleanup queues so the
+				# budgeted unloader doesn't fire `hide_cell_instances_budgeted`
+				# / `remove_cell_instances` on a now-live cell. Frozen gate above
+				# guarantees no hide/cleanup work has run yet.
+				if grid in _pending_rs_hide_set:
+					var idx := _pending_rs_hide_cells.find(grid)
+					if idx >= 0:
+						_pending_rs_hide_cells[idx] = _pending_rs_hide_cells.back()
+						_pending_rs_hide_cells.pop_back()
+					_pending_rs_hide_set.erase(grid)
+				var cleanup_idx := _pending_rs_cleanup_cells.find(grid)
+				if cleanup_idx >= 0:
+					_pending_rs_cleanup_cells[cleanup_idx] = _pending_rs_cleanup_cells.back()
+					_pending_rs_cleanup_cells.pop_back()
+				_pending_rs_cleanup_set.erase(grid)
+				_unloading_destructive_holds.erase(grid)
+				_record_lifecycle_event("reclaim_cell", grid, "children=%d request_restored=%s" % [
+					cell_node.get_child_count(),
+					"Y" if grid in _async_requests else "N",
+				])
+				_debug("Reclaimed unloading cell %s (%d children remaining, request restored)" % [grid, cell_node.get_child_count()])
+	for grid in reclaimed:
+		_unloading_cells.erase(grid)
+		_unloading_hold_frames.erase(grid)
+		_unloading_frozen.erase(grid)
+	var t_reclaim := Time.get_ticks_usec()
+
+	for grid: Vector2i in cells_to_load:
+		_cancel_pending_unload_cell(grid)
+	_queue_near_gameplay_upgrades(cells_to_load)
+
+	# Unload cells that are too far, using the same cell-bounds distance as
+	# load selection plus hysteresis so MID corners do not linger as a square ring.
+	var cells_to_unload: Array[Vector2i] = []
+	var unload_hysteresis := SC.HYSTERESIS_MID if _static_streaming_enabled else SC.HYSTERESIS_NEAR
+	var unload_distance := _effective_scene_load_distance_cap() + unload_hysteresis
+	var unload_threshold_sq := unload_distance * unload_distance
+
+	for grid: Vector2i in _loaded_cells:
+		if grid not in cells_to_load:
+			# Only unload if beyond hysteresis distance
+			if _cell_bounds_distance_squared_to_position(grid, _camera_position) > unload_threshold_sq:
+				cells_to_unload.append(grid)
+
+	# Phase 0 (2026-07-05): sweep never-completed loading cells too. Requests
+	# held open by the proximity-deferred interactive tail keep their grid out
+	# of _loaded_cells indefinitely (see CellManager.is_async_visual_playable);
+	# without this walk, their in-progress nodes and static buckets leak once
+	# the camera moves away — the permanent `loading=N` heartbeat residue.
+	for grid: Vector2i in _loading_cells:
+		if grid in _loaded_cells or grid in cells_to_load or grid in _unloading_cells:
+			continue
+		if _cell_bounds_distance_squared_to_position(grid, _camera_position) > unload_threshold_sq:
+			cells_to_unload.append(grid)
+
+	if debug_enabled and not cells_to_unload.is_empty():
+		_debug("Unloading %d cells" % cells_to_unload.size())
+
+	cells_to_unload.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
+		return _cell_bounds_distance_squared_to_position(a, _camera_position) < _cell_bounds_distance_squared_to_position(b, _camera_position)
+	)
+	for grid: Vector2i in cells_to_unload:
+		_queue_unload_cell(grid)
+	var t_unload := Time.get_ticks_usec()
+
+	# Queue new cells for loading (sorted farthest-first so pop_back gets nearest)
+	_pending_load_queue.clear()
+	_pending_load_set.clear()
+	for grid: Vector2i in cells_to_load:
+		if not _is_cell_occupied(grid):
+			_pending_load_queue.append(grid)
+			_pending_load_set[grid] = true
+
+	if debug_enabled and not _pending_load_queue.is_empty():
+		_debug("Queueing %d cells for loading (camera at cell %s)" % [_pending_load_queue.size(), _camera_cell])
+
+	# Sort farthest first — pop_back() returns nearest cell (O(1) instead of O(n))
+	_pending_load_queue.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
+		return _cell_distance_squared(_camera_cell, a) > _cell_distance_squared(_camera_cell, b)
+	)
+	var t_queue := Time.get_ticks_usec()
+
+	# Defer impostor update to next frame to avoid stacking with cell load/unload.
+	# During startup phase, defer further — impostor scan (11K+ cells) overwhelms
+	# the resource pipeline when combined with cell model loading. The startup_complete
+	# signal handler below triggers the impostor scan once initial cells are done.
+	if not _startup_phase and _impostor_streaming_enabled():
+		if _first_playable_reached:
+			_impostor_update_pending = true
+
+	# Scan for distant lights in a wider radius than loaded cells
+	# Uses impostor_radius since distant lights should be visible as far as impostors
+	if _distant_light_manager:
+		_distant_light_manager.scan_cells_around(_camera_cell, _distant_stream_radius_cells())
+	var t_lights := Time.get_ticks_usec()
+
+	# Lazy-spawn re-queue (statics_no_node3d follow-up 2026-04-19): walk the
+	# proximity-deferred list, re-queue any interactive refs that are now
+	# within INTERACTIVE_PROXIMITY_THRESHOLD_M of the camera. Throttled
+	# internally to ~4 checks/sec.
+	if _cell_manager:
+		_cell_manager.tick_proximity_deferred(_camera_position)
+	var t_proximity := Time.get_ticks_usec()
+
+	# Log breakdown if total exceeds 2ms
+	var total_ulc_ms := float(Time.get_ticks_usec() - ulc_start) / 1000.0
+	if total_ulc_ms > 2.0:
+		Log.info("streaming", "_update_loaded_cells: %.1fms [grid:%.1f reclaim:%.1f unload:%.1f queue:%.1f lights:%.1f prox:%.1f] cells_loaded=%d cells_unload_q=%d" % [
+			total_ulc_ms,
+			float(t_grid - ulc_start) / 1000.0,
+			float(t_reclaim - t_grid) / 1000.0,
+			float(t_unload - t_reclaim) / 1000.0,
+			float(t_queue - t_unload) / 1000.0,
+			float(t_lights - t_queue) / 1000.0,
+			float(t_proximity - t_lights) / 1000.0,
+			_loaded_cells.size(),
+			cells_to_unload.size()])
+
+
+## Get all cells within a radius of the center cell
+func _get_cells_in_radius(center: Vector2i, radius: int) -> Array[Vector2i]:
+	var cells: Array[Vector2i] = []
+	var effective_radius := mini(radius, _effective_scene_load_radius_cells())
+	var effective_max_load_distance := _effective_scene_load_distance_cap()
+	var max_dist_sq := effective_max_load_distance * effective_max_load_distance
+	
+	for dy in range(-effective_radius, effective_radius + 1):
+		for dx in range(-effective_radius, effective_radius + 1):
+			var grid := Vector2i(center.x + dx, center.y + dy)
+			
+			var dist_sq := _cell_bounds_distance_squared_to_position(grid, _camera_position)
+			if dist_sq <= max_dist_sq:
+				cells.append(grid)
+	
+	# Sort by distance (closest first)
+	cells.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
+		return _cell_bounds_distance_squared_to_position(a, _camera_position) < _cell_bounds_distance_squared_to_position(b, _camera_position)
+	)
+	
+	return cells
+
+
+func _cell_bounds_distance_squared_to_position(grid: Vector2i, position: Vector3) -> float:
+	var cell_size := _cell_size_meters()
+	var origin := DU.cell_to_world_origin(grid)
+	var min_x := origin.x
+	var max_x := origin.x + cell_size
+	var min_z := origin.z - cell_size
+	var max_z := origin.z
+	var dx := 0.0
+	if position.x < min_x:
+		dx = min_x - position.x
+	elif position.x > max_x:
+		dx = position.x - max_x
+	var dz := 0.0
+	if position.z < min_z:
+		dz = min_z - position.z
+	elif position.z > max_z:
+		dz = position.z - max_z
+	return dx * dx + dz * dz
+
+#endregion
+
+
+#region Cell Loading
+
+## Request async loading of a cell (non-blocking)
+## Returns true if request was submitted, false if already loading or at capacity
+func _request_cell_async(grid: Vector2i) -> bool:
+	if _is_cell_occupied(grid):
+		return false
+
+	# Submit async request
+	var profile: Variant = _load_profile_for_cell(grid)
+	var request_id := _cell_manager.request_world_cell_async(grid, profile) if _cell_manager.has_method("request_world_cell_async") else _cell_manager.request_exterior_cell_async(grid.x, grid.y, profile)
+
+	if request_id < 0:
+		# Async not available (no background processor) or at capacity
+		# Don't fall back to sync - let the cell stay in queue for next frame
+		# This prevents frame stalls from sync loading when async is just busy
+		if debug_enabled:
+			_debug("Async request rejected for cell %s (will retry)" % grid)
+		return false
+
+	# Track the request
+	_async_requests[grid] = request_id
+	_loading_cells[grid] = true
+	_loaded_cell_has_gameplay[grid] = bool(profile.get("include_gameplay"))
+
+	# Get the in-progress cell node and add it to scene immediately
+	# Objects will appear progressively as they are instantiated
+	var cell_node := _cell_manager.get_async_cell_node(request_id)
+	if cell_node:
+		cell_node.visible = _near_tier_visible
+		_set_near_gameplay_active(cell_node, _near_tier_visible)
+		_world_container.add_child(cell_node)
+		_loaded_cells[grid] = cell_node
+
+	cell_loading.emit(grid)
+	_debug("Async request %d submitted for cell %s" % [request_id, grid])
+	return true
+
+
+func _request_cell_gameplay_upgrade_async(grid: Vector2i) -> bool:
+	if grid in _gameplay_upgrade_requests:
+		return false
+	if bool(_pending_gameplay_upgrade_merge_cells.get(grid, false)):
+		return false
+	if grid not in _loaded_cells:
+		return false
+	if grid in _async_requests:
+		return false
+	var profile: Variant = CellManagerScript.LoadProfile.exterior_gameplay_only()
+	var request_id := _cell_manager.request_world_cell_async(grid, profile) if _cell_manager.has_method("request_world_cell_async") else _cell_manager.request_exterior_cell_async(grid.x, grid.y, profile)
+	if request_id < 0:
+		return false
+	_async_requests[grid] = request_id
+	_loading_cells[grid] = true
+	_gameplay_upgrade_requests[grid] = request_id
+	var cell_node := _cell_manager.get_async_cell_node(request_id)
+	if cell_node:
+		cell_node.visible = _near_tier_visible
+		_set_near_gameplay_active(cell_node, _near_tier_visible)
+	return true
+
+
+func _queue_near_gameplay_upgrades(cells_to_load: Array[Vector2i]) -> void:
+	if not _near_tier_visible:
+		return
+	for grid: Vector2i in cells_to_load:
+		if not _is_near_scene_cell(grid):
+			continue
+		if grid not in _loaded_cells:
+			continue
+		if bool(_loaded_cell_has_gameplay.get(grid, true)):
+			continue
+		_request_cell_gameplay_upgrade_async(grid)
+
+
+## Load a cell synchronously (blocking - used as fallback)
+func _load_cell_sync(grid: Vector2i) -> void:
+	if grid in _loaded_cells or grid in _loading_cells:
+		return
+
+	cell_loading.emit(grid)
+	_loading_cells[grid] = true
+
+	var cell_node := _cell_manager.load_exterior_cell(grid.x, grid.y)
+
+	if cell_node:
+		_configure_cell_visibility(cell_node)
+		cell_node.visible = _near_tier_visible
+		_set_near_gameplay_active(cell_node, _near_tier_visible)
+		_world_container.add_child(cell_node)
+		_loaded_cells[grid] = cell_node
+
+		# I.6 Phase 2 — re-home any orphans whose origin grid matches.
+		_rehome_persistent_nodes_for_cell(cell_node, grid)
+
+		_loaded_cell_has_gameplay[grid] = true
+		var object_count := _count_mesh_instances(cell_node)
+		_stats["loaded_cells"] = _loaded_cells.size()
+		_stats["total_objects"] += object_count
+
+		_log_pipeline_compile_for_cell_load(grid, object_count, "sync")
+		cell_loaded.emit(grid, object_count)
+		if _cell_preloader != null:
+			_cell_preloader.notify_activated(grid)
+		_debug("Sync loaded cell %s with %d objects" % [grid, object_count])
+	else:
+		_debug("Failed to load cell %s" % [grid])
+
+	_loading_cells.erase(grid)
+	stats_updated.emit(_stats)
+
+
+## Unload a cell at the given grid position (budgeted — gradual over multiple frames)
+##
+## State-reversal pattern: the cell_node enters unload-container LIMBO, where
+## it remains fully valid (queue entries keep draining into it, reclaim can
+## pull it back to `_loaded_cells` without any state rebuild). The async
+## request is NOT cancelled here — canceling the queue during unload would
+## discard 100-300 pending refs per cell and leave reclaim with a half-
+## populated cell_node. Instead the request_id parks in `_unloading_request_ids`
+## until the cell truly dies in `_process_budgeted_unloading`, where
+## `finalize_unloaded_cell` does the soft cleanup.
+func _queue_unload_cell(grid: Vector2i) -> void:
+	if grid in _pending_unload_set or grid in _unloading_cells:
+		return
+	# Loading-only grids are admissible: never-completed cells (requests held
+	# open by the proximity-deferred tail) must still unload when the camera
+	# leaves range — Phase 0 leak fix, 2026-07-05.
+	if grid not in _loaded_cells and grid not in _loading_cells:
+		return
+	_pending_unload_queue.append(grid)
+	_pending_unload_set[grid] = true
+
+
+func _cancel_pending_unload_cell(grid: Vector2i) -> void:
+	if grid not in _pending_unload_set:
+		return
+	var idx := _pending_unload_queue.find(grid)
+	if idx >= 0:
+		_pending_unload_queue[idx] = _pending_unload_queue.back()
+		_pending_unload_queue.pop_back()
+	_pending_unload_set.erase(grid)
+
+
+func _process_pending_unload_starts(start_time_usec: int, budget_usec: float) -> int:
+	var started := 0
+	while not _pending_unload_queue.is_empty() and started < SC.UNLOAD_STARTS_PER_FRAME:
+		if started > 0 and float(Time.get_ticks_usec() - start_time_usec) >= budget_usec:
+			break
+		var grid: Vector2i = _pending_unload_queue.pop_back()
+		_pending_unload_set.erase(grid)
+		if (grid not in _loaded_cells and grid not in _loading_cells) or grid in _unloading_cells:
+			continue
+		_unload_cell(grid)
+		started += 1
+	return started
+
+
+func _unload_cell(grid: Vector2i) -> void:
+	# NOTE 2026-04-20: prior `CrashBreadcrumb.write("unload_cell_begin/end", ...)`
+	# calls at entry/exit were each doing FileAccess open/write/close. Per-cell
+	# overhead compounded to 4-8ms/cell on slower disks and masked the real
+	# per-step cost (0.9-2.7ms). Removed — 2 months of crashes never pointed
+	# at `unload_cell_*`, breadcrumbs served their diagnostic purpose. The
+	# budgeted unloader still writes `bu::cell_qfree_*` breadcrumbs which
+	# cover the destructor path if a crash moves there.
+	# Phase 2 stutter diag — bracket each sub-step into the StreamingProfiler so
+	# the slow-frame autopsy (§11.4) can attribute spike time to specific
+	# sub-steps, not just the cell_update parent. The existing text-only
+	# breakdown log at the end of this function stays as a redundant signal.
+	var prof: StreamingProfilerScript = _profiler
+	if prof: prof.begin_section("unload_cell:total")
+	var t0 := Time.get_ticks_usec()
+	# Park any pending async request for this cell in the limbo registry.
+	# Do NOT call cell_manager.cancel_async_request — that filters the queue
+	# and frees the cell_node, which defeats state reversal on reclaim.
+	if grid in _async_requests:
+		var request_id: int = _async_requests[grid]
+		_async_requests.erase(grid)
+		_loading_cells.erase(grid)
+		_unloading_request_ids[grid] = request_id
+		# Win 2 — drain any in-flight collision worker + free the server-direct
+		# body NOW. The unload-container limbo can hold the request for many
+		# frames; without this, a worker that completes mid-limbo would insert
+		# a body into the broadphase that gets immediately freed by
+		# finalize_unloaded_cell. Also handles the rarer case where the body
+		# was already finalized before unload — better to free it at unload-
+		# start (matches old StaticBody3D-as-cell-node-child semantics, where
+		# physics died with the cell visibility change).
+		if _cell_manager != null:
+			if _cell_manager.has_method("pause_request_publish"):
+				_cell_manager.pause_request_publish(request_id)
+			_cell_manager.cancel_collision_build_for_request(request_id)
+		_record_lifecycle_event("park_request", grid, "request=%d" % request_id)
+		_debug("Parked async request %d for cell %s (state-reversal limbo)" % [request_id, grid])
+
+	if grid not in _loaded_cells:
+		# Never-completed cell: its request was just parked above, but the
+		# in-progress cell node was added to the tree at request start and
+		# would leak here (Phase 0 fix, 2026-07-05 — the permanent `loading=N`
+		# residue). Route the node through the same limbo + budgeted-unload
+		# path as a completed cell; finalize_unloaded_cell picks the parked
+		# request up from _unloading_request_ids when the drain finishes.
+		var pending_node: Node3D = null
+		if grid in _unloading_request_ids and _cell_manager != null \
+				and _cell_manager.has_method("get_async_cell_node"):
+			pending_node = _cell_manager.get_async_cell_node(_unloading_request_ids[grid])
+		if pending_node == null or not is_instance_valid(pending_node) or not pending_node.is_inside_tree():
+			if prof: prof.end_section("unload_cell:total")
+			return
+		if _static_renderer:
+			_pending_rs_hide_cells.append(grid)
+			_pending_rs_hide_set[grid] = true
+			_pending_rs_cleanup_cells.append(grid)
+			_pending_rs_cleanup_set[grid] = true
+		_evacuate_persistent_nodes_from_cell(pending_node, grid)
+		pending_node.visible = false
+		_unloading_cells[grid] = pending_node
+		_debug("Queued never-completed cell %s for budgeted unloading (%d children)" % [grid, pending_node.get_child_count()])
+		if _cell_preloader != null:
+			_cell_preloader.notify_unloaded(grid)
+		if prof: prof.end_section("unload_cell:total")
+		return
+
+	var cell_node: Node3D = _loaded_cells[grid]
+	_loaded_cells.erase(grid)
+	_loaded_cell_has_gameplay.erase(grid)
+	_gameplay_upgrade_requests.erase(grid)
+	_stats["loaded_cells"] = _loaded_cells.size()
+	var t_req := Time.get_ticks_usec()
+
+	# S.1: promoted-object tracking deleted. MID re-enable in S.7 will hide
+	# MID RS instances via per-cell tier transition (request_cell_tier), not
+	# per-actor promote clear.
+
+	# Queue MID-tier RS instances for BUDGETED hiding across frames.
+	# Previously this called hide_cell_instances() synchronously (1000+ RS calls, 10-32ms).
+	# Now we hide progressively via hide_cell_instances_budgeted() in _process_budgeted_unloading().
+	if _static_renderer:
+		_pending_rs_hide_cells.append(grid)
+		_pending_rs_hide_set[grid] = true
+		_pending_rs_cleanup_cells.append(grid)
+		_pending_rs_cleanup_set[grid] = true
+
+	# I.6 — evacuate any persistent nodes (held items, etc.) from this
+	# cell BEFORE putting it in the unloading set. Otherwise the
+	# budgeted unload pass would free the held body along with the
+	# rest of the cell. Per `docs/INTERACTION_SYSTEM.md` §10.
+	if prof: prof.begin_section("unload_cell:evac_persistents")
+	_evacuate_persistent_nodes_from_cell(cell_node, grid)
+	if prof: prof.end_section("unload_cell:evac_persistents")
+	var t_evac := Time.get_ticks_usec()
+
+	# No reparent. Cell_node stays in _world_container; hide via visible=false
+	# (propagates to subtree rendering). The budgeted unloader walks
+	# `_unloading_cells` by grid key and frees children in place — tree
+	# parent is irrelevant to that loop. process_mode stays INHERIT so
+	# in-flight physics bodies / scripts complete cleanly on their own
+	# frame — matching original behavior, which never touched process_mode.
+	# Phase 2 stutter diag — bracket separately to catch the suspected
+	# NOTIFICATION_VISIBILITY_CHANGED propagation cost on large subtrees.
+	if prof: prof.begin_section("unload_cell:visibility_propagate")
+	cell_node.visible = false
+	if prof: prof.end_section("unload_cell:visibility_propagate")
+	_unloading_cells[grid] = cell_node
+	if debug_unload_limbo_hold_frames > 0:
+		_unloading_hold_frames[grid] = debug_unload_limbo_hold_frames
+	if debug_unload_destructive_hold_frames > 0:
+		_unloading_destructive_holds[grid] = debug_unload_destructive_hold_frames
+	var t_hide := Time.get_ticks_usec()
+
+	_debug("Queued cell %s for budgeted unloading (%d children)" % [grid, cell_node.get_child_count()])
+	if prof: prof.begin_section("unload_cell:emit_unloaded")
+	cell_unloaded.emit(grid)
+	if prof: prof.end_section("unload_cell:emit_unloaded")
+	# Phase 2 stutter diag — explicit bracket: notify_unloaded → _drain_and_erase
+	# → _drain_entry → wait_for_task_completion. Suspected blocking call when
+	# a cell with many in-flight preload tasks unloads mid-transition.
+	if prof: prof.begin_section("unload_cell:preloader_drain")
+	if _cell_preloader != null:
+		_cell_preloader.notify_unloaded(grid)
+	if prof: prof.end_section("unload_cell:preloader_drain")
+	var t_emit1 := Time.get_ticks_usec()
+	if prof: prof.begin_section("unload_cell:emit_stats")
+	stats_updated.emit(_stats)
+	if prof: prof.end_section("unload_cell:emit_stats")
+	var t_emit2 := Time.get_ticks_usec()
+	var total_ms := float(t_emit2 - t0) / 1000.0
+	# Always log — threshold gating was masking the 8ms/call slice (sub-3ms per sub-step).
+	Log.info("streaming", "[_unload_cell %s] %.2fms [req:%.2f evac:%.2f hide:%.2f emit_unload:%.2f emit_stats:%.2f] children=%d" % [
+		grid, total_ms,
+		float(t_req - t0) / 1000.0,
+		float(t_evac - t_req) / 1000.0,
+		float(t_hide - t_evac) / 1000.0,
+		float(t_emit1 - t_hide) / 1000.0,
+		float(t_emit2 - t_emit1) / 1000.0,
+		cell_node.get_child_count()])
+	if prof: prof.end_section("unload_cell:total")
+
+
+## Process gradual unloading of departing cells within time budget
+## Removes children in batches to avoid frame spikes from mass queue_free()
+func _process_budgeted_unloading(deadline_usec: int = 0) -> void:
+	var start_time := Time.get_ticks_usec()
+	var budget_usec := SC.UNLOAD_BUDGET_MS * 1000.0
+	if deadline_usec > 0:
+		budget_usec = minf(budget_usec, maxf(0.0, float(deadline_usec - start_time)))
+	if budget_usec <= 0.0:
+		return
+	var total_freed := 0
+
+	# Verification-only: tick the per-grid destructive hold once per frame.
+	# When the hold is > 0 for a grid, both the queue_free pass and the RS
+	# hide pass below skip that grid, keeping the cell in pure limbo so the
+	# reclaim window stays open. Default-empty in production.
+	if not _unloading_destructive_holds.is_empty():
+		for grid: Vector2i in _unloading_destructive_holds.keys():
+			var rem := int(_unloading_destructive_holds[grid])
+			if rem > 0:
+				_unloading_destructive_holds[grid] = rem - 1
+
+	var unload_starts := _process_pending_unload_starts(start_time, budget_usec)
+	if unload_starts > 0 and float(Time.get_ticks_usec() - start_time) >= budget_usec:
+		return
+
+	# Process each unloading cell
+	var completed_grids: Array[Vector2i] = []
+
+	for grid: Vector2i in _unloading_cells:
+		var cell_ref: Variant = _unloading_cells[grid]
+		if not is_instance_valid(cell_ref):
+			# Cell_node was freed externally — finalize the parked request
+			# so its queue entries don't leak past the cell's death.
+			if grid in _unloading_request_ids:
+				_cell_manager.finalize_unloaded_cell(_unloading_request_ids[grid])
+				_unloading_request_ids.erase(grid)
+			completed_grids.append(grid)
+			continue
+		var cell_node: Node3D = cell_ref as Node3D
+
+		# Verification hook: skip destruction for this grid while its hold
+		# counter is positive. Reclaim can still succeed during this window.
+		if _unloading_destructive_holds.get(grid, 0) > 0:
+			continue
+
+		var children_count := cell_node.get_child_count()
+		if children_count == 0:
+			var hold_frames := int(_unloading_hold_frames.get(grid, 0))
+			if hold_frames > 0:
+				_unloading_hold_frames[grid] = hold_frames - 1
+				continue
+			# Cell is empty, free the container. State-reversal window closes
+			# here — cell is truly dying, finalize the parked async request.
+			CrashBreadcrumb.write("bu::cell_qfree_empty", str(grid))
+			if grid in _unloading_request_ids:
+				_record_lifecycle_event("finalize_unloaded", grid, "request=%d reason=empty" % _unloading_request_ids[grid])
+				_cell_manager.finalize_unloaded_cell(_unloading_request_ids[grid])
+				_unloading_request_ids.erase(grid)
+			cell_node.queue_free()
+			completed_grids.append(grid)
+			continue
+
+		# Queue up to UNLOAD_BATCH_SIZE children from this cell for deletion.
+		# Avoid remove_child() here: it synchronously runs tree-exit/physics
+		# notifications in the streaming tick and has crashed inside Terrain3D
+		# during cell transitions. queue_free() detaches at Godot's safe point.
+		var batch := 0
+		var child_index := cell_node.get_child_count() - 1
+		while batch < SC.UNLOAD_BATCH_SIZE and child_index >= 0:
+			# Check time budget
+			if Time.get_ticks_usec() - start_time >= budget_usec:
+				# Out of time — stop and continue next frame
+				if debug_enabled and total_freed > 0:
+					_debug("Unload budget hit: freed %d objects, %d cells still unloading" % [total_freed, _unloading_cells.size() - completed_grids.size()])
+				# Clean up completed cells before returning
+				for g in completed_grids:
+					_unloading_cells.erase(g)
+					_unloading_hold_frames.erase(g)
+					_unloading_frozen.erase(g)
+					_unloading_destructive_holds.erase(g)
+				return
+
+			# NOTE 2026-04-20: prior `CrashBreadcrumb.write("unload_child", ...)`
+			# fired per-child — with UNLOAD_BATCH_SIZE=30 it was the dominant
+			# cost inside `_process_budgeted_unloading` (each write is a
+			# FileAccess.open+store+close cycle). Removed; crashes never
+			# landed on `unload_child`, the cell-level `bu::cell_qfree_*`
+			# breadcrumbs still cover the destructor path.
+			var child := cell_node.get_child(child_index)
+			child_index -= 1
+			if child == null or not is_instance_valid(child) or child.is_queued_for_deletion():
+				continue
+			# Freeze the unload state-reversal window NOW — about to actually
+			# destroy a child. Flipping before this point (top of grid loop)
+			# would freeze cells that lost the time-budget race without any
+			# child being freed, shrinking the reclaim window. Idempotent.
+			if not _unloading_frozen.get(grid, false):
+				_unloading_frozen[grid] = true
+				_record_lifecycle_event("freeze_unload", grid, "reason=child_qfree children=%d" % cell_node.get_child_count())
+			child.queue_free()
+
+			batch += 1
+			total_freed += 1
+
+		# Check if cell is now empty — state-reversal window closes, finalize.
+		if cell_node.get_child_count() == 0:
+			CrashBreadcrumb.write("bu::cell_qfree_drained", str(grid))
+			if grid in _unloading_request_ids:
+				_record_lifecycle_event("finalize_unloaded", grid, "request=%d reason=drained" % _unloading_request_ids[grid])
+				_cell_manager.finalize_unloaded_cell(_unloading_request_ids[grid])
+				_unloading_request_ids.erase(grid)
+			cell_node.queue_free()
+			completed_grids.append(grid)
+
+	# Remove completed cells from tracking
+	for g in completed_grids:
+		_unloading_cells.erase(g)
+		_unloading_hold_frames.erase(g)
+		_unloading_frozen.erase(g)
+		_unloading_destructive_holds.erase(g)
+
+	if debug_enabled and total_freed > 0:
+		_debug("Budgeted unload: freed %d objects, %d cells remaining" % [total_freed, _unloading_cells.size()])
+
+	# Phase A: Budgeted RS instance HIDING — hide ~200 instances per frame
+	# Replaces the old synchronous hide_cell_instances() that caused 10-32ms spikes
+	if _static_renderer and not _pending_rs_hide_cells.is_empty():
+		var hide_budget := 200  # Max RS calls per frame for hiding
+		var total_hidden := 0
+		var completed_hide: Array[int] = []  # indices to remove (collected, then batch-removed)
+		for hi in _pending_rs_hide_cells.size():
+			if total_hidden >= hide_budget or Time.get_ticks_usec() - start_time >= budget_usec:
+				break
+			var hide_grid: Vector2i = _pending_rs_hide_cells[hi]
+			# Verification hook: skip RS hide for this grid while its hold
+			# counter is positive. The grid stays in `_pending_rs_hide_cells`
+			# (and `_pending_rs_hide_set`), so `_is_cell_occupied` still gates
+			# fresh loads correctly during the wait.
+			if _unloading_destructive_holds.get(hide_grid, 0) > 0:
+				continue
+			var result: Array = _static_renderer.hide_cell_instances_budgeted(hide_grid, hide_budget - total_hidden)
+			var hidden_this_call := result[0] as int
+			total_hidden += hidden_this_call
+			# Freeze only after actual hide work happened. A no-op call (cell
+			# had no instances registered, e.g. interior pocket profile) must
+			# not shrink the reclaim window. Idempotent.
+			if hidden_this_call > 0 and not _unloading_frozen.get(hide_grid, false):
+				_unloading_frozen[hide_grid] = true
+				_record_lifecycle_event("freeze_unload", hide_grid, "reason=rs_hide hidden=%d" % hidden_this_call)
+			if result[1] as bool:  # is_complete
+				completed_hide.append(hi)
+				_pending_rs_hide_set.erase(hide_grid)
+		# Remove completed cells back-to-front to preserve indices
+		for ri in range(completed_hide.size() - 1, -1, -1):
+			var idx: int = completed_hide[ri]
+			_pending_rs_hide_cells[idx] = _pending_rs_hide_cells.back()
+			_pending_rs_hide_cells.pop_back()
+		if total_hidden > 0 and debug_enabled:
+			_debug("Budgeted RS hide: %d instances, %d cells remaining" % [total_hidden, _pending_rs_hide_cells.size()])
+
+	# Phase B: Deferred RS instance cleanup (free_rid) within remaining budget
+	# Only process cells that have been fully hidden
+	if _static_renderer and not _pending_rs_cleanup_cells.is_empty():
+		var rs_freed := 0
+		var cleanup_cells := 0
+		while not _pending_rs_cleanup_cells.is_empty():
+			if cleanup_cells >= SC.RS_CLEANUP_CELLS_PER_FRAME or Time.get_ticks_usec() - start_time >= budget_usec:
+				break
+			var cleanup_grid: Vector2i = _pending_rs_cleanup_cells[-1]
+			# Don't free RIDs for cells still being hidden — O(1) set check
+			if cleanup_grid in _pending_rs_hide_set:
+				break
+			_pending_rs_cleanup_cells.resize(_pending_rs_cleanup_cells.size() - 1)
+			_pending_rs_cleanup_set.erase(cleanup_grid)
+			rs_freed += _static_renderer.remove_cell_instances(cleanup_grid)
+			cleanup_cells += 1
+		if rs_freed > 0 and debug_enabled:
+			_debug("Budgeted RS cleanup: freed %d instances, %d cells remaining" % [rs_freed, _pending_rs_cleanup_cells.size()])
+
+
+## Cells with RS instances that need budgeted visibility hiding
+## Hides ~200 RS instances per frame to avoid 10-32ms synchronous spikes
+var _pending_rs_hide_cells: Array[Vector2i] = []
+## O(1) lookup for cells still being hidden (mirrors _pending_rs_hide_cells)
+var _pending_rs_hide_set: Dictionary[Vector2i, bool] = {}
+
+## Cells with RS instances that need deferred free_rid() cleanup (after hiding)
+var _pending_rs_cleanup_cells: Array[Vector2i] = []
+## O(1) lookup mirroring _pending_rs_cleanup_cells. A grid in this set still has
+## pending RS instance free work; load gates must treat it as occupied so a fresh
+## load can't publish buckets under a grid whose old buckets are about to be freed.
+var _pending_rs_cleanup_set: Dictionary[Vector2i, bool] = {}
+
+
+# S.1 refactor (near_tier_refactor.md 2026-04-19): MID↔NEAR promotion / demotion
+# loops deleted. Per-cell tier is the axis of variation; MID re-enable in S.7
+# will run through request_cell_tier, not per-actor promote. Git restores
+# the deleted functions (previous commit touching this file) if reference is
+# needed for the future re-add. Removed:
+#   _promoted_objects / _promoted_by_cell fields
+#   _process_mid_to_near_promotions
+#   _process_promoted_collision_enable
+#   _disable_collision_shapes / _enable_collision_shapes (local; model_loader +
+#     reference_instantiator keep their own copies for the Node3D spawn path)
+#   _demote_all_promoted
+#   _process_deferred_near_instantiation
+
+
+## Configure visibility_range on mesh nodes for cells loaded from non-prebaked
+## sources (editor scenes, test scenes). Post-B-wide refactor: prebaked NIFs
+## carry `visibility_prebaked` meta AND the embedded LOD chain + tier range
+## is set at bake time, so this path is a no-op safety net for edge cases.
+func _configure_cell_visibility(cell_node: Node3D) -> void:
+	if not use_native_visibility:
+		return
+
+	# Skip if visibility_range was already baked into the prebaked models
+	var all_prebaked := true
+	for child in cell_node.get_children():
+		if not child.has_meta("visibility_prebaked"):
+			all_prebaked = false
+			break
+
+	if all_prebaked and cell_node.get_child_count() > 0:
+		return
+
+	# Safety fallback: apply the render-tier visibility_range to any
+	# non-prebaked GeometryInstance3D so FAR-tier culling still fires.
+	var count := 0
+	count = _apply_fallback_visibility_recursive(cell_node, count)
+	if debug_enabled and count > 0:
+		_debug("Fallback visibility applied to %d nodes in cell %s" % [count, cell_node.name])
+
+
+func _apply_fallback_visibility_recursive(node: Node, count: int) -> int:
+	if node is GeometryInstance3D:
+		var geo := node as GeometryInstance3D
+		geo.visibility_range_begin = 0.0
+		geo.visibility_range_end = _distant_render_end_m
+		geo.visibility_range_begin_margin = 0.0
+		geo.visibility_range_end_margin = DU.FADE_MARGIN_LOD3_FAR
+		geo.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
+		count += 1
+	for child in node.get_children():
+		count = _apply_fallback_visibility_recursive(child, count)
+	return count
+
+
+## Count MeshInstance3D nodes in a tree
+func _count_mesh_instances(node: Node) -> int:
+	var count := 0
+	if node is MeshInstance3D:
+		count += 1
+	for child in node.get_children():
+		count += _count_mesh_instances(child)
+	return count
+
+
+## Process pending cell loads asynchronously (non-blocking)
+## Submits async requests for cells in the queue
+## Uses staggered loading during startup to prevent freeze
+func _process_pending_loads_async() -> void:
+	# Streaming-policy gate: stop submitting new cell-load requests only when
+	# NEAR gameplay is off AND static streaming is parked. The static_visuals
+	# RENDER toggle must not stop ingress. HLOD + impostors are independent
+	# (they read the world object source directly).
+	if not _near_tier_visible and not _static_streaming_enabled:
+		return
+	if _pending_load_queue.is_empty():
+		return
+
+	var requests_submitted := 0
+
+	var max_requests_per_frame: int = 2
+
+	# Check if there's async capacity before trying to submit
+	# This prevents unnecessary fallback to sync loading and reduces warning spam
+	var available_slots := _cell_manager.get_async_slots_available() if _cell_manager else 0
+
+	# Don't try to submit if there's no capacity - cells will stay in queue
+	if available_slots <= 0 and not _pending_load_queue.is_empty():
+		if debug_enabled:
+			_debug("Async capacity exhausted, %d cells waiting in queue" % _pending_load_queue.size())
+	else:
+		# Phase 1 wave 3 (2026-07-05): at most ONE cold manifest build per
+		# frame. Building a dense cell's manifest is a 9-22ms GDScript atom
+		# ([cell-request-start] data); two cold submissions in one frame
+		# stacked to 40ms+. Warm cells (manifest cached — usually prepaid by
+		# the CellPreloader) submit freely.
+		var cold_manifest_built := false
+		var can_probe_manifest: bool = _world_object_source != null \
+			and _world_object_source.has_method("has_cell_manifest")
+		while not _pending_load_queue.is_empty() and requests_submitted < max_requests_per_frame and available_slots > 0:
+			var grid: Vector2i = _pending_load_queue[-1]
+			var is_cold := can_probe_manifest \
+				and not bool(_world_object_source.call("has_cell_manifest", grid))
+			if is_cold and cold_manifest_built:
+				break  # Next frame pays the next cold atom; queue order intact
+			_pending_load_queue.resize(_pending_load_queue.size() - 1)
+			_pending_load_set.erase(grid)
+
+			# Skip if already loaded, loading, mid-unload, or mid-cleanup.
+			# Same gate as _request_cell_async; checked here too so a frozen-
+			# rejected grid doesn't slip through when the queue submits.
+			if _is_cell_occupied(grid):
+				continue
+
+			# Submit async request
+			if _request_cell_async(grid):
+				requests_submitted += 1
+				available_slots -= 1
+				if is_cold:
+					cold_manifest_built = true
+
+		if requests_submitted > 0 and debug_enabled:
+			_debug("Submitted %d async cell requests, %d remaining in queue (startup=%s, frame=%d)" % [
+				requests_submitted, _pending_load_queue.size(), _startup_phase, _startup_frames
+			])
+
+
+func _process_payload_publish_steps(budget_usec: int) -> int:
+	if _cell_manager == null or budget_usec <= 0:
+		return 0
+	if _cell_manager.has_method("process_async_payloads"):
+		return int(_cell_manager.call("process_async_payloads", budget_usec))
+	return 0
+
+
+## Process completed async requests
+## Checks for finished cell loads and finalizes them
+## Cell completion is atomic (add_child + scene-tree emit can't be time-sliced),
+## so we cap at 1 per frame. Empirical: each completion ≈ 13ms at 60 FPS load;
+## 2 in one frame = 26ms overrun. A time budget wouldn't help here — the work
+## is indivisible. The right lever is throughput (cells/s), not latency (ms/cell).
+func _process_async_completions() -> void:
+	var completed_grids: Array[Vector2i] = []
+	var max_completions_per_frame := 1
+	_drain_pending_gameplay_upgrade_merges(SC.CHILD_ATTACH_MAX_PER_FRAME)
+
+	for grid: Vector2i in _async_requests:
+		if completed_grids.size() >= max_completions_per_frame:
+			break
+		var request_id: int = _async_requests[grid]
+
+		if _cell_manager.is_async_complete(request_id):
+			# Request is complete - finalize
+			var cell_node := _cell_manager.get_async_result(request_id)
+			var is_gameplay_upgrade := int(_gameplay_upgrade_requests.get(grid, -1)) == request_id
+
+			if cell_node:
+				if is_gameplay_upgrade and grid in _loaded_cells:
+					_queue_gameplay_upgrade_merge(grid, cell_node)
+					cell_node = _loaded_cells[grid]
+				_configure_cell_visibility(cell_node)
+				cell_node.visible = _near_tier_visible
+				_set_near_gameplay_active(cell_node, _near_tier_visible)
+
+				if cell_node.get_parent() != _world_container:
+					_world_container.add_child(cell_node)
+
+				_loaded_cells[grid] = cell_node
+
+				# I.6 Phase 2 — re-home any orphans whose origin grid
+				# matches this one. Must run AFTER the cell_node is
+				# parented under _world_container so reparent(..., true)
+				# resolves the orphan's global transform correctly.
+				_rehome_persistent_nodes_for_cell(cell_node, grid)
+
+				var object_count := _count_mesh_instances(cell_node)
+				_stats["loaded_cells"] = _loaded_cells.size()
+				_stats["total_objects"] += object_count
+				var completed_has_gameplay := is_gameplay_upgrade or bool(_loaded_cell_has_gameplay.get(grid, true))
+
+				# Check for failed models
+				if _cell_manager.has_async_failed(request_id):
+					var failed_count := _cell_manager.get_async_failed_count(request_id)
+					_debug("Cell %s completed with %d failed models" % [grid, failed_count])
+
+				if is_gameplay_upgrade:
+					_debug("Gameplay upgrade for cell %s completed with %d objects" % [grid, object_count])
+				elif completed_has_gameplay:
+					_log_pipeline_compile_for_cell_load(grid, object_count, "async")
+					cell_loaded.emit(grid, object_count)
+					if _cell_preloader != null:
+						_cell_preloader.notify_activated(grid)
+					_debug("Async cell %s completed with %d objects" % [grid, object_count])
+				else:
+					_debug("Static visuals for cell %s completed" % grid)
+			else:
+				_debug("Async cell %s returned null" % grid)
+
+			completed_grids.append(grid)
+
+	# Clean up completed requests
+	for grid in completed_grids:
+		_async_requests.erase(grid)
+		_loading_cells.erase(grid)
+		_gameplay_upgrade_requests.erase(grid)
+
+	if not completed_grids.is_empty():
+		stats_updated.emit(_stats)
+
+
+func _queue_gameplay_upgrade_merge(grid: Vector2i, upgrade_node: Node3D) -> void:
+	if upgrade_node == null:
+		return
+	var target: Node3D = _loaded_cells.get(grid, null)
+	if not is_instance_valid(target):
+		_loaded_cells[grid] = upgrade_node
+		_loaded_cell_has_gameplay[grid] = true
+		if upgrade_node.get_parent() != _world_container:
+			_world_container.add_child(upgrade_node)
+		return
+	_pending_gameplay_upgrade_merges.append({
+		"grid": grid,
+		"target": target,
+		"upgrade": upgrade_node,
+	})
+	_pending_gameplay_upgrade_merge_cells[grid] = true
+
+
+func _drain_pending_gameplay_upgrade_merges(max_children: int) -> int:
+	if _pending_gameplay_upgrade_merges.is_empty() or max_children <= 0:
+		return 0
+	var merged := 0
+	var kept: Array[Dictionary] = []
+	while not _pending_gameplay_upgrade_merges.is_empty() and merged < max_children:
+		var entry: Dictionary = _pending_gameplay_upgrade_merges.pop_front()
+		var grid: Vector2i = entry.get("grid", Vector2i.ZERO)
+		var target: Node3D = entry.get("target", null) as Node3D
+		var upgrade_node: Node3D = entry.get("upgrade", null) as Node3D
+		if not is_instance_valid(target) or not is_instance_valid(upgrade_node):
+			_pending_gameplay_upgrade_merge_cells.erase(grid)
+			continue
+		if upgrade_node.get_child_count() <= 0:
+			_set_near_gameplay_active(target, _near_tier_visible)
+			_loaded_cell_has_gameplay[grid] = true
+			_pending_gameplay_upgrade_merge_cells.erase(grid)
+			upgrade_node.queue_free()
+			continue
+		var child := upgrade_node.get_child(0)
+		upgrade_node.remove_child(child)
+		target.add_child(child)
+		merged += 1
+		if upgrade_node.get_child_count() > 0:
+			kept.append(entry)
+		else:
+			_set_near_gameplay_active(target, _near_tier_visible)
+			_loaded_cell_has_gameplay[grid] = true
+			_pending_gameplay_upgrade_merge_cells.erase(grid)
+			upgrade_node.queue_free()
+	for i in range(kept.size() - 1, -1, -1):
+		_pending_gameplay_upgrade_merges.push_front(kept[i])
+	return merged
+
+
+## Process pending cell loads synchronously (blocking fallback)
+## DEPRECATED: This sync path can cause significant frame stuttering
+## Use async_loading_enabled = true (the default) instead
+## This fallback exists only for debugging edge cases
+func _process_pending_loads_sync(_delta: float) -> void:
+	# Warn about sync loading usage - it causes stuttering
+	if Engine.get_frames_drawn() == 1:
+		push_warning("[NativeStreamingManager] Using synchronous cell loading - this can cause stuttering. Set async_loading_enabled = true for better performance.")
+
+	# Streaming-policy gate — mirror of async path.
+	if not _near_tier_visible and not _static_streaming_enabled:
+		return
+
+	if _pending_load_queue.is_empty():
+		return
+
+	_sync_fallback_frames += 1
+	_sync_fallback_last_frame = Engine.get_frames_drawn()
+	var start_time := Time.get_ticks_msec()
+	var cells_loaded_this_frame := 0
+
+	while not _pending_load_queue.is_empty():
+		# FIX: Check budget BEFORE starting a new cell load, not after
+		var elapsed := Time.get_ticks_msec() - start_time
+		if cells_loaded_this_frame > 0 and elapsed >= frame_budget_ms:
+			if debug_enabled or _pending_load_queue.size() > 5:
+				_debug("Frame budget reached (%.1fms), loaded %d cells, %d remaining" % [elapsed, cells_loaded_this_frame, _pending_load_queue.size()])
+			break
+
+		var grid: Vector2i = _pending_load_queue[-1]
+		_pending_load_queue.resize(_pending_load_queue.size() - 1)
+		_pending_load_set.erase(grid)
+
+		# Same occupancy gate as the async path: a grid mid-unload or with
+		# pending RS cleanup must not get a fresh load until the old cleanup
+		# clears (auditor2 finding 2026-05-01).
+		if _is_cell_occupied(grid):
+			continue
+
+		_load_cell_sync(grid)
+		cells_loaded_this_frame += 1
+		_sync_fallback_cells_loaded += 1
+		_stats["load_time_ms"] = Time.get_ticks_msec() - start_time
+
+	if debug_enabled and cells_loaded_this_frame > 0 and _pending_load_queue.is_empty():
+		var elapsed := Time.get_ticks_msec() - start_time
+		_debug("Sync loaded %d cells in %.1fms" % [cells_loaded_this_frame, elapsed])
+
+#endregion
+
+
+#region Public API
+
+## Get current streaming statistics
+func get_stats() -> Dictionary:
+	var s := _stats.duplicate()
+	var desired_cells := _get_cells_in_radius(_camera_cell, load_radius_cells)
+
+	# Add load queue stats and telemetry
+	s["frame_overrun_count"] = _frame_overrun_count
+	s["view_distance_meters"] = view_distance_meters
+	s["load_radius_cells"] = load_radius_cells
+	s["effective_load_radius_cells"] = _effective_scene_load_radius_cells()
+	s["target_cell_count"] = (2 * _effective_scene_load_radius_cells() + 1) * (2 * _effective_scene_load_radius_cells() + 1)
+	s["desired_cell_count"] = desired_cells.size()
+	s["resident_cell_containers"] = _loaded_cells.size()
+	s["visual_ready_cells"] = _get_visual_ready_cell_count()
+	s["load_queue_size"] = _pending_load_queue.size()
+	s["unload_queue_size"] = _pending_unload_queue.size()
+	s["unloading_cells"] = _unloading_cells.size()
+	s["async_requests"] = _async_requests.size()
+	s["gameplay_upgrade_requests"] = _gameplay_upgrade_requests.size()
+	var static_visual_only_cells := 0
+	for grid: Vector2i in _loaded_cell_has_gameplay:
+		if not bool(_loaded_cell_has_gameplay[grid]):
+			static_visual_only_cells += 1
+	s["static_visual_only_cells"] = static_visual_only_cells
+	s["loading_cells"] = _loading_cells.size()
+	s["async_loading_enabled"] = async_loading_enabled
+	s["sync_fallback_frames"] = _sync_fallback_frames
+	s["sync_fallback_cells_loaded"] = _sync_fallback_cells_loaded
+	s["sync_fallback_last_frame"] = _sync_fallback_last_frame
+	s["benchmark_mode_metadata"] = get_benchmark_mode_metadata()
+	s["camera_cell"] = _camera_cell
+	s["camera_position"] = _camera_position
+	s["world_tracking_frozen"] = _world_tracking_frozen
+	s["frame_budget_ms"] = frame_budget_ms
+	s["frame_total_ms"] = _last_frame_total_ms
+	s["startup_phase"] = _startup_phase
+	var phase_sum_usec: float = 0.0
+	for phase_usec: float in _last_phase_times:
+		phase_sum_usec += phase_usec
+	var distant_tier_usec := _last_impostor_update_usec + _last_hlod_merger_usec + _last_distant_light_usec
+	var attributed_ms := (phase_sum_usec + distant_tier_usec) / 1000.0
+	s["streaming_phase_sum_ms"] = phase_sum_usec / 1000.0
+	s["streaming_distant_tiers_ms"] = distant_tier_usec / 1000.0
+	s["streaming_impostor_update_ms"] = _last_impostor_update_usec / 1000.0
+	s["streaming_hlod_merger_ms"] = _last_hlod_merger_usec / 1000.0
+	s["streaming_distant_light_ms"] = _last_distant_light_usec / 1000.0
+	s["streaming_unattributed_ms"] = maxf(0.0, _last_frame_total_ms - attributed_ms)
+	if _publication_budget:
+		s.merge(_publication_budget.get_stats())
+
+	# Add CellManager async stats if available
+	if _cell_manager and _cell_manager.has_method("get_loading_stats"):
+		var cm_stats: Dictionary = _cell_manager.get_loading_stats()
+		s["instantiation_queue"] = cm_stats.get("instantiation_queue_size", 0)
+		s["active_async_load_slots"] = cm_stats.get("active_async_load_slots", 0)
+		s["resident_async_requests"] = cm_stats.get("resident_async_requests", 0)
+		s["pending_conversions"] = cm_stats.get("pending_conversions", 0)
+		s["pending_disk_loads"] = cm_stats.get("pending_disk_loads", 0)
+		s["proximity_deferred"] = cm_stats.get("proximity_deferred", 0)
+		s["proximity_deferred_by_type"] = cm_stats.get("proximity_deferred_by_type", {})
+		s["burst_loading"] = cm_stats.get("burst_loading_active", false)
+
+	# Merge impostor stats if available
+	if _impostor_renderer and _impostor_renderer.has_method("get_stats"):
+		s.merge(_impostor_renderer.call("get_stats"))
+
+	# Merge distant-light billboard stats if available.
+	if _distant_light_manager and _distant_light_manager.has_method("get_stats"):
+		s.merge(_distant_light_manager.call("get_stats"))
+
+	# Merge MID-tier static renderer stats
+	if _static_renderer:
+		var sr_stats: Dictionary = _static_renderer.get_stats()
+		s["mid_instances"] = sr_stats.get("total_instances", 0)
+		s["mid_visible"] = sr_stats.get("visible_instances", 0)
+		s["mid_mesh_types"] = sr_stats.get("mesh_types", 0)
+		s["mid_cell_buckets"] = sr_stats.get("cell_buckets", 0)
+		s["mid_bucket_draw_groups"] = sr_stats.get("bucket_draw_groups", 0)
+		s["mid_bucket_instances"] = sr_stats.get("bucket_instances", 0)
+		s["mid_bucket_rs_instances"] = sr_stats.get("bucket_rs_instances", 0)
+		s["hlod_mid_bucket_overrides"] = sr_stats.get("hlod_bucket_overrides", 0)
+		s["hlod_mid_bucket_override_refs"] = sr_stats.get("hlod_bucket_override_refs", 0)
+		s["visual_proxy_instances"] = sr_stats.get("visual_proxy_instances", 0)
+		s["visual_proxy_dirty"] = sr_stats.get("visual_proxy_dirty", 0)
+
+	var hlod_stats: Dictionary = get_hlod_stats()
+	s["hlod_active"] = hlod_stats.get("enabled", false)
+	s["hlod_initialized"] = _hlod_merger != null
+	s["hlod_cells"] = hlod_stats.get("active_cells", 0)
+	s["hlod_pending"] = hlod_stats.get("pending_merges", 0)
+	s["hlod_cached_publish_queue"] = hlod_stats.get("cached_publish_queue_size", 0)
+	s["hlod_cache_mb"] = hlod_stats.get("cache_bytes", 0) / (1024.0 * 1024.0)
+	s["hlod_chunk_surfaces"] = hlod_stats.get("total_chunk_surfaces", 0)
+	s["hlod_chunk_materials"] = hlod_stats.get("total_chunk_materials", 0)
+	s["hlod_visible_draw_calls"] = hlod_stats.get("visible_hlod_draw_calls", 0)
+	s["hlod_null_material_surfaces"] = hlod_stats.get("null_material_surface_count", 0)
+	s["hlod_default_proxy_surfaces"] = hlod_stats.get("default_proxy_surface_count", 0)
+	s["hlod_overflow_proxy_surfaces"] = hlod_stats.get("overflow_proxy_surfaces", 0)
+	s["hlod_chunk_vertices"] = hlod_stats.get("total_chunk_vertices", 0)
+	s["hlod_chunk_indices"] = hlod_stats.get("total_chunk_indices", 0)
+	s["hlod_max_chunk_surfaces"] = hlod_stats.get("max_chunk_surfaces", 0)
+	s["hlod_max_chunk_materials"] = hlod_stats.get("max_chunk_materials", 0)
+	s["hlod_max_chunk_vertices"] = hlod_stats.get("max_chunk_vertices", 0)
+	s["hlod_max_chunk_indices"] = hlod_stats.get("max_chunk_indices", 0)
+	s["hlod_visual_begin_floor"] = hlod_stats.get("visual_begin_floor", DU.HLOD_START)
+	s["hlod_chunks_tier_0"] = hlod_stats.get("chunks_tier_0", 0)
+	s["hlod_chunks_tier_1"] = hlod_stats.get("chunks_tier_1", 0)
+	s["hlod_chunks_tier_2"] = hlod_stats.get("chunks_tier_2", 0)
+	s["hlod_active_visual_chunks"] = hlod_stats.get("active_visual_chunks", 0)
+	s["hlod_nonvisual_chunks_suppressed"] = hlod_stats.get("nonvisual_chunks_suppressed", 0)
+	s["hlod_mid_overlap_chunks"] = hlod_stats.get("mid_hlod_overlap_chunks", 0)
+	s["hlod_desired_chunks"] = hlod_stats.get("desired_chunks", 0)
+	s["hlod_predictive_desired_chunks"] = hlod_stats.get("predictive_desired_chunks", 0)
+	s["hlod_merge_queue_size"] = hlod_stats.get("merge_queue_size", 0)
+	s["hlod_preparing_chunks"] = hlod_stats.get("preparing_chunks", 0)
+	s["hlod_negative_chunks"] = hlod_stats.get("negative_chunks", 0)
+	s["hlod_warmup_queue_size"] = hlod_stats.get("warmup_queue_size", 0)
+	s["hlod_stale_completions"] = hlod_stats.get("stale_completions_discarded", 0)
+	s["hlod_surface_cap_rejections"] = hlod_stats.get("surface_cap_rejections", 0)
+	s["hlod_surface_cap_over_budget_published"] = hlod_stats.get("surface_cap_over_budget_published", 0)
+	s["hlod_refs_skipped"] = hlod_stats.get("total_refs_skipped", 0)
+	s["hlod_refs_type_rejected"] = hlod_stats.get("refs_type_rejected", 0)
+	s["hlod_refs_size_rejected"] = hlod_stats.get("refs_size_rejected", 0)
+	s["hlod_refs_surface_rejected"] = hlod_stats.get("refs_surface_rejected", 0)
+	s["hlod_refs_partial_bucket_rejected"] = hlod_stats.get("refs_partial_bucket_rejected", 0)
+	s["hlod_size_cache_hits"] = hlod_stats.get("size_cache_hits", 0)
+	s["hlod_size_cache_size"] = hlod_stats.get("size_cache_size", 0)
+	s["hlod_merge_queue_us"] = hlod_stats.get("merge_queue_last_usec", 0)
+	s["hlod_completion_us"] = hlod_stats.get("completion_last_usec", 0)
+	s["hlod_active_covered_refs"] = hlod_stats.get("active_covered_refs", 0)
+	s["hlod_active_covered_cells"] = hlod_stats.get("active_covered_cells", 0)
+	s["hlod_active_complete_coverage_chunks"] = hlod_stats.get("active_complete_coverage_chunks", 0)
+	s["hlod_active_incomplete_coverage_chunks"] = hlod_stats.get("active_incomplete_coverage_chunks", 0)
+	s["hlod_coverage_revision"] = hlod_stats.get("coverage_revision", 0)
+	s["hlod_handoff_far_overlap_chunks"] = hlod_stats.get("handoff_far_hlod_overlap_chunks", 0)
+	s["hlod_handoff_hole_risk_chunks"] = hlod_stats.get("handoff_hole_risk_chunks", 0)
+	s["hlod_far_covered_pages"] = hlod_stats.get("far_hlod_covered_pages", 0)
+	s["hlod_far_uncovered_pages"] = hlod_stats.get("far_hlod_uncovered_pages", 0)
+	s["hlod_far_page_overrides"] = hlod_stats.get("far_hlod_page_overrides", 0)
+	s["hlod_runtime_lod_generation_enabled"] = hlod_stats.get("runtime_lod_generation_enabled", false)
+	s["hlod_runtime_force_merge_eligible_refs"] = hlod_stats.get("runtime_force_merge_eligible_refs", false)
+	s["mid_object_paging_accepted_chunks"] = hlod_stats.get("mid_object_paging_accepted_chunks", 0)
+	s["mid_object_paging_rejected_chunks_cost"] = hlod_stats.get("mid_object_paging_rejected_chunks_cost", 0)
+	s["mid_object_paging_rejected_chunks_partial"] = hlod_stats.get("mid_object_paging_rejected_chunks_partial", 0)
+	s["mid_object_paging_rejected_chunks_missing_bucket"] = hlod_stats.get("mid_object_paging_rejected_chunks_missing_bucket", 0)
+	s["mid_object_paging_suppressed_draw_groups"] = hlod_stats.get("mid_object_paging_suppressed_draw_groups", 0)
+	s["mid_object_paging_proxy_surface_estimate"] = hlod_stats.get("mid_object_paging_proxy_surface_estimate", 0)
+	s["mid_object_paging_refs_no_bucket_rejected"] = hlod_stats.get("mid_object_paging_refs_no_bucket_rejected", 0)
+
+	return s
+
+
+func get_benchmark_mode_metadata() -> Dictionary:
+	var invalid_reasons: Array[String] = []
+	var parked_modes: Array[String] = []
+	if not async_loading_enabled:
+		invalid_reasons.append("sync_loading_mode")
+	if _sync_fallback_frames > 0:
+		invalid_reasons.append("sync_fallback_executed")
+	var far_active := false
+	if _impostor_renderer and _impostor_renderer.has_method("is_enabled"):
+		far_active = bool(_impostor_renderer.call("is_enabled"))
+	var distant_lights_active := _distant_lights_requested_visible and _distant_light_manager != null
+	if _distant_light_manager and _distant_light_manager.has_method("get_stats"):
+		var light_stats: Dictionary = _distant_light_manager.call("get_stats")
+		distant_lights_active = bool(light_stats.get("enabled", distant_lights_active))
+
+	var hlod_requested := _hlod_requested_visible
+	var hlod_active := is_hlod_active()
+	if hlod_requested:
+		parked_modes.append("runtime_hlod")
+	if _dev_mid_object_paging_visible:
+		parked_modes.append("dev_mid_object_paging")
+		invalid_reasons.append("dev_mid_object_paging_experiment")
+
+	var near_only := (
+		_near_tier_visible
+		and not _mid_tier_visible
+		and not _dev_mid_object_paging_visible
+		and not _impostors_requested_visible
+		and not hlod_requested
+		and not _distant_lights_requested_visible
+	)
+	var near_mid_only := (
+		_near_tier_visible
+		and _mid_tier_visible
+		and not _dev_mid_object_paging_visible
+		and not _impostors_requested_visible
+		and not hlod_requested
+		and not _distant_lights_requested_visible
+	)
+	var near_mid_dev_object_paging := (
+		_near_tier_visible
+		and _mid_tier_visible
+		and _dev_mid_object_paging_visible
+		and not _impostors_requested_visible
+		and not hlod_requested
+		and not _distant_lights_requested_visible
+	)
+	var far_only := (
+		not _near_tier_visible
+		and not _mid_tier_visible
+		and _impostors_requested_visible
+		and not hlod_requested
+		and not _distant_lights_requested_visible
+	)
+	var hlod_only := (
+		not _near_tier_visible
+		and not _mid_tier_visible
+		and not _impostors_requested_visible
+		and hlod_requested
+		and not _distant_lights_requested_visible
+	)
+
+	var mode_name := "custom"
+	if near_only:
+		mode_name = "near_only"
+	elif near_mid_dev_object_paging:
+		mode_name = "near_mid_dev_object_paging"
+	elif near_mid_only:
+		mode_name = "near_mid_only"
+	elif far_only:
+		mode_name = "far_only"
+	elif hlod_only:
+		mode_name = "hlod_only"
+	elif _near_tier_visible and _mid_tier_visible and _impostors_requested_visible and not hlod_requested and _distant_lights_requested_visible:
+		mode_name = "default_distant_no_hlod"
+	elif _near_tier_visible and _mid_tier_visible and _impostors_requested_visible and hlod_requested and _distant_lights_requested_visible:
+		mode_name = "full_distant_with_hlod"
+
+	var flags := {
+		"async_loading_enabled": async_loading_enabled,
+		"sync_loading_mode": not async_loading_enabled,
+		"sync_fallback_frames": _sync_fallback_frames,
+		"sync_fallback_cells_loaded": _sync_fallback_cells_loaded,
+		"sync_fallback_last_frame": _sync_fallback_last_frame,
+		"near_gameplay": _near_tier_visible,
+		"static_visuals": _mid_tier_visible,
+		"static_streaming": _static_streaming_enabled,
+		"dev_mid_object_paging": _dev_mid_object_paging_visible,
+		"hlod_requested": hlod_requested,
+		"hlod_active": hlod_active,
+		"far_impostors_requested": _impostors_requested_visible,
+		"far_impostors_active": far_active,
+		"distant_lights_requested": _distant_lights_requested_visible,
+		"distant_lights_active": distant_lights_active,
+		"near_only": near_only,
+		"near_mid_only": near_mid_only,
+		"near_mid_dev_object_paging": near_mid_dev_object_paging,
+		"far_only": far_only,
+		"hlod_only": hlod_only,
+	}
+	return {
+		"schema": "godotwind_benchmark_mode_v1",
+		"mode_name": mode_name,
+		"valid_for_performance_baseline": invalid_reasons.is_empty(),
+		"invalid_reasons": invalid_reasons,
+		"parked_modes": parked_modes,
+		"flags": flags,
+	}
+
+
+## Get last frame's per-phase timing breakdown (usec).
+## Indices: 0=unload, 1=async_complete, 2=instantiate, 3=promote, 4=collision,
+##          5=deferred, 6=queue, 7=cell_update, 8=static_cull
+## Returns empty array if not yet initialized.
+func get_phase_times() -> PackedFloat64Array:
+	return _last_phase_times
+
+
+## Get last frame's total streaming work in ms.
+func get_frame_streaming_ms() -> float:
+	return _last_frame_total_ms
+
+
+func _register_streaming_custom_monitors() -> void:
+	for monitor_id: StringName in STREAMING_CUSTOM_PERFORMANCE_MONITORS:
+		if Performance.has_custom_monitor(monitor_id):
+			Performance.remove_custom_monitor(monitor_id)
+		var metric: String = String(STREAMING_CUSTOM_PERFORMANCE_MONITORS[monitor_id])
+		Performance.add_custom_monitor(monitor_id, Callable(self, "_get_streaming_custom_monitor"), [metric])
+	_streaming_custom_monitors_registered = true
+
+
+func _unregister_streaming_custom_monitors() -> void:
+	if not _streaming_custom_monitors_registered:
+		return
+	for monitor_id: StringName in STREAMING_CUSTOM_PERFORMANCE_MONITORS:
+		if Performance.has_custom_monitor(monitor_id):
+			Performance.remove_custom_monitor(monitor_id)
+	_streaming_custom_monitors_registered = false
+
+
+func _get_streaming_custom_monitor(metric: String) -> float:
+	match metric:
+		"queue_size":
+			if _cell_manager and _cell_manager.has_method("get_instantiation_queue_size"):
+				return float(_cell_manager.get_instantiation_queue_size())
+			return 0.0
+		"loaded_cells":
+			return float(_loaded_cells.size())
+		"visual_ready_cells":
+			return float(_get_visual_ready_cell_count())
+		"async_requests":
+			return float(_async_requests.size())
+		"startup_phase":
+			return 1.0 if _startup_phase else 0.0
+		"first_playable_reached":
+			return 1.0 if _first_playable_reached else 0.0
+		"stream_total_ms":
+			return maxf(0.0, _last_frame_total_ms)
+	return 0.0
+
+
+func _get_visual_ready_cell_count() -> int:
+	var visual_ready_cells := 0
+	for grid: Vector2i in _loaded_cells:
+		if grid in _async_requests:
+			if _cell_manager and _cell_manager.has_method("is_async_visual_playable"):
+				var request_id: int = int(_async_requests[grid])
+				if bool(_cell_manager.call("is_async_visual_playable", request_id)):
+					visual_ready_cells += 1
+		else:
+			visual_ready_cells += 1
+	return visual_ready_cells
+
+
+func consume_lifecycle_events() -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	if _lifecycle_events.size() < MAX_LIFECYCLE_EVENTS:
+		out.append_array(_lifecycle_events)
+	else:
+		var start := _lifecycle_event_write_index % MAX_LIFECYCLE_EVENTS
+		for i in range(MAX_LIFECYCLE_EVENTS):
+			out.append(_lifecycle_events[(start + i) % MAX_LIFECYCLE_EVENTS])
+	_lifecycle_events.clear()
+	_lifecycle_event_write_index = 0
+	return out
+
+
+func set_lifecycle_capture_enabled(enabled: bool) -> void:
+	debug_lifecycle_capture_enabled = enabled
+	_lifecycle_events.clear()
+	_lifecycle_event_write_index = 0
+
+
+func _record_lifecycle_event(event_name: String, grid: Vector2i, detail: String = "") -> void:
+	if not debug_lifecycle_capture_enabled:
+		return
+	var entry := {
+		"frame": Engine.get_frames_drawn(),
+		"elapsed_s": Time.get_ticks_msec() / 1000.0,
+		"event": event_name,
+		"detail": "%s %s" % [str(grid), detail],
+	}
+	if _lifecycle_events.size() < MAX_LIFECYCLE_EVENTS:
+		_lifecycle_events.append(entry)
+	else:
+		_lifecycle_events[_lifecycle_event_write_index % MAX_LIFECYCLE_EVENTS] = entry
+	_lifecycle_event_write_index += 1
+	Log.info("streaming", "[P0.4-LIFECYCLE] %s %s" % [event_name, entry["detail"]])
+
+
+## Get or create the per-phase StreamingProfiler.
+## Benchmark / debug overlay reads this to display per-phase timing.
+func get_profiler() -> StreamingProfilerScript:
+	if not _profiler:
+		_profiler = StreamingProfilerScript.new()
+		_profiler.enabled = SC.ENABLE_PROFILING
+	return _profiler
+
+
+## Get StaticObjectRenderer stats (for benchmark diagnostics)
+func get_static_renderer_stats() -> Dictionary:
+	if _static_renderer:
+		return _static_renderer.get_stats()
+	return {}
+
+
+func get_static_renderer_census(max_top_cells: int = 12) -> Dictionary:
+	if _static_renderer and _static_renderer.has_method("get_bucket_census"):
+		return _static_renderer.call("get_bucket_census", max_top_cells)
+	return {}
+
+
+func static_trace_selection(selection: Variant, debug_action: String = "") -> String:
+	if selection == null:
+		return "No selected object. Use the console picker first."
+	if str(selection.get("source_kind")) != "static_payload":
+		return "Selected object is '%s', not static_payload. This trace targets server-direct static visuals." % str(selection.get("source_kind"))
+	if _static_renderer == null:
+		return "Static renderer is not initialized."
+	if _cell_manager == null:
+		return "Cell manager is not initialized."
+
+	var grid: Vector2i = selection.get("cell_grid")
+	var model_path := str(selection.get("model_path"))
+	var ref_num := int(selection.get("instance_id"))
+	var ref_id := str(selection.get("form_id"))
+	var request_id := int(_async_requests.get(grid, -1))
+	var payload: RefCounted = null
+	if request_id >= 0 and _cell_manager.has_method("get_async_payload"):
+		payload = _cell_manager.call("get_async_payload", request_id) as RefCounted
+
+	var payload_key := ""
+	var expected_count := 0
+	var transform_count := 0
+	var selected_index := -1
+	if payload != null:
+		payload_key = _resolve_static_payload_key(payload, model_path, ref_num)
+		if not payload_key.is_empty():
+			expected_count = int(payload.static_expected_counts.get(payload_key, 0))
+			var transforms: Array = payload.static_instance_transforms.get(payload_key, [])
+			transform_count = transforms.size()
+			selected_index = _find_static_ref_index(payload, payload_key, ref_num)
+	if payload_key.is_empty():
+		payload_key = model_path.to_lower().replace("/", "\\")
+
+	var bucket_key := "%d,%d:%s" % [grid.x, grid.y, payload_key]
+	var action := debug_action.to_lower()
+	var force_changed := false
+	var force_enabled := false
+	match action:
+		"force", "force_on", "on", "debug_on":
+			force_changed = true
+			force_enabled = true
+		"force_off", "off", "debug_off":
+			force_changed = true
+			force_enabled = false
+	if force_changed and _static_renderer.has_method("set_cell_bucket_debug_force_visible"):
+		_static_renderer.call("set_cell_bucket_debug_force_visible", bucket_key, force_enabled)
+
+	var bucket_info: Dictionary = {}
+	if _static_renderer.has_method("get_cell_bucket_debug_info"):
+		bucket_info = _static_renderer.call("get_cell_bucket_debug_info", bucket_key)
+
+	var lines: Array[String] = []
+	lines.append("========== STATIC TRACE SELECTED ==========")
+	lines.append("selection: source=%s grid=%s ref=%s#%d model=%s" % [
+		str(selection.get("source_kind")),
+		str(grid),
+		ref_id,
+		ref_num,
+		model_path,
+	])
+	lines.append("payload: request_id=%d exists=%s key=%s expected=%d transforms=%d selected_index=%d" % [
+		request_id,
+		"Y" if payload != null else "N",
+		payload_key,
+		expected_count,
+		transform_count,
+		selected_index,
+	])
+	lines.append("bucket: key=%s exists=%s pending_build=%s pending_cleanup=%s hlod_capped=%s covered=%d target_end=%s" % [
+		bucket_key,
+		"Y" if bool(bucket_info.get("exists", false)) else "N",
+		"Y" if bool(bucket_info.get("build_pending", false)) else "N",
+		"Y" if bool(bucket_info.get("pending_cleanup", false)) else "N",
+		"Y" if bool(bucket_info.get("hlod_capped", false)) else "N",
+		int(bucket_info.get("hlod_covered_count", 0)),
+		str(bucket_info.get("target_visibility_range_end", "?")),
+	])
+	if force_changed:
+		lines.append("debug_force_visible: %s" % ("ON" if force_enabled else "OFF"))
+	var bucket: Dictionary = bucket_info.get("bucket", {})
+	if bucket.is_empty():
+		lines.append("bucket_detail: unavailable")
+	else:
+		lines.append("bucket_detail: visible=%s frozen=%s debug_force=%s instances=%d draw_groups=%d range=%.1f-%.1f handle=%s refs=%d" % [
+			"Y" if bool(bucket.get("visible", false)) else "N",
+			"Y" if bool(bucket.get("frozen", false)) else "N",
+			"Y" if bool(bucket.get("debug_force_visible", false)) else "N",
+			int(bucket.get("instance_count", 0)),
+			int(bucket.get("draw_group_count", 0)),
+			float(bucket.get("visibility_range_begin", 0.0)),
+			float(bucket.get("visibility_range_end", 0.0)),
+			"Y" if bool(bucket.get("resource_handle_pinned", false)) else "N",
+			int(bucket.get("resource_ref_count", 0)),
+		])
+		var groups: Array = bucket.get("draw_groups", [])
+		for group_value: Variant in groups:
+			var group: Dictionary = group_value
+			lines.append("  group[%d]: kind=%s rid=%s mesh_rid=%s mm_rid=%s count=%d mm_count=%d mm_visible=%d fmt=%d layer=%d mat_override=%s surf_mats=%d" % [
+				int(group.get("index", -1)),
+				str(group.get("kind", "")),
+				"Y" if bool(group.get("rid_valid", false)) else "N",
+				"Y" if bool(group.get("mesh_rid_valid", false)) else "N",
+				"Y" if bool(group.get("multimesh_rid_valid", false)) else "N",
+				int(group.get("instance_count", 0)),
+				int(group.get("multimesh_instance_count", 0)),
+				int(group.get("multimesh_visible_instance_count", -1)),
+				int(group.get("multimesh_transform_format", -1)),
+				int(group.get("layer_mask", 0)),
+				"Y" if bool(group.get("has_material_override", false)) else "N",
+				int(group.get("surface_material_count", 0)),
+			])
+			lines.append("    mesh_aabb=%s custom_aabb=%s local_group_aabb=%s range=%.1f-%.1f margin_end=%.1f" % [
+				str(group.get("mesh_aabb", AABB())),
+				str(group.get("custom_aabb", AABB())),
+				str(group.get("local_group_aabb", AABB())),
+				float(group.get("visibility_range_begin", 0.0)),
+				float(group.get("visibility_range_end", 0.0)),
+				float(group.get("visibility_margin_end", 0.0)),
+			])
+	lines.append("===========================================")
+	return "\n".join(lines)
+
+
+func _resolve_static_payload_key(payload: RefCounted, model_path: String, ref_num: int) -> String:
+	if payload == null:
+		return ""
+	var exact_key := model_path.to_lower().replace("/", "\\")
+	var refs_by_model: Dictionary = payload.get("static_refs_by_model")
+	if refs_by_model.has(exact_key):
+		return exact_key
+	var model_keys: Dictionary = payload.get("model_keys")
+	for key_value: Variant in refs_by_model.keys():
+		var key := str(key_value)
+		var info: Dictionary = model_keys.get(key, {})
+		if str(info.get("model_path", "")).to_lower().replace("/", "\\") != exact_key:
+			continue
+		if ref_num < 0 or _find_static_ref_index(payload, key, ref_num) >= 0:
+			return key
+	return ""
+
+
+func _find_static_ref_index(payload: RefCounted, payload_key: String, ref_num: int) -> int:
+	if payload == null or payload_key.is_empty() or ref_num < 0:
+		return -1
+	var refs_by_model: Dictionary = payload.get("static_refs_by_model")
+	var refs: Array = refs_by_model.get(payload_key, [])
+	for i in range(refs.size()):
+		var ref: Variant = refs[i]
+		if ref != null and "ref_num" in ref and int(ref.ref_num) == ref_num:
+			return i
+	return -1
+
+
+## Print detailed debug information to console (for troubleshooting)
+func print_debug_info() -> void:
+	var lines: Array[String] = []
+	lines.append("========== NATIVE STREAMING DEBUG INFO ==========")
+	lines.append("Initialized: %s" % _initialized)
+	lines.append("Camera: %s" % _camera)
+	lines.append("Camera Cell: %s" % _camera_cell)
+	lines.append("Camera Position: %s" % _camera_position)
+	lines.append("Settings:")
+	lines.append("  load_radius_cells: %s" % load_radius_cells)
+	lines.append("  impostor_radius_cells: %s" % impostor_radius_cells)
+	lines.append("  frame_budget_ms: %s" % frame_budget_ms)
+	lines.append("  use_native_visibility: %s" % use_native_visibility)
+	lines.append("  async_loading_enabled: %s" % async_loading_enabled)
+	lines.append("  debug_enabled: %s" % debug_enabled)
+	lines.append("Async Loading:")
+	lines.append("  BackgroundProcessor: %s" % (_background_processor != null))
+	lines.append("  Pending async requests: %s" % _async_requests.size())
+	lines.append("  Load queue size: %s" % _pending_load_queue.size())
+	if _cell_manager and _cell_manager.has_method("get_loading_stats"):
+		var cm_stats: Dictionary = _cell_manager.get_loading_stats()
+		lines.append("  Instantiation queue: %s" % cm_stats.get("instantiation_queue_size", 0))
+		lines.append("  Pending conversions: %s" % cm_stats.get("pending_conversions", 0))
+	lines.append("Stats:")
+	var stats = get_stats()
+	for key in stats:
+		lines.append("  %s: %s" % [key, stats[key]])
+	lines.append("Impostor Renderer:")
+	if _impostor_renderer:
+		lines.append("  Exists: true")
+		lines.append("  ImpostorCandidates: %s" % (_impostor_renderer.impostor_candidates != null))
+		lines.append("  Debug enabled: %s" % _impostor_renderer.debug_enabled)
+	else:
+		lines.append("  Exists: false")
+	lines.append("=================================================")
+	Log.info("streaming", "\n".join(lines))
+
+
+## Force reload all cells (after configuration change)
+func reload_all_cells() -> void:
+	# Unload all current cells
+	for grid: Vector2i in _loaded_cells.keys():
+		_unload_cell(grid)
+	
+	# Trigger reload
+	_update_loaded_cells()
+
+
+## Get loaded cell at grid position (overload for backwards compatibility)
+func get_loaded_cell(x: Variant, y: Variant = null) -> Node3D:
+	if y == null:
+		# Called with Vector2i
+		var grid: Vector2i = x
+		return _loaded_cells.get(grid, null)
+	else:
+		# Called with x, y integers
+		var grid := Vector2i(int(x), int(y))
+		return _loaded_cells.get(grid, null)
+
+
+## Check if a cell is loaded
+func is_cell_loaded(grid: Vector2i) -> bool:
+	return grid in _loaded_cells
+
+
+# ----------------------------------------------------------------------------
+# Subsystem visibility toggles (for benchmark A/B testing)
+# ----------------------------------------------------------------------------
+# Each method delegates to the owning subsystem — no internal reach-around.
+
+## Toggle MID-tier RS instances (StaticObjectRenderer)
+## PURE render-visibility toggle (Phase 0, 2026-07-05). Flips whether static
+## visuals draw — nothing else. Does NOT touch the loaded-cell ring, load
+## profiles, publish gates, or visibility ranges, so benchmark ablations
+## measure rendering cost only. Streaming policy lives in
+## set_static_streaming_enabled().
+func set_mid_tier_visible(visible: bool) -> void:
+	_mid_tier_visible = visible
+	_apply_static_renderer_tier_visibility()
+	_apply_hlod_request()
+
+
+## Streaming-POLICY control, not a render toggle: parks/resumes the wide
+## scene-cell ring and static-visuals publish. Used by mode isolation
+## (--near-only / --far-only / --hlod-only). Benchmark subsystem toggles must
+## never call this.
+func set_static_streaming_enabled(enabled: bool) -> void:
+	if _static_streaming_enabled == enabled:
+		return
+	_static_streaming_enabled = enabled
+	if _initialized and _camera:
+		_update_loaded_cells()
+
+
+func is_static_streaming_enabled() -> bool:
+	return _static_streaming_enabled
+
+
+## Debug override for the static renderer's visibility range (console
+## `static_range`). Persists until cleared; while active, view-distance
+## changes do not stomp it.
+var _static_range_override: Vector2 = Vector2(-1.0, -1.0)
+
+func set_static_visibility_range_override(begin: float, end: float) -> void:
+	_static_range_override = Vector2(maxf(0.0, begin), maxf(0.0, end))
+	_apply_paged_coverage()
+	_apply_static_renderer_tier_visibility()
+
+
+func clear_static_visibility_range_override() -> void:
+	_static_range_override = Vector2(-1.0, -1.0)
+	_apply_paged_coverage()
+	_apply_static_renderer_tier_visibility()
+
+
+func _apply_static_renderer_tier_visibility() -> void:
+	if not _static_renderer:
+		return
+	# Range policy: full 0..MID_END band (capped by the view-distance slider),
+	# regardless of which tiers are toggled — the static renderer owns ALL
+	# static scenery from 0m out. NEAR gameplay visibility is a separate
+	# concern (Node3D cells). Debug override wins when set.
+	var begin := 0.0
+	var end := minf(_distant_render_end_m, DU.MID_END)
+	if _static_range_override.y >= 0.0:
+		begin = _static_range_override.x
+		end = _static_range_override.y
+	if _static_renderer.has_method("set_visibility_range"):
+		_static_renderer.call("set_visibility_range", begin, end)
+	elif _static_renderer.has_method("set_visibility_range_end"):
+		_static_renderer.call("set_visibility_range_end", end)
+	_static_renderer.set_all_visible(_mid_tier_visible)
+	# Phase 0 ablation contract: static_visuals hides ALL static output,
+	# chunk proxies included (they are merged copies of the same content).
+	if _chunk_renderer != null and _chunk_renderer.has_method("set_globally_visible"):
+		_chunk_renderer.call("set_globally_visible", _mid_tier_visible)
+
+## Toggle FAR-tier impostors (NativeImpostorRenderer) — hides + stops streaming.
+func set_impostors_visible(visible: bool) -> void:
+	_impostors_requested_visible = visible
+	_apply_impostor_request()
+
+
+func _apply_impostor_request() -> void:
+	if _impostor_renderer:
+		# CHUNK tier active → impostors retreat to the chunk band's far edge
+		# (the 2026-07-05 decision: real geometry to 1.2km, billboards beyond).
+		var chunk_active: bool = _chunk_renderer != null and bool(_chunk_renderer.call("is_enabled"))
+		var far_begin := DU.CHUNK_END if chunk_active else DU.FAR_START
+		var effective_visible := _impostors_requested_visible and _distant_render_end_m > far_begin
+		if effective_visible and _impostor_renderer.has_method("set_visibility_range_begin"):
+			if _impostor_renderer.has_method("set_visibility_range"):
+				_impostor_renderer.call("set_visibility_range", far_begin, _distant_render_end_m, DU.FADE_MARGIN_RENDER_FAR)
+			else:
+				_impostor_renderer.set_visibility_range_begin(far_begin)
+		_impostor_renderer.set_enabled(effective_visible)
+		if effective_visible:
+			_impostor_update_pending = true
+
+## Toggle the CHUNK tier (offline-baked ring proxies). Returns the effective
+## state (false when no bake exists on disk). Re-applies the impostor range
+## so FAR_START flips between MID_END and CHUNK_END accordingly, and the
+## paged-coverage band release so MID buckets revert to the plain MID_END
+## band when the proxies are gone.
+func set_chunk_tier_enabled(enabled: bool) -> bool:
+	if _chunk_renderer == null:
+		return false
+	_chunk_renderer.call("set_enabled", enabled)
+	_apply_impostor_request()
+	_apply_paged_coverage()
+	return bool(_chunk_renderer.call("is_enabled"))
+
+
+## Effective CHUNK-tier state — false when no renderer/bake exists. Lets the UI
+## reflect reality after a no-bake refusal or a console chunks_enable/disable.
+func is_chunk_tier_enabled() -> bool:
+	return _chunk_renderer != null and bool(_chunk_renderer.call("is_enabled"))
+
+
+## Route per-cell static-bucket presence to the chunk-proxy swap.
+func _on_cell_static_presence_changed(cell_grid: Vector2i, present: bool) -> void:
+	if _chunk_renderer != null:
+		_chunk_renderer.call("set_cell_covered", cell_grid, present)
+
+
+## Covered MID bucket types run band-free ONLY while the chunk tier can
+## actually cover them, and never while a `static_range` debug override is
+## in force (the override is a measurement instrument — it must clamp
+## everything or its ablations lie).
+func _apply_paged_coverage() -> void:
+	if _static_renderer == null:
+		return
+	var chunk_active: bool = _chunk_renderer != null and bool(_chunk_renderer.call("is_enabled"))
+	var override_active := _static_range_override.y >= 0.0
+	var min_radius := 0.0 if (not chunk_active or override_active) else DU.CHUNK_PROXY_MIN_WORLD_RADIUS
+	_static_renderer.set_paged_coverage(min_radius)
+
+
+func get_chunk_tier_stats() -> Dictionary:
+	if _chunk_renderer == null:
+		return {}
+	return _chunk_renderer.call("get_stats")
+
+
+## Toggle NEAR-tier Node3D cells (loaded cell containers).
+## Remembers state so cells loaded after the toggle respect it.
+var _near_tier_visible: bool = true
+## Set when near tier is thawed after being off — forces 25ms instantiation budget
+## until the queue drains, without touching _startup_phase (which has broader effects).
+var _near_burst_drain: bool = false
+
+func set_near_tier_visible(visible: bool) -> void:
+	var was_visible := _near_tier_visible
+	_near_tier_visible = visible
+	for grid: Vector2i in _loaded_cells:
+		var cell_node: Node3D = _loaded_cells[grid]
+		if cell_node:
+			cell_node.visible = visible
+			_set_near_gameplay_active(cell_node, visible)
+	# On thaw: arm burst drain + force catch-up cell scan.
+	if visible and not was_visible:
+		_near_burst_drain = true
+		Log.info("streaming", "NEAR thaw — burst drain armed")
+		_update_loaded_cells()
+
+func _set_near_gameplay_active(root: Node, active: bool) -> void:
+	root.process_mode = Node.PROCESS_MODE_INHERIT if active else Node.PROCESS_MODE_DISABLED
+	if root is CollisionShape3D or root is CollisionPolygon3D:
+		root.set_deferred("disabled", not active)
+	if root is Area3D:
+		var area := root as Area3D
+		if area.name != "InteractionArea":
+			area.set_deferred("monitoring", active)
+			area.set_deferred("monitorable", active)
+	for child: Node in root.get_children():
+		_set_near_gameplay_active(child, active)
+
+
+## Toggle HLOD merged geometry (ObjectPaging)
+func set_hlod_visible(visible: bool) -> void:
+	_hlod_requested_visible = visible
+	_apply_hlod_request()
+
+
+func set_dev_mid_object_paging_visible(visible: bool) -> void:
+	_dev_mid_object_paging_visible = visible
+	_apply_hlod_request()
+
+
+func _object_paging_requested_visible() -> bool:
+	return _hlod_requested_visible or (_dev_mid_object_paging_visible and _mid_tier_visible)
+
+
+func _object_paging_mid_replacement_active() -> bool:
+	return _dev_mid_object_paging_visible and not _hlod_requested_visible
+
+
+func _configure_object_paging_visual_range() -> void:
+	if not _hlod_merger:
+		return
+	if _object_paging_mid_replacement_active():
+		if _hlod_merger.has_method("set_mid_replacement_cost_gate_enabled"):
+			_hlod_merger.call("set_mid_replacement_cost_gate_enabled", true)
+		if _hlod_merger.has_method("set_visual_begin_floor"):
+			_hlod_merger.call("set_visual_begin_floor", DU.NEAR_END)
+		if _hlod_merger.has_method("set_visual_end_cap"):
+			_hlod_merger.call("set_visual_end_cap", DU.HLOD_START)
+		return
+	if _hlod_merger.has_method("set_mid_replacement_cost_gate_enabled"):
+		_hlod_merger.call("set_mid_replacement_cost_gate_enabled", false)
+	if _hlod_merger.has_method("set_visual_begin_floor"):
+		_hlod_merger.call("set_visual_begin_floor", DU.HLOD_START)
+	if _hlod_merger.has_method("set_visual_end_cap"):
+		_hlod_merger.call("set_visual_end_cap", minf(_distant_render_end_m, DU.HLOD_END))
+
+
+func _apply_hlod_request() -> void:
+	var effective_visible := false
+	if _object_paging_requested_visible() and (_object_paging_mid_replacement_active() or _distant_render_end_m > DU.HLOD_START):
+		effective_visible = _ensure_hlod_merger()
+		if _hlod_merger:
+			_hlod_merger.set("enabled", effective_visible)
+			_hlod_merger.call("set_all_visible", effective_visible)
+			_configure_object_paging_visual_range()
+	else:
+		_teardown_hlod_merger()
+		_sync_hlod_far_coverage(true)
+	if _static_renderer:
+		_apply_static_renderer_tier_visibility()
+	_apply_impostor_request()
+	if effective_visible:
+		_hlod_needs_initial_update = true
+		_sync_hlod_far_coverage(true)
+
+
+func is_hlod_active() -> bool:
+	return _hlod_requested_visible and _hlod_merger != null
+
+
+func get_hlod_stats() -> Dictionary:
+	if not _hlod_merger:
+		return {
+			"enabled": false,
+			"active_cells": 0,
+			"pending_merges": 0,
+			"cached_publish_queue_size": 0,
+			"cache_entries": 0,
+			"cache_bytes": 0,
+			"total_merges_completed": 0,
+			"total_refs_skipped": 0,
+			"refs_size_rejected": 0,
+			"refs_surface_rejected": 0,
+			"refs_partial_bucket_rejected": 0,
+			"refs_type_rejected": 0,
+			"size_cache_hits": 0,
+			"size_cache_size": 0,
+			"chunks_tier_0": 0,
+			"chunks_tier_1": 0,
+			"chunks_tier_2": 0,
+			"total_chunk_surfaces": 0,
+			"total_chunk_materials": 0,
+			"visible_hlod_draw_calls": 0,
+			"null_material_surface_count": 0,
+			"default_proxy_surface_count": 0,
+			"source_null_material_surfaces": 0,
+			"overflow_proxy_surfaces": 0,
+			"chunk_surface_histogram": {},
+			"chunk_material_histogram": {},
+			"total_chunk_vertices": 0,
+			"total_chunk_indices": 0,
+			"max_chunk_surfaces": 0,
+			"max_chunk_materials": 0,
+			"max_chunk_vertices": 0,
+			"max_chunk_indices": 0,
+			"stale_completions_discarded": 0,
+			"surface_cap_rejections": 0,
+			"surface_cap_over_budget_published": 0,
+			"runtime_surface_budget_proxy_chunks": 0,
+			"merge_queue_last_usec": 0,
+			"completion_last_usec": 0,
+			"preparing_chunks": 0,
+			"negative_chunks": 0,
+			"desired_chunks": 0,
+			"predictive_desired_chunks": 0,
+			"merge_queue_size": 0,
+			"active_visual_chunks": 0,
+			"visual_begin_floor": DU.HLOD_START,
+			"mid_hlod_overlap_chunks": 0,
+			"nonvisual_chunks_suppressed": 0,
+			"far_visibility_begin_m": DU.FAR_START,
+			"handoff_far_hlod_overlap_chunks": 0,
+			"handoff_hole_risk_chunks": 0,
+			"far_hlod_covered_pages": 0,
+			"far_hlod_uncovered_pages": 0,
+			"far_hlod_covered_impostors": 0,
+			"far_hlod_page_overrides": 0,
+			"active_covered_refs": 0,
+			"active_covered_cells": 0,
+			"active_complete_coverage_chunks": 0,
+			"active_incomplete_coverage_chunks": 0,
+			"coverage_revision": 0,
+			"warmup_queue_size": 0,
+			"total_teleports": 0,
+			"runtime_lod_generation_enabled": false,
+			"runtime_force_merge_eligible_refs": false,
+			"mid_replacement_cost_gate_enabled": false,
+			"mid_object_paging_accepted_chunks": 0,
+			"mid_object_paging_rejected_chunks_cost": 0,
+			"mid_object_paging_rejected_chunks_partial": 0,
+			"mid_object_paging_rejected_chunks_missing_bucket": 0,
+			"mid_object_paging_suppressed_draw_groups": 0,
+			"mid_object_paging_proxy_surface_estimate": 0,
+			"mid_object_paging_refs_no_bucket_rejected": 0,
+			"dev_mid_object_paging": _dev_mid_object_paging_visible,
+		}
+	var stats: Dictionary = _hlod_merger.call("get_stats")
+	stats["enabled"] = bool(_hlod_merger.get("enabled"))
+	stats["runtime_lod_generation_enabled"] = bool(stats.get("runtime_lod_generation_enabled", false))
+	stats["runtime_force_merge_eligible_refs"] = bool(stats.get("runtime_force_merge_eligible_refs", false))
+	stats["dev_mid_object_paging"] = _dev_mid_object_paging_visible
+	var far_begin := DU.FAR_START
+	var far_enabled := false
+	if _impostor_renderer and _impostor_renderer.has_method("get_stats"):
+		var far_stats: Dictionary = _impostor_renderer.call("get_stats")
+		far_begin = float(far_stats.get("far_visibility_begin_m", DU.FAR_START))
+		far_enabled = bool(far_stats.get("far_enabled", false))
+	stats["far_visibility_begin_m"] = far_begin
+	stats["handoff_far_hlod_overlap_chunks"] = int(stats.get("active_visual_chunks", 0)) if far_enabled and far_begin < DU.HLOD_END else 0
+	stats["handoff_hole_risk_chunks"] = (
+		int(stats.get("pending_merges", 0))
+		+ int(stats.get("cached_publish_queue_size", 0))
+		+ int(stats.get("merge_queue_size", 0))
+		+ int(stats.get("preparing_chunks", 0))
+		+ int(stats.get("negative_chunks", 0))
+	) if far_begin > _distant_render_end_m else 0
+	if _impostor_renderer and _impostor_renderer.has_method("get_stats"):
+		var impostor_stats: Dictionary = _impostor_renderer.call("get_stats")
+		stats["far_hlod_covered_pages"] = int(impostor_stats.get("far_hlod_covered_pages", 0))
+		stats["far_hlod_uncovered_pages"] = int(impostor_stats.get("far_hlod_uncovered_pages", 0))
+		stats["far_hlod_covered_impostors"] = int(impostor_stats.get("far_hlod_covered_impostors", 0))
+		stats["far_hlod_page_overrides"] = int(impostor_stats.get("far_hlod_page_overrides", 0))
+	return stats
+
+
+func get_hlod_chunk_debug_data() -> Array[Dictionary]:
+	if not _hlod_merger or not _hlod_merger.has_method("get_active_chunk_debug_data"):
+		return []
+	return _hlod_merger.call("get_active_chunk_debug_data") as Array[Dictionary]
+
+
+func _sync_hlod_far_coverage(force: bool = false) -> void:
+	var can_sync_far := not _object_paging_mid_replacement_active() and _impostors_requested_visible and _impostor_renderer != null and (
+		_impostor_renderer.has_method("set_hlod_covered_object_ids")
+	)
+	var can_sync_mid := _mid_tier_visible and _static_renderer != null and _static_renderer.has_method("set_hlod_covered_bucket_counts")
+	if not can_sync_far and not can_sync_mid:
+		_hlod_far_coverage_revision = -1
+		return
+	if not _object_paging_requested_visible() or not _hlod_merger or not _hlod_merger.has_method("get_active_coverage_manifest"):
+		if force or _hlod_far_coverage_revision != -1:
+			if can_sync_far:
+				_impostor_renderer.call("set_hlod_covered_object_ids", {})
+			if can_sync_mid:
+				_static_renderer.call("set_hlod_covered_bucket_counts", {}, DU.NEAR_END if _object_paging_mid_replacement_active() else DU.HLOD_START)
+			_hlod_far_coverage_revision = -1
+		return
+
+	if not force and _hlod_merger.has_method("get_coverage_revision"):
+		var current_revision := int(_hlod_merger.call("get_coverage_revision"))
+		if current_revision == _hlod_far_coverage_revision:
+			return
+
+	var manifest: Dictionary = _hlod_merger.call("get_active_coverage_manifest")
+	var revision := int(manifest.get("coverage_revision", 0))
+	if not force and revision == _hlod_far_coverage_revision:
+		return
+	_hlod_far_coverage_revision = revision
+	if can_sync_far:
+		var covered_objects: Dictionary = manifest.get("source_object_ids", {})
+		_impostor_renderer.call("set_hlod_covered_object_ids", covered_objects)
+	if can_sync_mid:
+		_static_renderer.call(
+			"set_hlod_covered_bucket_counts",
+			manifest.get("complete_bucket_counts", manifest.get("source_bucket_counts", {})),
+			DU.NEAR_END if _object_paging_mid_replacement_active() else DU.HLOD_START
+		)
+
+
+func _should_update_hlod() -> bool:
+	if _hlod_needs_initial_update or _cell_changed_this_frame:
+		return true
+	if _hlod_last_update_position == Vector3.INF:
+		return true
+	var camera_xz := Vector2(_camera_position.x, _camera_position.z)
+	var last_xz := Vector2(_hlod_last_update_position.x, _hlod_last_update_position.z)
+	return camera_xz.distance_to(last_xz) >= HLOD_UPDATE_DISTANCE
+
+
+func _ensure_hlod_merger() -> bool:
+	if _hlod_merger:
+		return true
+	if not _static_renderer or not _background_processor:
+		Log.warn("streaming", "HLOD requested before streaming initialization completed")
+		return false
+	if not _object_paging_script:
+		_object_paging_script = load("res://src/core/world/object_paging.gd") as Script
+	if not _object_paging_script:
+		Log.error("streaming", "Failed to load ObjectPaging script for HLOD")
+		return false
+	var merger: RefCounted = _object_paging_script.new() as RefCounted
+	if not merger:
+		Log.error("streaming", "Failed to create ObjectPaging instance for HLOD")
+		return false
+	_hlod_merger = merger
+	var scenario := get_viewport().get_world_3d().scenario
+	_hlod_merger.call("initialize", scenario, _static_renderer, _background_processor, _cell_manager.get_model_loader())
+	if _hlod_merger.has_method("set_world_object_source"):
+		_hlod_merger.call("set_world_object_source", _world_object_source)
+	if _hlod_merger.has_method("set_coordinate_mapper"):
+		_hlod_merger.call("set_coordinate_mapper", _coordinate_mapper)
+	if _hlod_merger.has_method("set_visual_begin_floor"):
+		_hlod_merger.call("set_visual_begin_floor", DU.HLOD_START)
+	_configure_object_paging_visual_range()
+	Log.info("streaming", "Runtime HLOD merger initialized lazily - MID bridge 150-%dm, HLOD visible %d-%dm, FAR starts at %dm, view cap=%dm" % [
+		int(DU.MID_END), int(DU.HLOD_START), int(minf(_distant_render_end_m, DU.HLOD_END)), int(DU.FAR_START), int(_distant_render_end_m)])
+	return true
+
+
+func _teardown_hlod_merger() -> void:
+	if _hlod_merger:
+		_hlod_merger.set("enabled", false)
+		_hlod_merger.call("set_all_visible", false)
+		_hlod_merger.call("cleanup", true)
+		_hlod_merger = null
+	_hlod_needs_initial_update = true
+	if _static_renderer and _static_renderer.has_method("set_hlod_covered_bucket_counts"):
+		_static_renderer.call("set_hlod_covered_bucket_counts", {}, DU.HLOD_START)
+
+## Toggle distant-light billboard MultiMesh (DistantLightManager) — hides + stops streaming.
+func set_distant_lights_visible(visible: bool) -> void:
+	_distant_lights_requested_visible = visible
+	if _distant_light_manager:
+		_distant_light_manager.set_enabled(visible)
+		if visible:
+			_distant_light_manager.scan_cells_around(_camera_cell, _distant_stream_radius_cells())
+
+
+## Re-apply live LightTuning values to ALL light tiers (Lighting UI tab). NEAR
+## lights are re-tuned in place via the gw_tunable_lights group walk; the distant
+## real lights + aggregate proxies via the manager's refresh_tunables.
+func refresh_light_tuning() -> void:
+	var near_count := reapply_near_lights()
+	var distant_count := 0
+	var agg_count := 0
+	if _distant_light_manager:
+		_distant_light_manager.refresh_tunables()
+		var s: Dictionary = _distant_light_manager.get_stats()
+		distant_count = int(s.get("distant_real_light_count", 0))
+		agg_count = int(s.get("distant_light_aggregates", 0))
+	Log.info("streaming", "Light tuning: NEAR=%d DISTANT=%d AGG=%d | Size %.2f Near %.2f Dist %.2f Glow %.2f Reach %.0f" % [
+		near_count, distant_count, agg_count,
+		LightTuning.radius_multiplier, LightTuning.near_energy_multiplier,
+		LightTuning.distant_energy_multiplier, LightTuning.aggregate_energy_base,
+		LightTuning.aggregate_near_full_m])
+
+
+## Walk the gw_tunable_lights group and re-apply the current LightTuning radius /
+## energy multipliers to every loaded NEAR light — both OmniLight3D nodes
+## (animated) and server-direct RID lights (static). Runs synchronously on a
+## slider change, so the change is instant and independent of the streaming tick.
+## Cost is bounded by the loaded NEAR-light count (a few hundred at most).
+func reapply_near_lights() -> int:
+	var tree := get_tree()
+	if tree == null:
+		return 0
+	var mult_r := LightTuning.radius_multiplier
+	var mult_e := LightTuning.near_energy_multiplier
+	var count := 0
+	for node: Node in tree.get_nodes_in_group("gw_tunable_lights"):
+		if not is_instance_valid(node):
+			continue
+		var base_range: float = float(node.get_meta("gw_base_range", 0.0))
+		var base_energy: float = float(node.get_meta("gw_base_energy", 0.8))
+		var new_range: float = maxf(base_range * mult_r, 0.125)
+		var new_energy: float = base_energy * mult_e
+		if node.has_meta("gw_light_rid"):
+			var rid: RID = node.get_meta("gw_light_rid")
+			if rid.is_valid():
+				RenderingServer.light_set_param(rid, RenderingServer.LIGHT_PARAM_RANGE, new_range)
+				RenderingServer.light_set_param(rid, RenderingServer.LIGHT_PARAM_ENERGY, new_energy)
+		else:
+			var omni := node.get_node_or_null("Light") as OmniLight3D
+			if omni != null:
+				omni.omni_range = new_range
+				omni.light_energy = new_energy
+				omni.set_meta("base_energy", new_energy)  # LightAnimator's per-frame base
+		count += 1
+	return count
+
+
+# ----------------------------------------------------------------------------
+# I.6 — Persistent node registry (held / carried items)
+# ----------------------------------------------------------------------------
+#
+# Public API for systems that need to keep a node alive across cell
+# unloads (currently `CarryController` for held bodies; future
+# consumers: dropped items, NPC corpses, save-system anchors).
+#
+# Per `docs/INTERACTION_SYSTEM.md` §10:
+# - On grab: caller invokes `register_persistent_node(body, grid)`
+# - On cell unload: streaming manager reparents matching nodes to
+#   `_orphan_container` so they survive the cell teardown
+# - On cell reload: streaming manager re-homes orphans keyed to that
+#   grid back into the loaded cell node (Phase 2 — not implemented yet)
+# - On release: caller invokes `unregister_persistent_node(body)`
+#
+# Per spec §9: orphan registry is a child of `NativeStreamingManager`,
+# NOT an autoload. Hard rule.
+
+## Register a node as persistent. The node will be reparented to the
+## orphan registry when its origin cell unloads instead of being freed
+## with the cell. Caller MUST call `unregister_persistent_node` when
+## the node no longer needs the protection (e.g. on release for a held
+## item) — the registry does not auto-clean on free, because Godot's
+## `tree_exiting` signal also fires on `reparent()` which is exactly
+## what the evacuation path does. Stale entries are pruned lazily via
+## `is_instance_valid` checks in the evacuation walk.
+##
+## The `original_grid` is the grid coordinate of the cell that contains
+## the node at registration time. Used as the re-home key when the cell
+## reloads. Pass `find_grid_for_node(node)` if you don't track it
+## yourself. Timestamp + last-known-player grid are captured for the
+## Phase 2 bound policy (5 min / 8 cell expiry).
+func register_persistent_node(node: Node3D, original_grid: Vector2i) -> void:
+	if node == null:
+		return
+	var entry := PersistentNodeEntry.new()
+	entry.original_grid = original_grid
+	entry.created_ms = Time.get_ticks_msec()
+	entry.last_known_player_grid = _camera_cell
+	_persistent_nodes[node] = entry
+
+
+## Unregister a previously-registered persistent node. Idempotent.
+## Does NOT reparent the node — caller decides where it goes after
+## release (back into a loaded cell, into the orphan registry, etc.).
+func unregister_persistent_node(node: Node3D) -> void:
+	if node == null:
+		return
+	_persistent_nodes.erase(node)
+
+
+## Walk the node's ancestor chain looking for a loaded cell. Returns
+## the cell's grid coordinate if found, or `Vector2i(INT_MIN, INT_MIN)`
+## as a sentinel if no ancestor is in the loaded set. Used by callers
+## who need to capture the origin grid at registration time.
+func find_grid_for_node(node: Node3D) -> Vector2i:
+	if node == null:
+		return Vector2i(-2147483648, -2147483648)
+	var current: Node = node.get_parent()
+	while current != null:
+		# Build a reverse lookup once per call — fine for low-frequency
+		# grab events, not on hot path.
+		for grid: Vector2i in _loaded_cells:
+			if _loaded_cells[grid] == current:
+				return grid
+		current = current.get_parent()
+	return Vector2i(-2147483648, -2147483648)
+
+
+## Internal — called from `_unload_cell` BEFORE the cell goes into the
+## unload container. Walks `_persistent_nodes`, finds any whose ancestor
+## chain leads to `cell_node`, reparents them to `_orphan_container`
+## with global transform preserved.
+func _evacuate_persistent_nodes_from_cell(cell_node: Node3D, grid: Vector2i) -> void:
+	if _persistent_nodes.is_empty() or _orphan_container == null:
+		return
+	# Snapshot keys to a plain Array — `_persistent_nodes` is untyped
+	# but iterating it directly while pruning dead entries can still
+	# trip the engine's safety checks. Snapshot, walk, prune at the end.
+	var keys: Array = _persistent_nodes.keys()
+	var to_evacuate: Array[Node3D] = []
+	var dead_keys: Array = []
+	for key in keys:
+		if not is_instance_valid(key):
+			dead_keys.append(key)
+			continue
+		var node: Node3D = key as Node3D
+		if node == null:
+			dead_keys.append(key)
+			continue
+		# Walk ancestors — is `cell_node` in the chain?
+		var ancestor: Node = node.get_parent()
+		while ancestor != null:
+			if ancestor == cell_node:
+				to_evacuate.append(node)
+				# Re-key to the actual current grid (which is the same
+				# as the unload grid; explicit re-record for clarity).
+				var entry: PersistentNodeEntry = _persistent_nodes[node]
+				if entry == null:
+					entry = PersistentNodeEntry.new()
+					entry.created_ms = Time.get_ticks_msec()
+				entry.original_grid = grid
+				entry.last_known_player_grid = _camera_cell
+				_persistent_nodes[node] = entry
+				break
+			ancestor = ancestor.get_parent()
+	# Lazy prune dead entries discovered during the walk.
+	for k in dead_keys:
+		_persistent_nodes.erase(k)
+	for node in to_evacuate:
+		# `reparent` preserves global transform — held bodies' world
+		# pos shouldn't jump on unload.
+		node.reparent(_orphan_container, true)
+		_debug("Evacuated persistent node '%s' from cell %s to orphan registry" % [node.name, grid])
+
+
+## I.6 Phase 2 — called from `_load_cell_sync` and the async loader
+## after a cell_node enters `_world_container`. Walks the orphan
+## registry, finds entries whose `original_grid` matches the loading
+## cell, and reparents the node back into the newly loaded cell with
+## global transform preserved. If the re-home position is off the
+## cell's terrain / inside a wall / otherwise invalid, the walk-back
+## fallback raycasts downward against layer 1 (Environment) and drops
+## the body to the first hit — prevents items from vanishing through
+## deformed terrain between unload and reload.
+func _rehome_persistent_nodes_for_cell(cell_node: Node3D, grid: Vector2i) -> void:
+	if _persistent_nodes.is_empty() or cell_node == null:
+		return
+	var keys: Array = _persistent_nodes.keys()
+	var dead_keys: Array = []
+	var rehomed_count := 0
+	for key in keys:
+		if not is_instance_valid(key):
+			dead_keys.append(key)
+			continue
+		var node: Node3D = key as Node3D
+		if node == null:
+			dead_keys.append(key)
+			continue
+		var entry: PersistentNodeEntry = _persistent_nodes[key]
+		if entry == null:
+			dead_keys.append(key)
+			continue
+		if entry.original_grid != grid:
+			continue
+		# Only re-home nodes that were actually evacuated to the orphan
+		# container. A held item's _held_body is still under the player
+		# camera Marker3D — we don't touch those. Evacuated nodes live
+		# directly under `_orphan_container` (reparent is not deep).
+		if node.get_parent() != _orphan_container:
+			continue
+		node.reparent(cell_node, true)
+		_apply_walkback_ground_snap(node, cell_node)
+		rehomed_count += 1
+		_debug("Re-homed persistent node '%s' back into cell %s" % [node.name, grid])
+	for k in dead_keys:
+		_persistent_nodes.erase(k)
+	if rehomed_count > 0 and debug_enabled:
+		_debug("Cell %s reload re-homed %d orphan(s)" % [grid, rehomed_count])
+
+
+## Walk-back ground-snap safety net. After a re-home `reparent` the
+## node's global_position is whatever it was at evacuation. If that
+## point is (a) below the reloaded cell's terrain (terrain tile was
+## deformed or regenerated while the cell was gone) or (b) inside a
+## collider, a short downward raycast from a safe offset above the
+## original position picks the nearest layer 1 (Environment) contact
+## and drops the body there. Cheap, bounded, and avoids the
+## "item falls through the world on cell reload" edge case.
+func _apply_walkback_ground_snap(node: Node3D, _cell_node: Node3D) -> void:
+	const WALKBACK_PROBE_UP: float = 3.0
+	const WALKBACK_PROBE_DOWN: float = 50.0
+	const ENV_LAYER_BIT: int = 1 << 0  # Layer 1 = Environment
+	var space := node.get_world_3d().direct_space_state if node.is_inside_tree() else null
+	if space == null:
+		return
+	var pos := node.global_position
+	var from := Vector3(pos.x, pos.y + WALKBACK_PROBE_UP, pos.z)
+	var to := Vector3(pos.x, pos.y - WALKBACK_PROBE_DOWN, pos.z)
+	var query := PhysicsRayQueryParameters3D.create(from, to)
+	query.collision_mask = ENV_LAYER_BIT
+	query.collide_with_areas = false
+	query.collide_with_bodies = true
+	# Exclude the node itself so a held body doesn't self-hit.
+	if node is CollisionObject3D:
+		query.exclude = [(node as CollisionObject3D).get_rid()]
+	var hit := space.intersect_ray(query)
+	if hit.is_empty():
+		return
+	var hit_pos: Vector3 = hit.get("position", pos)
+	# If the current position is within 0.25m of the ground hit, leave
+	# it alone — we don't want to snap a stable resting item. Only
+	# correct genuinely invalid placements.
+	if absf(pos.y - hit_pos.y) < 0.25 and pos.y >= hit_pos.y:
+		return
+	node.global_position = Vector3(pos.x, hit_pos.y + 0.05, pos.z)
+
+
+## I.6 Phase 2 — periodic orphan expiry pass. Walks `_persistent_nodes`
+## filtering to entries whose current parent is `_orphan_container`
+## (i.e. actually orphaned right now, not held). Nodes that exceed the
+## 5-minute wall-clock budget OR whose `original_grid` is more than
+## ORPHAN_EXPIRY_CELL_DISTANCE Chebyshev cells from the current player
+## grid get deferred-queue-freed and their entries erased. Held items
+## (parent is camera Marker3D) are never touched — the player still
+## owns them.
+##
+## Called at ORPHAN_PRUNE_INTERVAL_S from `_process`.
+func _prune_expired_orphans() -> void:
+	if _persistent_nodes.is_empty() or _orphan_container == null:
+		return
+	var keys: Array = _persistent_nodes.keys()
+	var dead_keys: Array = []
+	var now_ms: int = Time.get_ticks_msec()
+	var expired_count := 0
+	for key in keys:
+		if not is_instance_valid(key):
+			dead_keys.append(key)
+			continue
+		var node: Node3D = key as Node3D
+		if node == null:
+			dead_keys.append(key)
+			continue
+		var entry: PersistentNodeEntry = _persistent_nodes[key]
+		if entry == null:
+			dead_keys.append(key)
+			continue
+		# Only expire actually-orphaned nodes. Held items live under
+		# the player camera and must stay alive until released.
+		if node.get_parent() != _orphan_container:
+			# Update the last-known-player grid while we're here so the
+			# Chebyshev check stays current after re-home.
+			entry.last_known_player_grid = _camera_cell
+			continue
+		var age_ms: int = now_ms - entry.created_ms
+		var dx: int = absi(entry.original_grid.x - _camera_cell.x)
+		var dy: int = absi(entry.original_grid.y - _camera_cell.y)
+		var chebyshev: int = maxi(dx, dy)
+		if age_ms > ORPHAN_EXPIRY_MS or chebyshev > ORPHAN_EXPIRY_CELL_DISTANCE:
+			dead_keys.append(key)
+			if is_instance_valid(node) and not node.is_queued_for_deletion():
+				node.queue_free()
+			expired_count += 1
+	for k in dead_keys:
+		_persistent_nodes.erase(k)
+	if expired_count > 0:
+		_debug("Expired %d orphan(s) (age>5min or chebyshev>%d cells)" % [
+			expired_count, ORPHAN_EXPIRY_CELL_DISTANCE])
+
+
+## Get the impostor renderer (for console commands and diagnostics)
+func get_impostor_manager() -> Node3D:
+	return _impostor_renderer
+
+
+func set_impostor_debug_enabled(enabled: bool) -> void:
+	if _impostor_renderer:
+		_impostor_renderer.debug_enabled = enabled
+
+
+func get_static_renderer_debug_target() -> Node:
+	return _static_renderer
+
+
+## Teleport to a new location (forces immediate cell reload)
+func teleport_to(position: Vector3) -> void:
+	_camera_position = position
+	_camera_cell = _world_to_cell(position)
+
+	# S.1: promotion tracking deleted — no promoted objects to batch-free.
+
+	# Unload all cells
+	for grid: Vector2i in _loaded_cells.keys():
+		_unload_cell(grid)
+
+	# Load cells around new position
+	_update_loaded_cells()
+
+
+## Get the camera's current cell grid coordinate
+func get_camera_cell() -> Vector2i:
+	return _camera_cell
+
+
+## Get all loaded cell coordinates
+func get_loaded_cell_coordinates() -> Array[Vector2i]:
+	var coords: Array[Vector2i] = []
+	for grid: Vector2i in _loaded_cells:
+		coords.append(grid)
+	return coords
+
+
+## Get all loaded cell Node3D containers (for object picking)
+func get_loaded_cell_nodes() -> Array:
+	var nodes: Array = []
+	for grid: Vector2i in _loaded_cells:
+		var cell: Variant = _loaded_cells[grid]
+		if is_instance_valid(cell):
+			nodes.append(cell)
+	return nodes
+
+
+## Refresh cells around camera
+## Forces a check of which cells should be loaded
+func refresh_cells() -> void:
+	if _initialized:
+		_update_loaded_cells()
+
+#endregion
+
+
+#region Utilities
+
+## Calculate dynamic frame budget based on actual FPS
+## At 60 FPS: ~8ms (same as static INSTANTIATION_BUDGET_MS)
+## At 30 FPS: ~16ms (more time per frame available)
+## At 120 FPS: ~4ms (less time to stay within frame budget)
+func _get_dynamic_budget(delta: float) -> float:
+	var frame_time_ms := delta * 1000.0
+	var budget := frame_time_ms * SC.INSTANTIATION_BUDGET_FRACTION
+	return clampf(budget, SC.INSTANTIATION_BUDGET_MIN_MS, SC.INSTANTIATION_BUDGET_MAX_MS)
+
+#endregion
+
+
+#region Debug
+
+func _debug(msg: String) -> void:
+	if debug_enabled:
+		Log.debug("streaming", msg)
+
+
+## Phase 2 stutter diag — log pipeline compile delta at cell-load completion.
+## Companion to the per-5s heartbeat: heartbeat shows TOTAL deltas over a slice,
+## this shows the delta attributable specifically to one cell's add_child window.
+##
+## Decision tree for the resulting log line (plan §2.2):
+##   Δ:m+sf>0, dr=0  → engine pre-compiled at instantiation; expected. If preload
+##                     delta was ALSO 0 then ResourceLoader.load alone isn't
+##                     sufficient — we need hidden-instance pre-warm in CellPreloader.
+##   Δ:dr>0          → first-visibility shader stutter. Missed pre-warm window.
+##                     Almost always means the asset entered the scene without
+##                     the engine having seen its mesh+material combo before.
+##   Δ:sp>0          → ubershader background optimization fired. Non-stuttering.
+func _log_pipeline_compile_for_cell_load(grid: Vector2i, object_count: int, mode: String) -> void:
+	if _pipeline_compile_per_cell == null:
+		return
+	var d: PackedInt64Array = _pipeline_compile_per_cell.delta_and_update()
+	if not PipelineCompileMonitorScript.has_activity(d):
+		return  # silent — nothing happened during this cell-load window
+	var level := "warn" if PipelineCompileMonitorScript.has_draw_compile(d) else "info"
+	var msg := "[pipe-cell %s %s] objs=%d %s" % [
+		mode, grid, object_count, PipelineCompileMonitorScript.format_delta(d),
+	]
+	if level == "warn":
+		Log.warn("streaming", msg)
+	else:
+		Log.info("streaming", msg)
+
+#endregion
+
+
+#region Startup Progress
+
+## Emit startup progress signal for parent UI to handle
+func _emit_startup_progress() -> void:
+	var target_cells := _get_cells_in_radius(_camera_cell, load_radius_cells).size()
+	var loaded := _loaded_cells.size()
+	var loading := _loading_cells.size()
+	var queue_size := _cell_manager.get_instantiation_queue_size() if _cell_manager else 0
+
+	# Combined progress: cells (0-40%) + impostors (40-100%)
+	var cell_progress := 0.0
+	if target_cells > 0:
+		cell_progress = float(loaded + loading * 0.5) / float(target_cells)
+		cell_progress = clampf(cell_progress, 0.0, 1.0)
+
+	var impostor_progress := 0.0
+	if _impostor_renderer:
+		var initial: int = _impostor_renderer.get_initial_pending_count()
+		var pending: int = _impostor_renderer.get_pending_cell_count()
+		var processed: int = initial - pending
+		# Progress is based on inner ring completion, not the full 11K+ cell ring
+		var inner_ring_radius: int = load_radius_cells + 2
+		var inner_ring_count: int = int(PI * inner_ring_radius * inner_ring_radius)
+		if inner_ring_count > 0:
+			impostor_progress = float(processed) / float(inner_ring_count)
+			impostor_progress = clampf(impostor_progress, 0.0, 1.0)
+
+	var progress := (cell_progress * 40.0) + (impostor_progress * 60.0)
+	progress = clampf(progress, 0.0, 100.0)
+
+	startup_progress.emit(progress, loaded, target_cells, queue_size)
+
+## Check if startup phase should end
+func _check_startup_complete() -> void:
+	if not _startup_phase or _startup_frames < 20:
+		return
+	# Safety timeout: don't block loading screen longer than 10 seconds (~600 frames)
+	if _startup_frames > 600:
+		Log.warn("streaming", "Startup timeout after %d frames — forcing completion" % _startup_frames)
+		_startup_phase = false
+		if _impostor_renderer:
+			_impostor_renderer.set_load_budget_usec(4000.0)
+		# Deferred impostor scan — was blocked during startup to reduce load pressure
+		_impostor_update_pending = true
+		startup_complete.emit()
+		return
+	var queue_size := _cell_manager.get_instantiation_queue_size() if _cell_manager else 0
+	var impostor_pending: int = _impostor_renderer.get_pending_cell_count() if _impostor_renderer else 0
+	var impostor_initial: int = _impostor_renderer.get_initial_pending_count() if _impostor_renderer else 1
+	# Inner ring = just beyond the load radius — enough for visual horizon
+	var inner_ring_radius: int = load_radius_cells + 2
+	var inner_ring_count: int = int(PI * inner_ring_radius * inner_ring_radius)
+	var impostor_processed: int = impostor_initial - impostor_pending
+	var impostor_inner_ring_done: bool = impostor_processed >= inner_ring_count or impostor_pending == 0
+	# Wait for nearby cells loaded + first-playable queue cap + inner ring impostors
+	# Don't be too strict — player shouldn't wait 30s for every impostor
+	var scene_tiers_disabled := not _near_tier_visible and not _static_streaming_enabled
+	var nearby_cells_loaded := scene_tiers_disabled or _loaded_cells.size() >= mini(load_radius_cells * 2 + 1, 7)
+	# Diagnostic: log startup progress every 60 frames
+	if _startup_frames % 60 == 0:
+		Log.info("streaming", "Startup check: nearby_cells=%d/%d queue=%d imp_processed=%d/%d imp_pending=%d" % [
+			_loaded_cells.size(), mini(load_radius_cells * 2 + 1, 7),
+			queue_size, impostor_processed, inner_ring_count,
+			impostor_pending])
+	if nearby_cells_loaded and queue_size <= FIRST_PLAYABLE_MAX_QUEUE and impostor_inner_ring_done:
+		_startup_phase = false
+		_post_startup_start_ms = Time.get_ticks_msec()
+		# Restore normal impostor budget
+		if _impostor_renderer:
+			_impostor_renderer.set_load_budget_usec(4000.0)
+		# Deferred impostor scan — was blocked during startup to reduce load pressure
+		_impostor_update_pending = true
+		startup_complete.emit()
+		Log.info("streaming", "Startup phase complete after %d frames, %d cells loaded, %d impostor cells remaining (inner ring: %d/%d processed)" % [
+			_startup_frames, _loaded_cells.size(), impostor_pending, impostor_processed, inner_ring_count])
+
+
+## Check if currently in startup phase
+func is_in_startup_phase() -> bool:
+	return _startup_phase
+
+
+# -----------------------------------------------------------------------------
+# Inner-ring readiness API (Phase 8 — LoadingStateMachine consumer)
+# -----------------------------------------------------------------------------
+
+## Size of the inner ring in "cell radius". Inner ring = (2r+1)² cells
+## centred on the camera cell. INNER_RING_RADIUS=1 means the 3×3 block
+## right under the player. Matches the post-v4 `load_radius_cells = 1`
+## default (the loading gate and the streaming radius are now identical —
+## "playable at arm's reach" is the initial cell-streaming readiness gate).
+const INNER_RING_RADIUS: int = 1
+
+## Soft cap on the instantiation queue for the "ready" gate. The queue
+## trickles down steady-state; we don't require 0, just low enough that
+## the next 2–3 s of gameplay won't stall. 8 picked empirically — matches
+## the 2 cells/frame HLOD merge rate × ~4 frames of tolerable post-unpause
+## trickling.
+const FIRST_PLAYABLE_MAX_QUEUE: int = 8
+
+
+## Return a snapshot of inner-ring load state. Read by LoadingStateMachine's
+## predicate + progress callables; also surfaced to the perf-audit
+## autobench JSON for post-hoc analysis.
+##
+## Fields:
+##   ring_loaded       — how many of the (2r+1)² cells in the inner ring
+##                       are playable: present in _loaded_cells and either
+##                       fully completed or past the cell data/resource gate.
+##   ring_total        — (2 * INNER_RING_RADIUS + 1) ** 2 — constant, for
+##                       convenience.
+##   ring_pending_async — cells in the ring still waiting on the worker
+##                        thread (in _async_requests or _loading_cells).
+##   instantiation_queue — CellManager's queued instantiation batches.
+##                         Drains ~2 per frame; treated as a soft cap.
+##   camera_cell       — the cell the ring is centred on.
+func get_inner_ring_status() -> Dictionary:
+	var center: Vector2i = _camera_cell
+	# Count the scheduler-visible ring, not the theoretical grid. Coastal or
+	# sparse data sources may never queue every coordinate in the 3x3 block.
+	var ring_total: int = 0
+	var ring_loaded: int = 0
+	var ring_pending_async: int = 0
+	for dx in range(-INNER_RING_RADIUS, INNER_RING_RADIUS + 1):
+		for dy in range(-INNER_RING_RADIUS, INNER_RING_RADIUS + 1):
+			var grid := Vector2i(center.x + dx, center.y + dy)
+			var tracked := (
+				grid in _loaded_cells
+				or grid in _loading_cells
+				or grid in _async_requests
+				or grid in _pending_load_set
+			)
+			if not tracked:
+				continue
+			ring_total += 1
+			if grid in _loaded_cells:
+				if grid not in _async_requests:
+					ring_loaded += 1
+				elif _cell_manager and _cell_manager.has_method("is_async_visual_playable"):
+					var request_id: int = int(_async_requests[grid])
+					if bool(_cell_manager.call("is_async_visual_playable", request_id)):
+						ring_loaded += 1
+					else:
+						ring_pending_async += 1
+				else:
+					ring_pending_async += 1
+			elif grid in _loading_cells or grid in _async_requests:
+				ring_pending_async += 1
+	var inst_queue: int = 0
+	if _cell_manager and _cell_manager.has_method("get_instantiation_queue_size"):
+		inst_queue = _cell_manager.get_instantiation_queue_size()
+	return {
+		"ring_loaded": ring_loaded,
+		"ring_total": ring_total,
+		"ring_pending_async": ring_pending_async,
+		"instantiation_queue": inst_queue,
+		"first_playable_queue_cap": FIRST_PLAYABLE_MAX_QUEUE,
+		"camera_cell": center,
+	}
+
+
+## Option-A acceptance gate (see docs/audit/LOADING_STATE_MACHINE_DESIGN.md):
+## every cell in the (2r+1)² inner ring is loaded, no ring cell is still
+## async-pending, and the global instantiation queue is below
+## INNER_RING_MAX_QUEUE so the next few seconds of gameplay won't stall.
+func is_inner_ring_ready() -> bool:
+	var s := get_inner_ring_status()
+	if not _startup_phase:
+		return (
+			int(s["ring_pending_async"]) == 0
+			and int(s["instantiation_queue"]) <= FIRST_PLAYABLE_MAX_QUEUE
+		)
+	return (
+		int(s["ring_total"]) > 0
+		and int(s["ring_loaded"]) >= int(s["ring_total"])
+		and int(s["ring_pending_async"]) == 0
+		and int(s["instantiation_queue"]) <= FIRST_PLAYABLE_MAX_QUEUE
+	)
+
+
+## Called by the loading gate when the first playable frame has been reached
+## or the gate times out. It ends the high-budget startup phase so leftover
+## queue work drains under the normal runtime budget after the overlay hides.
+func mark_first_playable(reason: String = "loading_gate") -> void:
+	_first_playable_reached = true
+	if _startup_phase:
+		_startup_phase = false
+	if _post_startup_start_ms <= 0:
+		_post_startup_start_ms = Time.get_ticks_msec()
+	if _impostor_renderer:
+		_impostor_renderer.set_load_budget_usec(4000.0)
+	_impostor_update_pending = true
+	startup_complete.emit()
+	var queue_size := _cell_manager.get_instantiation_queue_size() if _cell_manager else 0
+	Log.info("streaming", "[first-playable] reason=%s frames=%d loaded_cells=%d queue=%d" % [
+		reason,
+		_startup_frames,
+		_loaded_cells.size(),
+		queue_size,
+	])
+
+#endregion

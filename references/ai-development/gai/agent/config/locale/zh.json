@@ -1,0 +1,210 @@
+{
+  "locale": "zh",
+  "agent": {
+    "common": {
+      "select": "选择",
+      "show": "显示",
+      "hide": "隐藏"
+    },
+    "toolbar": {
+      "title": "代码智能体工作区",
+      "log": "日志",
+      "view_log": "查看系统日志",
+      "theme_color": "主题颜色",
+      "light_theme": "切换到浅色主题",
+      "dark_theme": "切换到深色主题",
+      "raw_text": "显示原始文本",
+      "markdown": "将 Markdown 渲染为 BBCode",
+      "add_skills": "将技能索引加入当前对话",
+      "remove_skills": "从当前对话移除技能索引",
+      "add_agents": "将 AGENTS.md 加入当前对话",
+      "remove_agents": "从当前对话移除 AGENTS.md",
+      "hide_animation": "隐藏运行动画",
+      "show_animation": "智能体工作时显示运行动画"
+    },
+    "sidebar": {
+      "new_session": "+ 新建智能体",
+      "pinned": "已固定",
+      "chats": "对话",
+      "delete_chat": "删除对话",
+      "chat_title": "对话标题"
+    },
+    "search": {
+      "title": "搜索聊天记录",
+      "tooltip": "搜索聊天记录",
+      "placeholder": "搜索聊天内容",
+      "hint": "输入关键词搜索已保存的聊天",
+      "loading": "正在加载聊天记录…",
+      "empty": "没有已保存的聊天",
+      "results": "{} 条结果",
+      "limited_results": "{} 条结果（仅显示前 100 条）"
+    },
+    "workspace": {
+      "choose": "点击选择工作区文件夹",
+      "dialog_title": "打开文件夹"
+    },
+    "input": {
+      "placeholder": "让 gai Code Agent 读取、编辑文件或运行命令…（Enter 发送，Shift+Enter 换行）",
+      "click_to_ask": "点击询问 gai Code Agent…",
+      "stop": "停止",
+      "send": "发送（Enter）"
+    },
+    "sense": {
+      "pick_title": "选文",
+      "pick_cancel": "取消",
+      "pick_pending": "生成中…",
+      "pick_skipped": "无语音",
+      "label_voice": "语音",
+      "label_correct": "纠错",
+      "label_optimize": "优化",
+      "label_expand": "扩写",
+      "label_diverge": "发散",
+      "settings_title": "Sense 输入法",
+      "settings_tooltip": "Sense 输入法设置",
+      "input_method": "输入法",
+      "enabled_tooltip": "启用或关闭 Sense 输入法",
+      "model": "模型",
+      "local_model": "本地模型",
+      "remote_model": "远程模型",
+      "hotkey": "唤起快捷键",
+      "hotkey_tooltip": "点击后按下新的组合键",
+      "hotkey_capture": "请按快捷键…",
+      "hotkey_invalid": "快捷键需包含修饰键，且主键必须受系统支持",
+      "system_prompt": "系统提示词",
+      "system_prompt_placeholder": "此内容会附加到每次 Sense 模型请求的系统提示词。",
+      "prompt_search": "提示词模板搜索",
+      "prompt_search_placeholder": "输入关键字",
+      "prompt_search_tooltip": "双击搜索结果插入系统提示词"
+    },
+    "tokens": {
+      "label": "{} 个令牌",
+      "tooltip": "上下文：{}（{}%）· 回复：{} · 总计：{}（上次请求）"
+    },
+    "settings": {
+      "appearance": "外观",
+      "language": "语言",
+      "custom_provider": "自定义",
+      "heading": "AI 连接",
+      "description": "配置 OpenAI 兼容 API。",
+      "api_endpoint": "API 地址",
+      "api_endpoint_help": "完整的聊天补全接口地址",
+      "model": "模型",
+      "model_help": "每次请求使用的模型",
+      "proxy": "代理",
+      "proxy_help": "可选的 HTTP/HTTPS 代理",
+      "notification": "通知",
+      "notification_window": "智能体完成时弹窗通知",
+      "notification_sound": "通知声音",
+      "sound_folder_help": "选择包含通知声音的文件夹。",
+      "sound_duration": "声音时长",
+      "sound_folder_title": "选择通知声音文件夹",
+      "provider": "服务商",
+      "provider_help": "选择服务商后自动填写接口地址和推荐模型",
+      "api_token": "API 令牌",
+      "token_help": "保存在本地 user://setting.config",
+      "tooltip": "AI 设置"
+    }
+  },
+  "workflow": {
+    "window_title": "Skills Workflow — {}",
+    "untitled": "未命名",
+    "toolbar": {
+      "new": "新建",
+      "load": "打开",
+      "save": "保存",
+      "delete": "删除节点",
+      "log": "日志",
+      "run": "运行",
+      "stop": "停止"
+    },
+    "locale_switch": {
+      "to_en": "EN",
+      "to_zh": "中文"
+    },
+    "palette": {
+      "title": "技能库",
+      "hint": "展开分类，双击技能添加节点；双击工作流打开",
+      "my_workflows": "我的工作流"
+    },
+    "dialog": {
+      "save_title": "保存工作流",
+      "load_title": "打开工作流",
+      "workflow_filter": "Workflow JSON",
+      "all_files": "All Files"
+    },
+    "node": {
+      "connect_upstream": "请连接上游",
+      "path_placeholder": "选择或输入 {}",
+      "output_arrow": "→ {}"
+    },
+    "batch": {
+      "glob": "通配符",
+      "output_type": "输出类型"
+    }
+  },
+  "category": {
+    "source": "输入",
+    "audio": "音频",
+    "image": "图片",
+    "video": "视频"
+  },
+  "port_type": {
+    "audio": "音频",
+    "image": "图片",
+    "video": "视频",
+    "text": "文本",
+    "folder": "文件夹"
+  },
+  "port": {
+    "audio": "音频",
+    "image": "图片",
+    "video": "视频",
+    "text": "文本",
+    "folder": "文件夹",
+    "item": "文件"
+  },
+  "node": {
+    "input-audio": "音频输入",
+    "input-image": "图片输入",
+    "input-video": "视频输入",
+    "input-text": "文本输入",
+    "input-folder": "文件夹输入",
+    "batch-for-each": "批处理 (For Each)",
+    "audio-to-wav": "音频转 WAV",
+    "audio-to-ogg": "音频转 OGG",
+    "audio-trim": "音频去静音",
+    "audio-denoise": "音频降噪",
+    "audio-fade": "音频淡入淡出",
+    "audio-loudness-normalization": "响度标准化",
+    "audio-sample-rate-standardize": "采样率标准化",
+    "audio-volume-adjust": "音量调整",
+    "video-to-wav": "视频提取音频",
+    "video-remove-audio": "移除视频音轨",
+    "video-to-ogv": "视频转 OGV",
+    "video-compress-to-size": "视频压缩到目标大小",
+    "video-4k-normalization": "4K 规范化",
+    "video-to-4k": "视频升 4K",
+    "video-to-60fps": "视频升 60fps",
+    "video-merge": "视频合并 (CPU)",
+    "video-merge-gpu": "视频合并 (GPU)",
+    "image-to-png": "图片转 PNG",
+    "image-trim": "图片裁边",
+    "image-remove-background": "AI 抠图",
+    "image-remove-white-background": "纯色背景抠图",
+    "image-resize": "图片缩放"
+  },
+  "node_port": {
+    "audio-to-wav.out": "WAV",
+    "audio-to-ogg.out": "OGG",
+    "image-to-png.out": "PNG",
+    "image-trim.out": "PNG",
+    "image-remove-background.out": "PNG",
+    "image-remove-white-background.out": "PNG",
+    "image-resize.out": "PNG",
+    "video-merge.folder": "视频文件夹",
+    "video-merge-gpu.folder": "视频文件夹"
+  },
+  "pipeline": {
+    "stopped": "工作流已停止"
+  }
+}

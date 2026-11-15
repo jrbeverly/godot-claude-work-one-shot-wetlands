@@ -1,0 +1,172 @@
+{
+  "id": "phantom-camera",
+  "path": "references/godot/controllers/phantom-camera",
+  "url": "https://github.com/ramokz/phantom-camera",
+  "commit": "e2f6cf2fbe418517e04afcf81d6136f6709315ad",
+  "archive_url": "https://codeload.github.com/ramokz/phantom-camera/tar.gz/e2f6cf2fbe418517e04afcf81d6136f6709315ad",
+  "archive_bytes": 728193,
+  "kept_files": 169,
+  "kept_bytes": 747107,
+  "omitted": [
+    {
+      "path": "addons/phantom_camera/assets/PhantomCameraBtnPrimaryDefault.png",
+      "bytes": 10296,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/phantom_camera/assets/PhantomCameraBtnPrimaryHover.png",
+      "bytes": 9931,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/phantom_camera/examples/textures/2D/inventory_container.png",
+      "bytes": 68739,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/phantom_camera/examples/textures/2D/level_spritesheet.png",
+      "bytes": 10314,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/phantom_camera/examples/textures/2D/phantom_camera_2d_sprite.png",
+      "bytes": 1584,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/phantom_camera/examples/textures/2D/sign_prompt.png",
+      "bytes": 175934,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/phantom_camera/examples/textures/3D/checker_pattern_dark.png",
+      "bytes": 2861,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/phantom_camera/examples/textures/3D/target.png",
+      "bytes": 96068,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/phantom_camera/fonts/Nunito-Black.ttf",
+      "bytes": 131568,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/phantom_camera/fonts/Nunito-Regular.ttf",
+      "bytes": 131736,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/phantom_camera/icons/phantom_camera_glow_logo.png",
+      "bytes": 25499,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/phantom_camera/icons/phantom_camera_logo.png",
+      "bytes": 70905,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/phantom_camera/icons/phantom_camera_2d.svg",
+      "bytes": 1340,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/phantom_camera/icons/phantom_camera_gizmo.svg",
+      "bytes": 2821,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/phantom_camera/icons/phantom_camera_tween.svg",
+      "bytes": 1095,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/phantom_camera/icons/phantom_camera_updater_panel_icon.svg",
+      "bytes": 231,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/phantom_camera/icons/phantom_camera_noise_resource.svg",
+      "bytes": 3135,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/phantom_camera/icons/phantom_camera_3d.svg",
+      "bytes": 1340,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/phantom_camera/icons/phantom_camera_tween_director.svg",
+      "bytes": 2104,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/phantom_camera/icons/phantom_camera_camera_3d_resource.svg",
+      "bytes": 1091,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/phantom_camera/icons/phantom_camera_host.svg",
+      "bytes": 1976,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/phantom_camera/icons/phantom_camera_noise_emitter_2d.svg",
+      "bytes": 2569,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/phantom_camera/icons/phantom_camera_noise_emitter_gizmo.svg",
+      "bytes": 2517,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/phantom_camera/icons/phantom_camera_tween_director_resource.svg",
+      "bytes": 4082,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/phantom_camera/icons/warning.svg",
+      "bytes": 1077,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/phantom_camera/icons/phantom_camera_noise_emitter_3d.svg",
+      "bytes": 2569,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/phantom_camera/icons/misc/PriorityOverride.svg",
+      "bytes": 1193,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/phantom_camera/icons/viewfinder/Select.svg",
+      "bytes": 647,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/phantom_camera/icons/viewfinder/Camera2DIcon.svg",
+      "bytes": 681,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/phantom_camera/icons/viewfinder/Camera3DIcon.svg",
+      "bytes": 681,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/phantom_camera/icons/viewfinder/SceneTypesIcon.svg",
+      "bytes": 1245,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/phantom_camera/examples/textures/2D/player_sprite.svg",
+      "bytes": 1919,
+      "reason": "image asset"
+    }
+  ]
+}

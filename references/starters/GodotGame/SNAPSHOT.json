@@ -1,0 +1,47 @@
+{
+  "id": "GodotGame",
+  "path": "references/starters/GodotGame",
+  "url": "https://github.com/chickensoft-games/GodotGame",
+  "commit": "9879f7f41dfb17b7adc9651493d68246fb7e9a5c",
+  "archive_url": "https://codeload.github.com/chickensoft-games/GodotGame/tar.gz/9879f7f41dfb17b7adc9651493d68246fb7e9a5c",
+  "archive_bytes": 26943,
+  "kept_files": 37,
+  "kept_bytes": 75993,
+  "omitted": [
+    {
+      "path": "docs/publish.png",
+      "bytes": 130,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "docs/renovatebot_pr.png",
+      "bytes": 130,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "docs/spelling_fix.png",
+      "bytes": 130,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "docs/version_change.png",
+      "bytes": 131,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "icon.png",
+      "bytes": 130,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "badges/branch_coverage.svg",
+      "bytes": 7274,
+      "reason": "image asset"
+    },
+    {
+      "path": "badges/line_coverage.svg",
+      "bytes": 5049,
+      "reason": "image asset"
+    }
+  ]
+}

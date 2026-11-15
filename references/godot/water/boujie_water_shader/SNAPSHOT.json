@@ -1,0 +1,157 @@
+{
+  "id": "boujie_water_shader",
+  "path": "references/godot/water/boujie_water_shader",
+  "url": "https://github.com/Chrisknyfe/boujie_water_shader",
+  "commit": "25f3c2da458e0a4f65bdb5903dc068b050930c06",
+  "archive_url": "https://codeload.github.com/Chrisknyfe/boujie_water_shader/tar.gz/25f3c2da458e0a4f65bdb5903dc068b050930c06",
+  "archive_bytes": 10571931,
+  "kept_files": 73,
+  "kept_bytes": 123882,
+  "omitted": [
+    {
+      "path": "addons/boujie_water_shader/icons/Ocean.png",
+      "bytes": 5272,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/boujie_water_shader/icons/icon.png",
+      "bytes": 6854,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/boujie_water_shader/icons/water_shader_avatar.png",
+      "bytes": 93125,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/boujie_water_shader/screenshots/Godot_v4.1.1-stable_win64_I1T9HnuYMS.png",
+      "bytes": 1275785,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/boujie_water_shader/screenshots/Godot_v4.1.1-stable_win64_jCeI3l7Kvm.png",
+      "bytes": 869490,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/boujie_water_shader/screenshots/Godot_v4.1.1-stable_win64_yC6wLJU7L4.png",
+      "bytes": 887370,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/boujie_water_shader/shader/foam_1.png",
+      "bytes": 13881,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/boujie_water_shader/shader/foam_2.png",
+      "bytes": 167273,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/boujie_water_shader/shader/ice_albedo.png",
+      "bytes": 14117,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/boujie_water_shader/shader/ocean_albedo_1.png",
+      "bytes": 17671,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/boujie_water_shader/shader/ocean_albedo_2.png",
+      "bytes": 68330,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/boujie_water_shader/shader/ocean_albedo_white_highcontrast.png",
+      "bytes": 36234,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/boujie_water_shader/shader/refraction.png",
+      "bytes": 279489,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "example/boujie_water_shader/Sand.png",
+      "bytes": 91869,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "example/boujie_water_shader/UV_checker_grid_dark.png",
+      "bytes": 449826,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "example/boujie_water_shader/mountains.obj",
+      "bytes": 923495,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "example/boujie_water_shader/obelisk/StoneFloorTexture.png",
+      "bytes": 458824,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "example/boujie_water_shader/obelisk/diffuse.tga",
+      "bytes": 12582956,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "example/boujie_water_shader/obelisk/normal.tga",
+      "bytes": 16777260,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "example/boujie_water_shader/obelisk/pyramid_pillar.obj",
+      "bytes": 6250,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "example/boujie_water_shader/obelisk/specular.tga",
+      "bytes": 12582956,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "example/boujie_water_shader/pedestal/MetalPlates_Diffuse.tga",
+      "bytes": 3145772,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "example/boujie_water_shader/pedestal/MetalPlates_Normal_03.tga",
+      "bytes": 3145772,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "example/boujie_water_shader/subdivcube.obj",
+      "bytes": 159257,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/boujie_water_shader/icons/WaterMaterialDesigner.svg",
+      "bytes": 5057,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/boujie_water_shader/icons/CameraFollower3D.svg",
+      "bytes": 2289,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/boujie_water_shader/icons/Ocean.svg",
+      "bytes": 2095,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/boujie_water_shader/icons/icon.svg",
+      "bytes": 2666,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/boujie_water_shader/icons/Wave.svg",
+      "bytes": 1974,
+      "reason": "image asset"
+    }
+  ]
+}

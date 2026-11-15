@@ -1,0 +1,57 @@
+{
+  "source": "https://github.com/GamesNotDeveloped/godot-forest-demo",
+  "pin": "623212ffeb4efbf4c95323a4a6a57e726be4f6e9",
+  "archive": "godot-forest-demo.tar.gz",
+  "archive_sha256": "65cf5e5f616ec53973cd115a13d714a108bc19b0bef2d02785a40b61fefb171f",
+  "modifications": "None; selected assets with complete glTF buffer and image dependencies.",
+  "files": [
+    {
+      "path": "pine-tree-3/license.txt",
+      "archive_path": "objects/pine-tree-3/license.txt",
+      "bytes": 716,
+      "sha256": "91d6e6bced3ed1502f309680cdff759e3b0219207722eb38bcced57a65405a5f"
+    },
+    {
+      "path": "pine-tree-3/scene.bin",
+      "archive_path": "objects/pine-tree-3/scene.bin",
+      "bytes": 101200,
+      "sha256": "e9029bb142da47cfbdadaa296151d475851fac803bdaa7c8ec1cb1a32058ea06"
+    },
+    {
+      "path": "pine-tree-3/scene.gltf",
+      "archive_path": "objects/pine-tree-3/scene.gltf",
+      "bytes": 4658,
+      "sha256": "1c46888e96eb0423c0e0e458b264eec9adb09c1141faec71087d23e3bd9781d2"
+    },
+    {
+      "path": "pine-tree-3/textures/Tree_tex_baseColor.png",
+      "archive_path": "objects/pine-tree-3/textures/Tree_tex_baseColor.png",
+      "bytes": 22558,
+      "sha256": "74addee75d3d0633fdf9b036a6f4bbc5f91e5e983dc8b619f048db748354017c"
+    },
+    {
+      "path": "pine-tree-4/license.txt",
+      "archive_path": "objects/pine-tree-4/license.txt",
+      "bytes": 746,
+      "sha256": "7472df36af3ae2850e46318ed2e069a7649e5685f0b68f06554d58f8ed0d84de"
+    },
+    {
+      "path": "pine-tree-4/scene.bin",
+      "archive_path": "objects/pine-tree-4/scene.bin",
+      "bytes": 21996,
+      "sha256": "0ed448e9915752f057e789b298113d2654e83c51309d915aea202e415237b27a"
+    },
+    {
+      "path": "pine-tree-4/scene.gltf",
+      "archive_path": "objects/pine-tree-4/scene.gltf",
+      "bytes": 8657,
+      "sha256": "4d78dca8a715290b591141fc8b93f442cd7e2b07ad375b228ae3ce8f10ab2641"
+    },
+    {
+      "path": "pine-tree-4/textures/Tree_Pine_diffuse.png",
+      "archive_path": "objects/pine-tree-4/textures/Tree_Pine_diffuse.png",
+      "bytes": 265990,
+      "sha256": "03301dc01590ce3887377ff458a2cc92045c32299e4d502e92dcf24d0b8440b0"
+    }
+  ]
+}

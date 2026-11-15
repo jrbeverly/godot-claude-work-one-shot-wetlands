@@ -1,0 +1,207 @@
+{
+  "source": "https://kaylousberg.itch.io/kaykit-forest",
+  "pin": "Free 1.0 downloaded 2026-10-04",
+  "archive": "kaykit-forest-free.zip",
+  "archive_sha256": "2ee83e63bb7695f2d884ec27ddf6fce020789a452e7d5c5b0bbdfc4f6ea1fc8c",
+  "modifications": "None; selected assets with complete glTF buffer and image dependencies.",
+  "files": [
+    {
+      "path": "Bush_1_A_Color1.bin",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Bush_1_A_Color1.bin",
+      "bytes": 2352,
+      "sha256": "66ba041776959c19849954c9d2393528783461ca6dd11ebe1c1f6b9026b63c0c"
+    },
+    {
+      "path": "Bush_1_A_Color1.gltf",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Bush_1_A_Color1.gltf",
+      "bytes": 3054,
+      "sha256": "bc6cf33dbed296a181d8afbd82ffe1c44ee5e57cb095f9efdf4b63e93c165b70"
+    },
+    {
+      "path": "Bush_2_B_Color1.bin",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Bush_2_B_Color1.bin",
+      "bytes": 2440,
+      "sha256": "b0f7b67b91b9696946e5ae616abbe139811d0949049876ed43a5a4f69b970aa0"
+    },
+    {
+      "path": "Bush_2_B_Color1.gltf",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Bush_2_B_Color1.gltf",
+      "bytes": 3057,
+      "sha256": "a56841ace35231c41b81f3038f5bd180fd0c6ffbd8bc0ab3070bd31e99e58aad"
+    },
+    {
+      "path": "Bush_3_A_Color1.bin",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Bush_3_A_Color1.bin",
+      "bytes": 5248,
+      "sha256": "7f4893327535d30c255da52eac62d1feb2b5688ed9b4f79a48787acdd0cfa6fe"
+    },
+    {
+      "path": "Bush_3_A_Color1.gltf",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Bush_3_A_Color1.gltf",
+      "bytes": 3059,
+      "sha256": "c1806cb5331a53bbd57a57fa678dce6484ac45e8b609caf4c619d3dae0fcd7b8"
+    },
+    {
+      "path": "Grass_1_A_Color1.bin",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Grass_1_A_Color1.bin",
+      "bytes": 2056,
+      "sha256": "d293510be3ca4a6062dc305c22a143ba134fc49af65aaba064cc8f8d868d6c6e"
+    },
+    {
+      "path": "Grass_1_A_Color1.gltf",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Grass_1_A_Color1.gltf",
+      "bytes": 3058,
+      "sha256": "58686904164d636e8731544fbb6911bf1ebc068841fe6c127f0c509b1449212b"
+    },
+    {
+      "path": "Grass_2_B_Color1.bin",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Grass_2_B_Color1.bin",
+      "bytes": 6168,
+      "sha256": "8a8a00efc28a7ea1fa735579b72c55ee6d0de7cea4672afa82a378dcadc70487"
+    },
+    {
+      "path": "Grass_2_B_Color1.gltf",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Grass_2_B_Color1.gltf",
+      "bytes": 3064,
+      "sha256": "c95c9aa402330cb1f1950a5c6fa467f9714d5ebeb257731bc4e0567951e08032"
+    },
+    {
+      "path": "Rock_1_A_Color1.bin",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Rock_1_A_Color1.bin",
+      "bytes": 2848,
+      "sha256": "1c94027b4b01e479f14c6a0288445f2ec74c4971bd5154095c4ea261ddea5b95"
+    },
+    {
+      "path": "Rock_1_A_Color1.gltf",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Rock_1_A_Color1.gltf",
+      "bytes": 3032,
+      "sha256": "ca24326b9c24556227c68df64933122f34a972cd38b6e95c53353fefa97dbc80"
+    },
+    {
+      "path": "Rock_1_D_Color1.bin",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Rock_1_D_Color1.bin",
+      "bytes": 4792,
+      "sha256": "30a7fc80775c585ce501170caf743c290cd4750b0515352f5e7612f888042c9d"
+    },
+    {
+      "path": "Rock_1_D_Color1.gltf",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Rock_1_D_Color1.gltf",
+      "bytes": 3039,
+      "sha256": "67df432b840e93475ab0b0d7d2d0473d19928168ee5c9c411a51e2bf7e05584d"
+    },
+    {
+      "path": "Rock_2_A_Color1.bin",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Rock_2_A_Color1.bin",
+      "bytes": 840,
+      "sha256": "ffee05221dda59936ba6c94112b65bb3c8a38e938fbb219a2808a1590daab050"
+    },
+    {
+      "path": "Rock_2_A_Color1.gltf",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Rock_2_A_Color1.gltf",
+      "bytes": 3052,
+      "sha256": "bbe5254a4c13be7f4aa017297a9458db441e99234028af378d29207d80be4696"
+    },
+    {
+      "path": "Rock_3_A_Color1.bin",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Rock_3_A_Color1.bin",
+      "bytes": 4440,
+      "sha256": "8659daf4bc724f414eda02193bc6a48132b595eef7c62009b7c0a3d93a8aa9b2"
+    },
+    {
+      "path": "Rock_3_A_Color1.gltf",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Rock_3_A_Color1.gltf",
+      "bytes": 3056,
+      "sha256": "65484de298f09f7ed5bcf781d7febde1a2df4f0f76b8a6396591240963152c88"
+    },
+    {
+      "path": "Tree_1_A_Color1.bin",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Tree_1_A_Color1.bin",
+      "bytes": 17484,
+      "sha256": "76a10ffa74960d730f0895a2599e5d56cc50a553d6624a14422420eb9b083979"
+    },
+    {
+      "path": "Tree_1_A_Color1.gltf",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Tree_1_A_Color1.gltf",
+      "bytes": 3061,
+      "sha256": "9d972eba9d61fc563cb7c3248f1be057190859ce2554ad2032df27c3d09e06c6"
+    },
+    {
+      "path": "Tree_1_C_Color1.bin",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Tree_1_C_Color1.bin",
+      "bytes": 46296,
+      "sha256": "b5d131c607d96b71583e515a48e28c22b1c67831a0290c850aa32c8980480eed"
+    },
+    {
+      "path": "Tree_1_C_Color1.gltf",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Tree_1_C_Color1.gltf",
+      "bytes": 3064,
+      "sha256": "ffb1e44646cd8dbe9902dd31bf94e64e1a3de5523d1b1f819acdbef09b42d45f"
+    },
+    {
+      "path": "Tree_2_B_Color1.bin",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Tree_2_B_Color1.bin",
+      "bytes": 11688,
+      "sha256": "90e260b69154a83b1799d68778fb35ddeaaf5f0eb69ac67384c99770ed7bf821"
+    },
+    {
+      "path": "Tree_2_B_Color1.gltf",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Tree_2_B_Color1.gltf",
+      "bytes": 3059,
+      "sha256": "3094d793c2625c2543c1c8106864426f6c61cfe13b2cff0a2c133aec23065408"
+    },
+    {
+      "path": "Tree_3_A_Color1.bin",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Tree_3_A_Color1.bin",
+      "bytes": 29740,
+      "sha256": "ea2f20e847bd3bcf748b9f1cf9932abe45967db8dcacfeafaea1f07e3da6a2e9"
+    },
+    {
+      "path": "Tree_3_A_Color1.gltf",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Tree_3_A_Color1.gltf",
+      "bytes": 3061,
+      "sha256": "a5140f21978004544844df4c2969625724c2c263e74f798716ea9e115216a230"
+    },
+    {
+      "path": "Tree_4_A_Color1.bin",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Tree_4_A_Color1.bin",
+      "bytes": 12568,
+      "sha256": "eeb22bdc0ece9941865139476afcaf5dadd8285751321770886d1a065b8512d6"
+    },
+    {
+      "path": "Tree_4_A_Color1.gltf",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Tree_4_A_Color1.gltf",
+      "bytes": 3061,
+      "sha256": "14f8f50af9f9cf8d2bb488cae15613f9e2ed6ce0002d2aa11721a2efc2ba3010"
+    },
+    {
+      "path": "Tree_Bare_1_A_Color1.bin",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Tree_Bare_1_A_Color1.bin",
+      "bytes": 11736,
+      "sha256": "6967f9187c6d6e5b829a022921115fac8990a693b800cf65bdff181e6b5e20d3"
+    },
+    {
+      "path": "Tree_Bare_1_A_Color1.gltf",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Tree_Bare_1_A_Color1.gltf",
+      "bytes": 3075,
+      "sha256": "f246cae013cb68c80b58d2493accc6b60bd2b6a11f5567879d5ef1b73b44d8db"
+    },
+    {
+      "path": "Tree_Bare_2_C_Color1.bin",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Tree_Bare_2_C_Color1.bin",
+      "bytes": 23100,
+      "sha256": "dcce0e6d561de20b140e4869419d6de11d0226115d955fede57f7c1280bb1365"
+    },
+    {
+      "path": "Tree_Bare_2_C_Color1.gltf",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/Tree_Bare_2_C_Color1.gltf",
+      "bytes": 3076,
+      "sha256": "d8368002845a42244c30b08a897ec0f47e9b178725e6d86f10fab77443039e4e"
+    },
+    {
+      "path": "forest_texture.png",
+      "archive_path": "KayKit_Forest_Nature_Pack_1.0_FREE/Assets/gltf/forest_texture.png",
+      "bytes": 48679,
+      "sha256": "406c01e0ac1d3368fc7b26ff5fb0d3335ba5e48bd19a703540ed92ee3971ea39"
+    }
+  ]
+}

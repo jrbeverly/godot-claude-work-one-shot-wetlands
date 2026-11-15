@@ -1,0 +1,27 @@
+﻿name: 🍎 macOS Builds
+on: [ workflow_call, workflow_dispatch ]
+
+jobs:
+  build:
+    name: 🍎 macOS ${{ matrix.arch }} ${{ matrix.target }}
+    runs-on: macos-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [universal]
+        target: [debug, release]
+        include:
+          - platform: macos
+
+    steps:
+      - name: Checkout Terrain3D
+        uses: actions/checkout@v7
+
+      - uses: ./.github/actions/build-artifact
+        with:
+          cache-name: ${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.target }}
+          platform: ${{ matrix.platform }}
+          arch: ${{ matrix.arch }}
+          target: ${{ matrix.target }}
+          flags: -j3

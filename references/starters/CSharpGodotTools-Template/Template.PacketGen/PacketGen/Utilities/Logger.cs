@@ -1,0 +1,112 @@
+using Microsoft.CodeAnalysis;
+using System.Collections.Immutable;
+using System.ComponentModel;
+
+namespace PacketGen;
+
+/// <summary>
+/// Roslyn diagnostic logger for PacketGen. Must be initialised via <see cref="Init"/> at the start of
+/// each <see cref="SourceProductionContext"/> callback before calling any other method.
+/// Diagnostics IDs: PKT0001 (info), PKT0002 (warning), PKT0003 (error).
+/// </summary>
+internal static class Logger
+{
+    private const string Category = "PacketGen";
+    private const string InfoId = "PKT0001";
+    private const string WarningId = "PKT0002";
+    private const string ErrorId = "PKT0003";
+
+    private static readonly DiagnosticDescriptor _infoDescriptor = new(
+        InfoId,
+        "PacketGen Info",
+        "{0}",
+        Category,
+        DiagnosticSeverity.Info,
+        true);
+
+    private static readonly DiagnosticDescriptor _warningDescriptor = new(
+        WarningId,
+        "PacketGen Warning",
+        "{0}",
+        Category,
+        DiagnosticSeverity.Warning,
+        true);
+
+    private static readonly DiagnosticDescriptor _errorDescriptor = new(
+        ErrorId,
+        "PacketGen Error",
+        "{0}",
+        Category,
+        DiagnosticSeverity.Error,
+        true);
+
+    private static SourceProductionContext _context;
+    private static bool _initialized;
+
+    /// <summary>Must be called at the start of every <see cref="SourceProductionContext"/> callback to bind the logger to the current context.</summary>
+    /// <param name="context">Current source-production context.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void Init(SourceProductionContext context)
+    {
+        _context = context;
+        _initialized = true;
+    }
+
+    /// <summary>Reports an error diagnostic for the given symbol location.</summary>
+    /// <param name="symbol">Symbol used to anchor diagnostic location.</param>
+    /// <param name="message">Diagnostic message text.</param>
+    public static void Err(ISymbol symbol, string? message)
+    {
+        Log(symbol, message, _errorDescriptor);
+    }
+
+    /// <summary>Reports a warning diagnostic for the given symbol location.</summary>
+    /// <param name="symbol">Symbol used to anchor diagnostic location.</param>
+    /// <param name="message">Diagnostic message text.</param>
+    public static void Warn(ISymbol symbol, string? message)
+    {
+        Log(symbol, message, _warningDescriptor);
+    }
+
+    /// <summary>Reports an informational diagnostic with no associated symbol location.</summary>
+    /// <param name="message">Diagnostic message text.</param>
+    public static void Info(string? message)
+    {
+        Info(null, message);
+    }
+
+    /// <summary>Reports an informational diagnostic, optionally anchored to a symbol location.</summary>
+    /// <param name="symbol">Optional symbol used to anchor diagnostic location.</param>
+    /// <param name="message">Diagnostic message text.</param>
+    public static void Info(ISymbol? symbol, string? message)
+    {
+        Log(symbol, message, _infoDescriptor);
+    }
+
+    /// <summary>
+    /// Reports a diagnostic to the current source production context.
+    /// </summary>
+    /// <param name="symbol">Optional symbol used to anchor the diagnostic location.</param>
+    /// <param name="message">Diagnostic message text.</param>
+    /// <param name="descriptor">Descriptor that defines id, severity, and category.</param>
+    private static void Log(ISymbol? symbol, string? message, DiagnosticDescriptor descriptor)
+    {
+        // Drop log attempts until Init binds a valid source production context.
+        if (!_initialized)
+            return;
+
+        string detail = string.IsNullOrWhiteSpace(message) ? "(no details provided)" : message!;
+
+        Location location = Location.None;
+
+        // Anchor diagnostics to the first symbol location when available.
+        if (symbol != null)
+        {
+            ImmutableArray<Location> locations = symbol.Locations;
+            location = locations.Length > 0 ? locations[0] : Location.None;
+        }
+
+        Diagnostic diagnostic = Diagnostic.Create(descriptor, location, detail);
+        _context.ReportDiagnostic(diagnostic);
+    }
+}

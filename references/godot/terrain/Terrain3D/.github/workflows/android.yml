@@ -1,0 +1,27 @@
+﻿name: 🤖 Android Builds
+on: [ workflow_call, workflow_dispatch ]
+
+jobs:
+  build:
+    name: 🤖 Android ${{ matrix.arch }} ${{ matrix.target }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [arm64, arm32]
+        target: [debug, release]
+        include:
+          - platform: android
+
+    steps:
+      - name: Checkout Terrain3D
+        uses: actions/checkout@v7
+
+      - uses: ./.github/actions/build-artifact
+        with:
+          cache-name: ${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.target }}
+          platform: ${{ matrix.platform }}
+          arch: ${{ matrix.arch }}
+          target: ${{ matrix.target }}
+          flags: ""

@@ -1,0 +1,492 @@
+{
+  "id": "godot_heightmap_plugin",
+  "path": "references/godot/terrain/godot_heightmap_plugin",
+  "url": "https://github.com/Zylann/godot_heightmap_plugin",
+  "commit": "7f574eb47fbd74cb1a79adc2cc9fb7f0694fccc3",
+  "archive_url": "https://codeload.github.com/Zylann/godot_heightmap_plugin/tar.gz/7f574eb47fbd74cb1a79adc2cc9fb7f0694fccc3",
+  "archive_bytes": 10130385,
+  "kept_files": 287,
+  "kept_bytes": 771102,
+  "omitted": [
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/alpha_blending_and_depth_blending.png",
+      "bytes": 320154,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/bad_array_blending.png",
+      "bytes": 122066,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/brush_editor.png",
+      "bytes": 3286,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/channel_packer.png",
+      "bytes": 16909,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/choose_bullet_physics.png",
+      "bytes": 31292,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/color_painting.png",
+      "bytes": 345984,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/data_directory_property.png",
+      "bytes": 8418,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/default_terrain.png",
+      "bytes": 12588,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/detail_layers.png",
+      "bytes": 739810,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/dilation.png",
+      "bytes": 55493,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/erosion_slope.png",
+      "bytes": 120726,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/erosion_steps.png",
+      "bytes": 203951,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/generator.png",
+      "bytes": 43813,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/gimp_png_preserve_colors.png",
+      "bytes": 8621,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/grass_models.png",
+      "bytes": 212007,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/hole_painting.png",
+      "bytes": 244074,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/ignore_tools_on_export.png",
+      "bytes": 13912,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/importer.png",
+      "bytes": 17043,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/inspector_texture_set.png",
+      "bytes": 256393,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/inspector_texture_set_save.png",
+      "bytes": 28115,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/lod_geometry.png",
+      "bytes": 414746,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/lookdev_grass.png",
+      "bytes": 741784,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/lookdev_menu.png",
+      "bytes": 230484,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/lots_of_textures_blending.png",
+      "bytes": 184093,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/low_poly.png",
+      "bytes": 233318,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/normalmap_conventions.png",
+      "bytes": 56589,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/overview.png",
+      "bytes": 436236,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/panel_import_button.png",
+      "bytes": 14146,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/panel_textures_edit_button.png",
+      "bytes": 28461,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/pbr_textures.png",
+      "bytes": 171987,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/resize_tool.png",
+      "bytes": 5403,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/sculpting_tools.png",
+      "bytes": 16396,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/single_sampling_and_triplanar_sampling.png",
+      "bytes": 220943,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/slope_limit_tool.png",
+      "bytes": 10864,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/splatmap_and_textured_result.png",
+      "bytes": 95955,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/texture_array_import_dock.png",
+      "bytes": 9044,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/texture_atlas_example.png",
+      "bytes": 47464,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/texture_dialog.png",
+      "bytes": 53896,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/texture_set_editor.png",
+      "bytes": 153980,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/texture_set_import_tool.png",
+      "bytes": 45978,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/texture_set_import_tool_directory.png",
+      "bytes": 4929,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/texture_set_import_tool_success.png",
+      "bytes": 8047,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/texture_set_import_tool_texture_types.png",
+      "bytes": 152337,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/texture_slots.png",
+      "bytes": 6389,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/tiling_artifacts.png",
+      "bytes": 1525731,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/tiling_reduction.png",
+      "bytes": 1050281,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/transition_array_blending.png",
+      "bytes": 134901,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/update_editor_collider.png",
+      "bytes": 112581,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/doc/docs/images/warped_checker_variations.png",
+      "bytes": 835193,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/models/grass_quad.obj",
+      "bytes": 332,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/models/grass_quad_x2.obj",
+      "bytes": 588,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/models/grass_quad_x3.obj",
+      "bytes": 852,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/models/grass_quad_x4.obj",
+      "bytes": 1066,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/brush/shapes/acrylic1.exr",
+      "bytes": 12881,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/brush/shapes/round0.exr",
+      "bytes": 11022,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/brush/shapes/round1.exr",
+      "bytes": 17380,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/brush/shapes/round2.exr",
+      "bytes": 10895,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/brush/shapes/round3.exr",
+      "bytes": 8906,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/brush/shapes/round4.exr",
+      "bytes": 36173,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/brush/shapes/smoke.exr",
+      "bytes": 10348,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/brush/shapes/texture1.exr",
+      "bytes": 17201,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/brush/shapes/thing.exr",
+      "bytes": 25254,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/brush/shapes/vegetation1.exr",
+      "bytes": 12597,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/empty.png",
+      "bytes": 832,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/white.png",
+      "bytes": 135,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/brush_circle_background.svg",
+      "bytes": 1510,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_heightmap_smooth.svg",
+      "bytes": 2586,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_heightmap_flatten.svg",
+      "bytes": 3885,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_anchor_top_left.svg",
+      "bytes": 2123,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_anchor_bottom_right.svg",
+      "bytes": 2119,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_anchor_top.svg",
+      "bytes": 2007,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_heightmap_paint.svg",
+      "bytes": 533,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_heightmap_erode.svg",
+      "bytes": 3937,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_anchor_bottom_left.svg",
+      "bytes": 2122,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_heightmap_level.svg",
+      "bytes": 2666,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_heightmap_mask.svg",
+      "bytes": 2511,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_small_circle.svg",
+      "bytes": 2014,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_minimap_out_of_range_position.svg",
+      "bytes": 1997,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_heightmap_node.svg",
+      "bytes": 1865,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_minimap_position.svg",
+      "bytes": 2005,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_heightmap_data.svg",
+      "bytes": 1865,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_long_arrow_down.svg",
+      "bytes": 2024,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_anchor_top_right.svg",
+      "bytes": 2109,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_heightmap_node_large.svg",
+      "bytes": 1865,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_heightmap_color.svg",
+      "bytes": 3213,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_anchor_left.svg",
+      "bytes": 2007,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_anchor_center.svg",
+      "bytes": 1964,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_anchor_bottom.svg",
+      "bytes": 2010,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_heightmap_unmask.svg",
+      "bytes": 2003,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_long_arrow_right.svg",
+      "bytes": 2017,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_grass.svg",
+      "bytes": 3871,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_heightmap_raise.svg",
+      "bytes": 2080,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_heightmap_lower.svg",
+      "bytes": 2105,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/brush_circle.svg",
+      "bytes": 1499,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_detail_layer_node.svg",
+      "bytes": 3900,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/zylann.hterrain/tools/icons/icon_anchor_right.svg",
+      "bytes": 2011,
+      "reason": "image asset"
+    }
+  ]
+}

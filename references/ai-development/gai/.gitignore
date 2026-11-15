@@ -1,0 +1,50 @@
+# AI
+.gai/
+.dependency/
+
+# Skills
+.cursor/
+
+# godot-cpp build intermediates (shared libraries under cpp/bin/ are kept)
+cpp/**/*.obj
+cpp/**/*.os
+cpp/**/*.o
+cpp/**/*.a
+cpp/**/*.lib
+cpp/**/*.exp
+cpp/**/*.ilk
+cpp/**/*.pdb
+cpp/.sconsign.dblite
+cpp/.sconsign.dblite.*
+# Godot GDExtension hot-reload temp copies (e.g. ~gai_cpp.windows....dll)
+cpp/bin/**/~*
+
+# Godot 4+ specific ignores
+.godot/**
+!.godot/extension_list.cfg
+.nomedia
+
+# Godot-specific ignores
+.import/
+export.cfg
+export_credentials.cfg
+*.tmp
+
+# Imported translations (automatically generated from CSV files)
+*.translation
+
+# Mono-specific ignores
+.mono/
+data_*/
+mono_crash.*.json
+
+
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

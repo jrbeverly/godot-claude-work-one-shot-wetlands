@@ -1,0 +1,652 @@
+{
+  "id": "godot-forest-demo",
+  "path": "references/godot/foliage/godot-forest-demo",
+  "url": "https://github.com/GamesNotDeveloped/godot-forest-demo",
+  "commit": "623212ffeb4efbf4c95323a4a6a57e726be4f6e9",
+  "archive_url": "https://codeload.github.com/GamesNotDeveloped/godot-forest-demo/tar.gz/623212ffeb4efbf4c95323a4a6a57e726be4f6e9",
+  "archive_bytes": 344066758,
+  "kept_files": 294,
+  "kept_bytes": 2283091,
+  "omitted": [
+    {
+      "path": "addons/uniplayer/ability.png",
+      "bytes": 441,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/uniplayer/extras/actors/lasergun/pop.wav",
+      "bytes": 534836,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/uniplayer/extras/objects/lasergun/apocalyptic_hand-gun/scene.bin",
+      "bytes": 586152,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/uniplayer/extras/objects/lasergun/apocalyptic_hand-gun/scene.gltf",
+      "bytes": 5285,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/uniplayer/extras/objects/lasergun/apocalyptic_hand-gun/textures/Material_47_baseColor.png",
+      "bytes": 3934272,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/uniplayer/extras/objects/lasergun/apocalyptic_hand-gun/textures/Material_47_normal.png",
+      "bytes": 3845005,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/uniplayer/hud/crosshair.png",
+      "bytes": 180,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/uniplayer/mouse.png",
+      "bytes": 312,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/uniplayer/rotationhelper.png",
+      "bytes": 1031,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/uniplayer/uniplayer.png",
+      "bytes": 1157,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/uniplayer/visual_ability.png",
+      "bytes": 6720,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "generated/biomes_billboards/plants/00_paproc/billboard.png",
+      "bytes": 46891,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "generated/biomes_billboards/plants/01_plant99/billboard.png",
+      "bytes": 136319,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "generated/biomes_billboards/plants/01_plant99/billboard_material.tres",
+      "bytes": 1715041,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "generated/biomes_billboards/plants2/00_flower-1/billboard.png",
+      "bytes": 65900,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "generated/biomes_billboards/plants2/00_flower-1/billboard_material.tres",
+      "bytes": 2162523,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "generated/biomes_billboards/trees/00_pine-tree-1/billboard.png",
+      "bytes": 76943,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "generated/biomes_billboards/trees/00_pine-tree-1/billboard_material.tres",
+      "bytes": 1089198,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "generated/biomes_billboards/trees/01_pine-tree-3/billboard.png",
+      "bytes": 79875,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "generated/biomes_billboards/trees/01_pine-tree-3/billboard_material.tres",
+      "bytes": 1191750,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "generated/biomes_billboards/trees/01_pine-tree-4/billboard.png",
+      "bytes": 55666,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "generated/biomes_billboards/trees/01_pine-tree-4/billboard_material.tres",
+      "bytes": 1220196,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "generated/biomes_billboards/trees/01_scene/billboard.png",
+      "bytes": 88404,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "generated/biomes_billboards/trees/01_scene/billboard_material.tres",
+      "bytes": 1195665,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "generated/biomes_billboards/trees/02_pine-tree-2/billboard.png",
+      "bytes": 67450,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "generated/biomes_billboards/trees/02_pine-tree-2/billboard_material.tres",
+      "bytes": 1428011,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "generated/biomes_billboards/trees/03_birch_tree_1/billboard.png",
+      "bytes": 115304,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "generated/biomes_billboards/trees/03_birch_tree_1/billboard_material.tres",
+      "bytes": 1793267,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "grass/grass.mesh",
+      "bytes": 507,
+      "reason": "binary content"
+    },
+    {
+      "path": "grass/grassbushcc008.png",
+      "bytes": 48540,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "grass/motion.png",
+      "bytes": 1511,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "grass/motion_frame.png",
+      "bytes": 1836,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "grass/normal.png",
+      "bytes": 1511,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "grass/normal_frame.png",
+      "bytes": 1837,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "grass/wind_pattern.png",
+      "bytes": 142318,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "icon.png",
+      "bytes": 22084,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "levels/biomes_mask.png",
+      "bytes": 15122,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "levels/flowers_mask.png",
+      "bytes": 7718,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lut/lut.kra",
+      "bytes": 7456813,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lut/lut.kra~",
+      "bytes": 7492826,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "lut/lut.png",
+      "bytes": 34317,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lut/lut.png~",
+      "bytes": 34713,
+      "reason": "binary content"
+    },
+    {
+      "path": "lut/lut2.kra",
+      "bytes": 17161055,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lut/lut2.kra~",
+      "bytes": 17163257,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "lut/lut2.png",
+      "bytes": 56539,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lut/lut2.png~",
+      "bytes": 53389,
+      "reason": "binary content"
+    },
+    {
+      "path": "lut/lut3.kra",
+      "bytes": 10066805,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lut/lut3.kra~",
+      "bytes": 10072029,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "lut/lut3.png",
+      "bytes": 43621,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "lut/lut3.png~",
+      "bytes": 35909,
+      "reason": "binary content"
+    },
+    {
+      "path": "music/sigmamusicart-tension-tension-music-503993.mp3",
+      "bytes": 3264768,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/birch-tree-1/scene.bin",
+      "bytes": 1503640,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/birch-tree-1/scene.gltf",
+      "bytes": 6576,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/birch-tree-1/textures/Leaves_diffuse.png",
+      "bytes": 1095142,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/birch-tree-1/textures/Material.002_diffuse.png",
+      "bytes": 4371661,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/flower-1/scene.bin",
+      "bytes": 451920,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/flower-1/scene.gltf",
+      "bytes": 42293,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/flower-2/scene.bin",
+      "bytes": 208076,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/flower-2/scene.gltf",
+      "bytes": 222864,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/flower-2/textures/Material.007_baseColor.png",
+      "bytes": 1774835,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/flower-2/textures/Material.007_metallicRoughness.png",
+      "bytes": 2421038,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/flower-2/textures/Material.007_normal.png",
+      "bytes": 4078850,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-house/scene.bin",
+      "bytes": 707904,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-house/scene.gltf",
+      "bytes": 46028,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-house/textures/Corpus_baseColor.jpeg",
+      "bytes": 5983296,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-house/textures/Corpus_metallicRoughness.png",
+      "bytes": 7127953,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-house/textures/Corpus_normal.png",
+      "bytes": 30710823,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-house/textures/Input_baseColor.jpeg",
+      "bytes": 3192090,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-house/textures/Input_metallicRoughness.png",
+      "bytes": 3718741,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-house/textures/Input_normal.png",
+      "bytes": 19737311,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-house/textures/Other_baseColor.jpeg",
+      "bytes": 4531402,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-house/textures/Other_metallicRoughness.png",
+      "bytes": 6525591,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-house/textures/Other_normal.png",
+      "bytes": 23010130,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-well/scene.bin",
+      "bytes": 463488,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-well/scene.gltf",
+      "bytes": 153480,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-well/textures/ConcreteNMetal_baseColor.png",
+      "bytes": 6310881,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-well/textures/ConcreteNMetal_metallicRoughness.png",
+      "bytes": 3834955,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-well/textures/ConcreteNMetal_normal.png",
+      "bytes": 8606543,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-well/textures/Wood1_baseColor.png",
+      "bytes": 3148038,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-well/textures/Wood1_metallicRoughness.png",
+      "bytes": 2938124,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-well/textures/Wood1_normal.png",
+      "bytes": 9292978,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-well/textures/Wood2_baseColor.png",
+      "bytes": 3972427,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-well/textures/Wood2_metallicRoughness.png",
+      "bytes": 3653503,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-well/textures/Wood2_normal.png",
+      "bytes": 9498974,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-well/textures/Wood3_baseColor.png",
+      "bytes": 4655095,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-well/textures/Wood3_metallicRoughness.png",
+      "bytes": 2887129,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-well/textures/Wood3_normal.png",
+      "bytes": 8956558,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-well/textures/Wood4_baseColor.png",
+      "bytes": 4652093,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-well/textures/Wood4_metallicRoughness.png",
+      "bytes": 3440823,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/old-well/textures/Wood4_normal.png",
+      "bytes": 8431445,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/pine-tree-1/scene.bin",
+      "bytes": 259620,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/pine-tree-1/scene.gltf",
+      "bytes": 7396,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/pine-tree-1/textures/Tree_0Mat_baseColor.png",
+      "bytes": 712347,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/pine-tree-1/textures/Tree_0Mat_metallicRoughness.png",
+      "bytes": 247292,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/pine-tree-1/textures/Tree_0Mat_normal.png",
+      "bytes": 919457,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/pine-tree-1/textures/Tree_1Mat_baseColor.png",
+      "bytes": 647939,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/pine-tree-1/textures/Tree_1Mat_metallicRoughness.png",
+      "bytes": 289108,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/pine-tree-1/textures/Tree_1Mat_normal.png",
+      "bytes": 1174693,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/pine-tree-2/scene.bin",
+      "bytes": 15512,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/pine-tree-2/scene.gltf",
+      "bytes": 4238,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/pine-tree-2/textures/Pine_s_1_Material_baseColor.png",
+      "bytes": 1615803,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/pine-tree-3/scene.bin",
+      "bytes": 101200,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/pine-tree-3/scene.gltf",
+      "bytes": 4658,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/pine-tree-3/textures/Tree_tex_baseColor.png",
+      "bytes": 22558,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/pine-tree-4/scene.bin",
+      "bytes": 21996,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/pine-tree-4/scene.gltf",
+      "bytes": 8657,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/pine-tree-4/textures/Tree_Pine_diffuse.png",
+      "bytes": 265990,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/plants/paproc-albedo-texture.res",
+      "bytes": 1302628,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/plants/paproc.mesh",
+      "bytes": 622761,
+      "reason": "binary content"
+    },
+    {
+      "path": "objects/plants/paproc2.mesh",
+      "bytes": 1939747,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "objects/plants/plant117.mesh",
+      "bytes": 695505,
+      "reason": "binary content"
+    },
+    {
+      "path": "objects/plants/plant148.mesh",
+      "bytes": 4273405,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "objects/plants/plant148.mesh.depren",
+      "bytes": 4273266,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "objects/plants/plant148_2.mesh",
+      "bytes": 6628966,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "objects/plants/plant41.mesh",
+      "bytes": 1146068,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "objects/plants/plant43.mesh",
+      "bytes": 6137229,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "objects/plants/plant89.mesh",
+      "bytes": 1447435,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "objects/plants/plant99.mesh",
+      "bytes": 1081948,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "objects/plants/plant_148_2.png",
+      "bytes": 988728,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "objects/plants/plant_148_3.png",
+      "bytes": 720561,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "textures/Ground020_1K-JPG/Ground020_1K-JPG.usdc",
+      "bytes": 2662,
+      "reason": "binary content"
+    },
+    {
+      "path": "textures/Ground020_1K-JPG/Ground020_1K_AmbientOcclusion.jpg",
+      "bytes": 713471,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "textures/Ground020_1K-JPG/Ground020_1K_Color.jpg",
+      "bytes": 1937252,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "textures/Ground020_1K-JPG/Ground020_1K_Displacement.jpg",
+      "bytes": 506840,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "textures/Ground020_1K-JPG/Ground020_1K_NormalGL.jpg",
+      "bytes": 2026360,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "textures/Ground020_1K-JPG/Ground020_1K_Roughness.jpg",
+      "bytes": 816747,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "textures/autumn_field_puresky_2k.exr",
+      "bytes": 22534136,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "icon.svg",
+      "bytes": 3670,
+      "reason": "image asset"
+    }
+  ]
+}

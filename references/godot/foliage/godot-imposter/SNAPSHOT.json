@@ -1,0 +1,87 @@
+{
+  "id": "godot-imposter",
+  "path": "references/godot/foliage/godot-imposter",
+  "url": "https://github.com/zhangjt93/godot-imposter",
+  "commit": "e86fd4786d36202129c7b7d5873131fc21dbbe72",
+  "archive_url": "https://codeload.github.com/zhangjt93/godot-imposter/tar.gz/e86fd4786d36202129c7b7d5873131fc21dbbe72",
+  "archive_bytes": 3173767,
+  "kept_files": 53,
+  "kept_bytes": 89455,
+  "omitted": [
+    {
+      "path": ".DS_Store",
+      "bytes": 6148,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/Imposter/icons/icon.png",
+      "bytes": 16893,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/Imposter/icons/imposter_icon.png",
+      "bytes": 109389,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/Imposter/imposter/materials/depth_baker.material",
+      "bytes": 300,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/Imposter/imposter/materials/dilatate.material",
+      "bytes": 275,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/Imposter/imposter/materials/normal_baker.material",
+      "bytes": 427,
+      "reason": "binary content"
+    },
+    {
+      "path": "addons/Imposter/imposter/materials/orm_baker.material",
+      "bytes": 504,
+      "reason": "binary content"
+    },
+    {
+      "path": "guide/20250815185643_157.png",
+      "bytes": 2461029,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "guide/741698737002_.pic.jpg",
+      "bytes": 476644,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "guide/batch_20231105.jpg",
+      "bytes": 343089,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "icon.svg",
+      "bytes": 950,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/Imposter/icons/fold_selected.svg",
+      "bytes": 1203,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/Imposter/icons/query_seleted.svg",
+      "bytes": 1273,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/Imposter/icons/query.svg",
+      "bytes": 1273,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/Imposter/icons/fold.svg",
+      "bytes": 1203,
+      "reason": "image asset"
+    }
+  ]
+}

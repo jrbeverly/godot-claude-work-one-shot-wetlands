@@ -1,0 +1,62 @@
+{
+  "id": "warcraft-rs",
+  "path": "references/classic-terrain-analysis/warcraft-rs",
+  "url": "https://github.com/wowemulation-dev/warcraft-rs",
+  "commit": "76bedfd8a8937af5bfa6a08e7df32d78e86c9123",
+  "archive_url": "https://codeload.github.com/wowemulation-dev/warcraft-rs/tar.gz/76bedfd8a8937af5bfa6a08e7df32d78e86c9123",
+  "archive_bytes": 1709206,
+  "kept_files": 629,
+  "kept_bytes": 6384476,
+  "omitted": [
+    {
+      "path": "file-formats/archives/wow-mpq/tests/extract_patch_file",
+      "bytes": 386568,
+      "reason": "binary content"
+    },
+    {
+      "path": "file-formats/archives/wow-mpq/tests/stormlib_patch_test",
+      "bytes": 390240,
+      "reason": "binary content"
+    },
+    {
+      "path": "file-formats/graphics/wow-blp/test-data/test_image_source.png",
+      "bytes": 561,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "file-formats/graphics/wow-blp/test-data/test_image_source_rect.png",
+      "bytes": 571,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "file-formats/graphics/wow-blp/test-data/test_image_source_rect_no_alpha.png",
+      "bytes": 564,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "file-formats/graphics/wow-blp/test-data/test_rect_with_alpha.blp",
+      "bytes": 1192,
+      "reason": "binary content"
+    },
+    {
+      "path": "file-formats/graphics/wow-blp/test-data/test_rect_without_alpha.blp",
+      "bytes": 608,
+      "reason": "binary content"
+    },
+    {
+      "path": "file-formats/graphics/wow-blp/test-data/test_simple_jpg.blp",
+      "bytes": 642,
+      "reason": "binary content"
+    },
+    {
+      "path": "file-formats/graphics/wow-blp/test-data/test_simple_with_alpha.blp",
+      "bytes": 1188,
+      "reason": "binary content"
+    },
+    {
+      "path": "file-formats/graphics/wow-blp/test-data/test_simple_without_alpha.blp",
+      "bytes": 1184,
+      "reason": "binary content"
+    }
+  ]
+}

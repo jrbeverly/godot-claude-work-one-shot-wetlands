@@ -1,0 +1,17 @@
+<Project Sdk="Godot.NET.Sdk/4.5.1">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <Nullable>enable</Nullable>
+    <RootNamespace>GodotWarcraft</RootNamespace>
+    <AssemblyName>GodotWarcraft</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- references/ holds third-party clones (fetched by tools/fetch-references.sh); never compile them. -->
+    <Compile Remove="references/**" />
+    <Compile Remove="tools/**" />
+    <Compile Remove="addons/**" />
+    <None Remove="references/**" />
+    <None Remove="tools/**" />
+  </ItemGroup>
+</Project>

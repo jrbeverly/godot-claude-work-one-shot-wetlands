@@ -1,0 +1,137 @@
+{
+  "id": "Sky3D",
+  "path": "references/godot/atmosphere/Sky3D",
+  "url": "https://github.com/TokisanGames/Sky3D",
+  "commit": "6e151bc3d941906643443b3751a1df545a08feda",
+  "archive_url": "https://codeload.github.com/TokisanGames/Sky3D/tar.gz/6e151bc3d941906643443b3751a1df545a08feda",
+  "archive_bytes": 12226304,
+  "kept_files": 64,
+  "kept_bytes": 177327,
+  "omitted": [
+    {
+      "path": "addons/sky_3d/assets/textures/SkyIcon.png",
+      "bytes": 860,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/sky_3d/assets/textures/noise.jpg",
+      "bytes": 49251,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/sky_3d/assets/textures/noise2.png",
+      "bytes": 145149,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/sky_3d/assets/textures/noiseClouds.png",
+      "bytes": 125654,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/sky_3d/assets/thirdparty/textures/milkyway/Milkyway.jpg",
+      "bytes": 4857484,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/sky_3d/assets/thirdparty/textures/milkyway/StarField.jpg",
+      "bytes": 117303,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/sky_3d/assets/thirdparty/textures/moon/MoonMap.png",
+      "bytes": 6120738,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "demo/assets/meshes/Block.obj",
+      "bytes": 2290,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "demo/assets/meshes/Diamond.obj",
+      "bytes": 28611,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "demo/assets/meshes/Gear.obj",
+      "bytes": 58162,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "demo/assets/meshes/Gem.obj",
+      "bytes": 7000,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "demo/assets/meshes/Honey.obj",
+      "bytes": 12148,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "demo/assets/meshes/KnotTorus.obj",
+      "bytes": 71755,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "demo/assets/meshes/RoundCube.obj",
+      "bytes": 16046,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "demo/assets/meshes/Suzanne.obj",
+      "bytes": 77181,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "demo/assets/meshes/Teapot.obj",
+      "bytes": 131630,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "demo/assets/meshes/Torus.obj",
+      "bytes": 90474,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "demo/assets/meshes/Triangle.obj",
+      "bytes": 240,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "demo/assets/meshes/TwistedTorus.obj",
+      "bytes": 64122,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "demo/assets/textures/ProtGrid0.jpg",
+      "bytes": 4450,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "demo/assets/textures/ProtGrid1.jpg",
+      "bytes": 5443,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "icon.png",
+      "bytes": 9325,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "screenshots/oota-forest.jpg",
+      "bytes": 256720,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "screenshots/oota-windmill.jpg",
+      "bytes": 409795,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "screenshots/sky3d.jpg",
+      "bytes": 111331,
+      "reason": "asset or binary"
+    }
+  ]
+}

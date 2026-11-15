@@ -1,0 +1,37 @@
+{
+  "id": "godot-4-stylized-sky",
+  "path": "references/godot/atmosphere/godot-4-stylized-sky",
+  "url": "https://github.com/gdquest-demos/godot-4-stylized-sky",
+  "commit": "a52b0874b57507474f1b8bbf2db40dc8223f07bf",
+  "archive_url": "https://codeload.github.com/gdquest-demos/godot-4-stylized-sky/tar.gz/a52b0874b57507474f1b8bbf2db40dc8223f07bf",
+  "archive_bytes": 764015,
+  "kept_files": 14,
+  "kept_bytes": 38000,
+  "omitted": [
+    {
+      "path": "icon.png",
+      "bytes": 4156,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "preview/sky_day.png",
+      "bytes": 305993,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "preview/sky_night.png",
+      "bytes": 442046,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "sky/assets/shooting_star_sampler.png",
+      "bytes": 2041,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "icon.svg",
+      "bytes": 4174,
+      "reason": "image asset"
+    }
+  ]
+}

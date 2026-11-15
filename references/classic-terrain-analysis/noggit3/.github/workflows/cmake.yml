@@ -1,0 +1,116 @@
+name: build and test
+on: [push]
+jobs:
+  build_and_test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: ubuntu-24.04
+            compiler: g++-14
+            compiler_c: gcc-14
+            extra_cmake_args: -GNinja
+          - platform: ubuntu-24.04
+            compiler: clang++-18
+            compiler_c: clang-18
+            extra_cmake_args: -GNinja
+          - platform: windows-2019
+            compiler: msvc2019 ## == vs 16
+            compiler_c: msvc2019
+            extra_cmake_args:
+    runs-on: ${{ matrix.platform }}
+    name: ${{ matrix.platform }}-${{ matrix.compiler }}
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: "release dependency: linuxdeployqt (linux)"
+      run: |
+        wget "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage" -O "${{ runner.workspace }}/linuxdeployqt"
+        chmod +x "${{ runner.workspace }}/linuxdeployqt"
+      if: ${{ matrix.platform == 'ubuntu-24.04' }}
+
+    - name: "dependency: ninja (linux)"
+      run: sudo apt update && sudo apt install ninja-build
+      if: ${{ matrix.platform == 'ubuntu-24.04' }}
+
+    - name: "dependency: qt5 (linux)"
+      run: sudo apt update && sudo apt install -y qtbase5-dev
+      if: ${{ matrix.platform == 'ubuntu-24.04' }}
+    - name: "dependency: qt5 (windows)"
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: 5.15.1
+        arch: win64_msvc2019_64
+      if: ${{ matrix.platform == 'windows-2019' }}
+
+    - name: "dependency: bzip2 (linux, stormlib)"
+      run: sudo apt update && sudo apt install libbz2-dev
+      if: ${{ matrix.platform == 'ubuntu-24.04' }}
+    - name: "dependency: stormlib"
+      run: |
+        git clone "https://github.com/ladislav-zezula/StormLib" "${{ runner.workspace }}/stormlib"
+        cmake -B "${{ runner.workspace }}/stormlib/build" -S "${{ runner.workspace }}/stormlib" -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} -DCMAKE_C_COMPILER=${{ matrix.compiler_c }} -DCMAKE_INSTALL_PREFIX="${{ runner.workspace }}/stormlib/install" -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        cmake --build "${{ runner.workspace }}/stormlib/build" --config RelWithDebInfo
+        cmake --install "${{ runner.workspace }}/stormlib/build" --config RelWithDebInfo
+
+    #- name: "dependency: fuse (linux, appimage)"
+    #  run: sudo apt update && sudo apt install libfuse2
+    #  if: ${{ matrix.platform == 'ubuntu-24.04' }}
+
+    - name: "configure"
+      run: cmake -Wdev -Wdeprecated --warn-uninitialized -B "${{ github.workspace }}/build" -S "${{ github.workspace }}" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_COMPILER=${{ matrix.compiler }} -DCMAKE_PREFIX_PATH="${{ runner.workspace }}/stormlib/install" ${{ matrix.extra_cmake_args }}
+    - name: "build"
+      run: cmake --build "${{ github.workspace }}/build" --config RelWithDebInfo
+    - name: "install"
+      run: cmake --install "${{ github.workspace }}/build" --prefix "${{ github.workspace }}/install" --config RelWithDebInfo
+
+    # \todo linuxdeployqt requires Ubuntu 20.04 for glibc version stability. Check whether they bumped the
+    # requirement at some point since 20.04 will be dropped from GitHub CI.
+    #- name: "release: appimage (linux)"
+    #  run: |
+    #    echo '[Desktop Entry]' > "${{ github.workspace }}/install/default.desktop"
+    #    echo 'Type=Application' >> "${{ github.workspace }}/install/default.desktop"
+    #    echo 'Name=Noggit 3' >> "${{ github.workspace }}/install/default.desktop"
+    #    echo 'Icon=default' >> "${{ github.workspace }}/install/default.desktop"
+    #    echo 'Categories=Game;' >> "${{ github.workspace }}/install/default.desktop"
+    #    "${{ runner.workspace }}/linuxdeployqt" "${{ github.workspace }}/install/noggit" -appimage -bundle-non-qt-libs -no-strip -verbose=2
+    #  if: ${{ matrix.platform == 'ubuntu-24.04' }}
+    #- uses: actions/upload-artifact@v4
+    #  with:
+    #    name: ${{ matrix.platform }}-${{ matrix.compiler }}-appimage
+    #    path: Noggit*.AppImage
+    #  if: ${{ matrix.platform == 'ubuntu-24.04' }}
+
+    - run: |
+        mkdir dependencies/
+        cp -av "${{ env.QT_ROOT_DIR }}/bin/Qt5Core.dll" dependencies/
+        cp -av "${{ env.QT_ROOT_DIR }}/bin/Qt5Gui.dll" dependencies/
+        cp -av "${{ env.QT_ROOT_DIR }}/bin/Qt5OpenGL.dll" dependencies/
+        cp -av "${{ env.QT_ROOT_DIR }}/bin/Qt5Widgets.dll" dependencies/
+      if: ${{ matrix.platform == 'windows-2019' }}
+      shell: bash
+    - run: |
+        mkdir dependencies/plugins/
+        cp -av "${{ env.QT_PLUGIN_PATH }}/" dependencies/
+      if: ${{ matrix.platform == 'windows-2019' }}
+      shell: bash
+
+    - uses: vimtor/action-zip@v1
+      with:
+        dest: noggit-${{ matrix.platform }}-${{ matrix.compiler }}-dependencies-${{ github.sha }}.zip
+        files: dependencies/
+      if: ${{ matrix.platform == 'windows-2019' }}
+    - uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.platform }}-${{ matrix.compiler }}-dependencies
+        path: noggit-${{ matrix.platform }}-${{ matrix.compiler }}-dependencies-${{ github.sha }}.zip
+      if: ${{ matrix.platform == 'windows-2019' }}
+
+    - uses: vimtor/action-zip@v1
+      with:
+        dest: noggit-${{ matrix.platform }}-${{ matrix.compiler }}-${{ github.sha }}.zip
+        files: install
+    - uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.platform }}-${{ matrix.compiler }}
+        path: noggit-${{ matrix.platform }}-${{ matrix.compiler }}-${{ github.sha }}.zip

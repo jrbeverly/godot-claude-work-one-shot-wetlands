@@ -1,0 +1,167 @@
+{
+  "id": "gai",
+  "path": "references/ai-development/gai",
+  "url": "https://github.com/godot-fun/gai",
+  "commit": "2e1514402968d70073831c78cf01fffc18ad3a57",
+  "archive_url": "https://codeload.github.com/godot-fun/gai/tar.gz/2e1514402968d70073831c78cf01fffc18ad3a57",
+  "archive_bytes": 36212853,
+  "kept_files": 781,
+  "kept_bytes": 1983915,
+  "omitted": [
+    {
+      "path": ".ai/test/audio/han.wav",
+      "bytes": 1290318,
+      "reason": "asset or binary"
+    },
+    {
+      "path": ".ai/test/audio/han_loud.wav",
+      "bytes": 1290318,
+      "reason": "asset or binary"
+    },
+    {
+      "path": ".ai/test/audio/zhu_ba_jie.wav",
+      "bytes": 2179150,
+      "reason": "asset or binary"
+    },
+    {
+      "path": ".ai/test/image/girl.png",
+      "bytes": 1046458,
+      "reason": "asset or binary"
+    },
+    {
+      "path": ".ai/test/image/tank1.jpg",
+      "bytes": 89939,
+      "reason": "asset or binary"
+    },
+    {
+      "path": ".ai/test/image/tank2.jpg",
+      "bytes": 139664,
+      "reason": "asset or binary"
+    },
+    {
+      "path": ".ai/test/image/tank3.jpg",
+      "bytes": 131006,
+      "reason": "asset or binary"
+    },
+    {
+      "path": ".ai/test/video/ending.mp4",
+      "bytes": 2199653,
+      "reason": "asset or binary"
+    },
+    {
+      "path": ".ai/test/video/opening.mp4",
+      "bytes": 2826001,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "agent/asset/image/screenshot/gai_1.png",
+      "bytes": 623283,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "agent/asset/image/screenshot/workflow_1.png",
+      "bytes": 663038,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "agent/config/prompts/en.json",
+      "bytes": 1598949,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "agent/config/prompts/zh.json",
+      "bytes": 1469207,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "cpp/bin/windows/gai_cpp.windows.template_debug.x86_64.dll",
+      "bytes": 427520,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "test/asset/All_the_Way_North.mp3",
+      "bytes": 7043235,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "test/asset/White_Windmill.mp3",
+      "bytes": 7749040,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "test/asset/character_attack.png",
+      "bytes": 2694280,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "test/asset/cheer.mp3",
+      "bytes": 142080,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "test/asset/explosion_animation.png",
+      "bytes": 15930,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "zfoo/font/NotoSansSC-Bold.woff2",
+      "bytes": 1172564,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "zfoo/font/NotoSansSC-Light.woff2",
+      "bytes": 1112316,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "zfoo/font/NotoSansSC-Medium.woff2",
+      "bytes": 1159068,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "zfoo/font/NotoSansSC-Regular.woff2",
+      "bytes": 1142704,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "zfoo/font/NotoSansSC-SemiBold.woff2",
+      "bytes": 1163544,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "icon.svg",
+      "bytes": 3519,
+      "reason": "image asset"
+    },
+    {
+      "path": "agent/asset/image/icon/close.svg",
+      "bytes": 197,
+      "reason": "image asset"
+    },
+    {
+      "path": "agent/asset/image/icon/search.svg",
+      "bytes": 273,
+      "reason": "image asset"
+    },
+    {
+      "path": "agent/asset/image/icon/moon.svg",
+      "bytes": 174,
+      "reason": "image asset"
+    },
+    {
+      "path": "agent/asset/image/icon/brush.svg",
+      "bytes": 384,
+      "reason": "image asset"
+    },
+    {
+      "path": "agent/asset/image/icon/sun.svg",
+      "bytes": 365,
+      "reason": "image asset"
+    },
+    {
+      "path": "agent/asset/image/icon/settings.svg",
+      "bytes": 968,
+      "reason": "image asset"
+    }
+  ]
+}

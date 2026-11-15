@@ -1,0 +1,50 @@
+# Modeled off of https://github.com/godotengine/godot/blob/master/.github/workflows/runner.yml
+
+name: 🛠️ Build All Platforms
+on: 
+  push:
+    branches: [ main ]
+  pull_request:
+    paths: [ '**' ]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows:
+    name: 🪟 Windows
+    uses: ./.github/workflows/windows.yml
+
+  linux:
+    name: 🐧 Linux
+    uses: ./.github/workflows/linux.yml
+
+  android:
+    name: 🤖 Android
+    uses: ./.github/workflows/android.yml
+
+  macos:
+    name: 🍎 macOS
+    uses: ./.github/workflows/macos.yml
+
+  ios:
+    name: 🍏 iOS
+    uses: ./.github/workflows/ios.yml
+
+  web:
+    name: 🌐 Web 
+    uses: ./.github/workflows/web.yml
+
+  merge:
+    runs-on: ubuntu-24.04
+    needs: [ windows, linux, android, macos, ios, web ]
+    steps:
+      - name: Merge Artifacts
+        uses: actions/upload-artifact/merge@v7
+        with:
+          include-hidden-files: true
+          name: ${{ github.event.repository.name }}
+          pattern: t3d-*
+          delete-merged: true

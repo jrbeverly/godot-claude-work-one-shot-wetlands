@@ -1,0 +1,492 @@
+{
+  "id": "GameDemo",
+  "path": "references/godot/controllers/GameDemo",
+  "url": "https://github.com/chickensoft-games/GameDemo",
+  "commit": "ea29545948c54eeec149aa61f7d97c622fb9749b",
+  "archive_url": "https://codeload.github.com/chickensoft-games/GameDemo/tar.gz/ea29545948c54eeec149aa61f7d97c622fb9749b",
+  "archive_bytes": 34146107,
+  "kept_files": 556,
+  "kept_bytes": 1912417,
+  "omitted": [
+    {
+      "path": "docs/app.png",
+      "bytes": 23095,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "docs/coin.png",
+      "bytes": 5418,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "docs/game.png",
+      "bytes": 27262,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "docs/jumpshroom.png",
+      "bytes": 9120,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "docs/player.png",
+      "bytes": 15442,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "docs/preview.png",
+      "bytes": 704283,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "icon.png",
+      "bytes": 166854,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/coin/Coin.tscn",
+      "bytes": 1944435,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "src/coin/audio/coin_collected.mp3",
+      "bytes": 18180,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/coin/visuals/coin_model.glb",
+      "bytes": 257808,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/coin/visuals/coin_normal.tres",
+      "bytes": 2585974,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "src/coin/visuals/coin_roughness.tres",
+      "bytes": 1935237,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "src/coin/visuals/coin_texture.tres",
+      "bytes": 2297981,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "src/in_game_audio/sounds/bounce.wav",
+      "bytes": 242192,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/in_game_audio/sounds/coin.wav",
+      "bytes": 261990,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/in_game_audio/sounds/death.wav",
+      "bytes": 1572970,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/in_game_audio/sounds/game_music.mp3",
+      "bytes": 7013040,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/in_game_audio/sounds/jump.wav",
+      "bytes": 354234,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/in_game_audio/sounds/menu_music.mp3",
+      "bytes": 5547793,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/bushes/bush.obj",
+      "bytes": 23959,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/dark_bark/dark_bark_albedo.png",
+      "bytes": 103820,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/dark_bark/dark_bark_heightmap.png",
+      "bytes": 90477,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/dark_bark/dark_bark_normal.png",
+      "bytes": 158924,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/dark_bark/dark_bark_orm.png",
+      "bytes": 104170,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/fence/fence.glb",
+      "bytes": 296624,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/fence/fence_bridge_planks_albedo.png",
+      "bytes": 124648,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/fence/fence_bridge_planks_roughness.png",
+      "bytes": 107411,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/flowers/flower_patch.obj",
+      "bytes": 25480,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/flowers/textures/flower_head_albedo.png",
+      "bytes": 13789,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/flowers/textures/flower_head_normal.png",
+      "bytes": 30094,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/grass/grass_1_geo.obj",
+      "bytes": 39005,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/grass/grass_multimesh.res",
+      "bytes": 29339,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/large_tree_trunk/large_trunk.obj",
+      "bytes": 34184,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/large_tree_trunk/moss/moss_albedo.png",
+      "bytes": 1368420,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/large_tree_trunk/moss/moss_depth.png",
+      "bytes": 1061067,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/large_tree_trunk/moss/moss_normal.png",
+      "bytes": 1599404,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/large_tree_trunk/moss/moss_orm.png",
+      "bytes": 678644,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/large_tree_trunk/trunk_top/trunk_top_albedo.png",
+      "bytes": 125550,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/large_tree_trunk/trunk_top/trunk_top_normal.png",
+      "bytes": 59200,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/large_tree_trunk/trunk_top/trunk_top_orm.png",
+      "bytes": 45375,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/mushroom/mushroom.glb",
+      "bytes": 187504,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/mushroom/mushroom_mushroom_albedo.png",
+      "bytes": 51079,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/mushroom/mushroom_mushroom_normal.png",
+      "bytes": 63786,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/orange_flowers/orange_flower.glb",
+      "bytes": 70660,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/orange_flowers/orange_flower_Image.png",
+      "bytes": 1655,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/orange_flowers/orange_flower_Image_3.png",
+      "bytes": 822,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/orange_flowers/orange_flower_flower_blade_albedo.png",
+      "bytes": 2868,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/orange_flowers/orange_flower_flower_blade_normal.png",
+      "bytes": 14926,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/orange_flowers/orange_flower_pink_flower_albedo.png",
+      "bytes": 5054,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/orange_flowers/orange_flower_pink_flower_normal.png",
+      "bytes": 13592,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/simple_leaves/simple_leaves_albedo.png",
+      "bytes": 276219,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/simple_leaves/simple_leaves_normal.png",
+      "bytes": 558754,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/simple_leaves/simple_leaves_orm.png",
+      "bytes": 1024834,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/terrain.glb",
+      "bytes": 697396,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/terrain/terrain.tscn",
+      "bytes": 1700674,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "src/map/terrain/visuals/cliff_mat_albedo.png",
+      "bytes": 393671,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/terrain/visuals/cliff_mat_depth.png",
+      "bytes": 161545,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/terrain/visuals/cliff_mat_normal.png",
+      "bytes": 273187,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/terrain/visuals/cliff_mat_orm.png",
+      "bytes": 61693,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/terrain/visuals/cliff_motif.png",
+      "bytes": 153062,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/terrain/visuals/grass_mat_albedo.png",
+      "bytes": 865058,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/terrain/visuals/grass_mat_normal.png",
+      "bytes": 646770,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/terrain/visuals/grass_mat_orm.png",
+      "bytes": 185101,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/terrain/visuals/ground_mat_albedo.png",
+      "bytes": 253246,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/terrain/visuals/ground_mat_normal.png",
+      "bytes": 286728,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/terrain/visuals/voronoi_rock_cliff/voronoi_rock_cliff_albedo.png",
+      "bytes": 469660,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/terrain/visuals/voronoi_rock_cliff/voronoi_rock_cliff_heightmap.png",
+      "bytes": 392065,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/terrain/visuals/voronoi_rock_cliff/voronoi_rock_cliff_normal.png",
+      "bytes": 1475729,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/terrain/visuals/voronoi_rock_cliff/voronoi_rock_cliff_orm.png",
+      "bytes": 56306,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/terrain_bridge_planks_albedo.png",
+      "bytes": 121079,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/terrain_bridge_planks_roughness.png",
+      "bytes": 74414,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/tree_trunk/tree_trunk_long.glb",
+      "bytes": 17764,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/tree_trunk/tree_trunk_small.glb",
+      "bytes": 16648,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/trees/simple_bark/simple_bark_albedo.png",
+      "bytes": 148013,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/trees/simple_bark/simple_bark_depth.png",
+      "bytes": 257259,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/trees/simple_bark/simple_bark_heightmap.png",
+      "bytes": 97336,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/trees/simple_bark/simple_bark_mask.png",
+      "bytes": 221728,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/trees/simple_bark/simple_bark_normal.png",
+      "bytes": 248581,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/trees/simple_bark/simple_bark_orm.png",
+      "bytes": 155445,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/trees/simple_pine_leaves/simple_pin_leaves_albedo.png",
+      "bytes": 26282,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/trees/simple_pine_leaves/simple_pin_leaves_normal.png",
+      "bytes": 280382,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/trees/simple_pine_leaves/simple_pin_leaves_orm.png",
+      "bytes": 237867,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/trees/tree.obj",
+      "bytes": 68636,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/water/textures/PerlinNoise.png",
+      "bytes": 131244,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/water/textures/WaterDistortion.png",
+      "bytes": 197244,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/map/waterfall/waterfall.glb",
+      "bytes": 8180,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/menu/splash/chickensoft_logo.png",
+      "bytes": 42089,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/menu/splash/godot_logo.png",
+      "bytes": 20543,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/pause_menu/assets/spinner.png",
+      "bytes": 4745,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/player/visuals/chicken/chicken.glb",
+      "bytes": 534276,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/player/visuals/faces/closed.png",
+      "bytes": 4746,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/player/visuals/faces/open.png",
+      "bytes": 7489,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "src/player/visuals/model/gdbot.glb",
+      "bytes": 3262704,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "test/fixtures/textures/grid.png",
+      "bytes": 637,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "badges/branch_coverage.svg",
+      "bytes": 8492,
+      "reason": "image asset"
+    },
+    {
+      "path": "badges/line_coverage.svg",
+      "bytes": 6265,
+      "reason": "image asset"
+    }
+  ]
+}

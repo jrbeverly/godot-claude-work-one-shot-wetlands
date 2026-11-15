@@ -1,0 +1,131 @@
+[gd_scene format=3 uid="uid://dnrkvwnv1tn73"]
+
+[ext_resource type="Script" uid="uid://bp2gcdjvjxrt1" path="res://agent/app/workflow/Workflow.gd" id="1_workflow"]
+[ext_resource type="Script" uid="uid://n3x46rjx4qlo" path="res://agent/app/workflow/ui/SkillGraphEdit.gd" id="2_graph"]
+
+[node name="Workflow" type="PanelContainer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_workflow")
+
+[node name="Root" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Toolbar" type="PanelContainer" parent="Root"]
+layout_mode = 2
+
+[node name="ToolbarMargin" type="MarginContainer" parent="Root/Toolbar"]
+layout_mode = 2
+
+[node name="ToolbarRow" type="HBoxContainer" parent="Root/Toolbar/ToolbarMargin"]
+layout_mode = 2
+
+[node name="Logo" type="Label" parent="Root/Toolbar/ToolbarMargin/ToolbarRow"]
+layout_mode = 2
+text = "GAI"
+vertical_alignment = 1
+
+[node name="Title" type="Label" parent="Root/Toolbar/ToolbarMargin/ToolbarRow"]
+layout_mode = 2
+text = "Workflow"
+vertical_alignment = 1
+
+[node name="Spacer" type="Control" parent="Root/Toolbar/ToolbarMargin/ToolbarRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Actions" type="HBoxContainer" parent="Root/Toolbar/ToolbarMargin/ToolbarRow"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="NewButton" type="Button" parent="Root/Toolbar/ToolbarMargin/ToolbarRow/Actions"]
+layout_mode = 2
+text = "New"
+
+[node name="LoadButton" type="Button" parent="Root/Toolbar/ToolbarMargin/ToolbarRow/Actions"]
+layout_mode = 2
+text = "Open"
+
+[node name="SaveButton" type="Button" parent="Root/Toolbar/ToolbarMargin/ToolbarRow/Actions"]
+layout_mode = 2
+text = "Save"
+
+[node name="DeleteButton" type="Button" parent="Root/Toolbar/ToolbarMargin/ToolbarRow/Actions"]
+layout_mode = 2
+text = "Delete Node"
+
+[node name="LogButton" type="Button" parent="Root/Toolbar/ToolbarMargin/ToolbarRow/Actions"]
+layout_mode = 2
+text = "Log"
+
+[node name="RunButton" type="Button" parent="Root/Toolbar/ToolbarMargin/ToolbarRow/Actions"]
+layout_mode = 2
+text = "Run"
+
+[node name="Body" type="HSplitContainer" parent="Root"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="Sidebar" type="PanelContainer" parent="Root/Body"]
+layout_mode = 2
+size_flags_vertical = 3
+clip_contents = true
+
+[node name="SidebarMargin" type="MarginContainer" parent="Root/Body/Sidebar"]
+layout_mode = 2
+
+[node name="PaletteVBox" type="VBoxContainer" parent="Root/Body/Sidebar/SidebarMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PaletteTitle" type="Label" parent="Root/Body/Sidebar/SidebarMargin/PaletteVBox"]
+layout_mode = 2
+text = "Skill Library"
+
+[node name="PaletteHint" type="Label" parent="Root/Body/Sidebar/SidebarMargin/PaletteVBox"]
+layout_mode = 2
+text = "Expand categories; double-click a skill to add a node, or a workflow to open"
+autowrap_mode = 3
+
+[node name="PaletteScroll" type="ScrollContainer" parent="Root/Body/Sidebar/SidebarMargin/PaletteVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="PaletteTree" type="Tree" parent="Root/Body/Sidebar/SidebarMargin/PaletteVBox/PaletteScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+hide_root = true
+scroll_horizontal_enabled = false
+
+[node name="SkillGraphEdit" type="GraphEdit" parent="Root/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+right_disconnects = true
+script = ExtResource("2_graph")
+
+[node name="SaveDialog" type="FileDialog" parent="."]
+oversampling_override = 1.0
+title = "Save Workflow"
+ok_button_text = "Save"
+access = 2
+filters = PackedStringArray("*.workflow.json ; Workflow JSON", "* ; All Files")
+
+[node name="LoadDialog" type="FileDialog" parent="."]
+oversampling_override = 1.0
+title = "Open Workflow"
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.workflow.json ; Workflow JSON")

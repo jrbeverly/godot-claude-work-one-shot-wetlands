@@ -1,0 +1,142 @@
+{
+  "id": "SimpleGrassTextured",
+  "path": "references/godot/foliage/SimpleGrassTextured",
+  "url": "https://github.com/IcterusGames/SimpleGrassTextured",
+  "commit": "88ff153711dad115d42717542bb9009e1c862440",
+  "archive_url": "https://codeload.github.com/IcterusGames/SimpleGrassTextured/tar.gz/88ff153711dad115d42717542bb9009e1c862440",
+  "archive_bytes": 305467,
+  "kept_files": 98,
+  "kept_bytes": 247829,
+  "omitted": [
+    {
+      "path": "addons/simplegrasstextured/images/motion.png",
+      "bytes": 1511,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/motion_frame.png",
+      "bytes": 1836,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/normal.png",
+      "bytes": 1511,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/normal_frame.png",
+      "bytes": 1837,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/pointer.png",
+      "bytes": 39873,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/pointer_rect.png",
+      "bytes": 8793,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/wind_pattern.png",
+      "bytes": 142318,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/simplegrasstextured/textures/grassbushcc008.png",
+      "bytes": 66076,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/simplegrasstextured/sgt_icon.svg",
+      "bytes": 1859,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/simplegrasstextured/sgt_icon_48.svg",
+      "bytes": 1859,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/sgt_icon_slope.svg",
+      "bytes": 314,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/sgt_icon_density.svg",
+      "bytes": 904,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/sgt_icon_eraser_dark.svg",
+      "bytes": 2619,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/sgt_icon_pen.svg",
+      "bytes": 1529,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/sgt_icon_distance_dark.svg",
+      "bytes": 4774,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/sgt_icon_distance.svg",
+      "bytes": 1664,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/sgt_icon_pen_dark.svg",
+      "bytes": 1568,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/sgt_icon_radius_dark.svg",
+      "bytes": 5086,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/sgt_icon_airbrush_dark.svg",
+      "bytes": 2079,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/sgt_icon_slope_dark.svg",
+      "bytes": 1761,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/sgt_icon_density_dark.svg",
+      "bytes": 4851,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/sgt_icon_arrow_up_dark.svg",
+      "bytes": 1389,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/sgt_icon_arrow_up.svg",
+      "bytes": 1384,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/sgt_icon_eraser.svg",
+      "bytes": 2523,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/sgt_icon_airbrush.svg",
+      "bytes": 2050,
+      "reason": "image asset"
+    },
+    {
+      "path": "addons/simplegrasstextured/images/sgt_icon_radius.svg",
+      "bytes": 1499,
+      "reason": "image asset"
+    }
+  ]
+}

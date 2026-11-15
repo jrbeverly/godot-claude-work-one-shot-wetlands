@@ -1,0 +1,82 @@
+{
+  "id": "GodotOceanWaves",
+  "path": "references/godot/water/GodotOceanWaves",
+  "url": "https://github.com/2Retr0/GodotOceanWaves",
+  "commit": "a171446f8174348895aaafc426576c26261058b9",
+  "archive_url": "https://codeload.github.com/2Retr0/GodotOceanWaves/tar.gz/a171446f8174348895aaafc426576c26261058b9",
+  "archive_bytes": 30669837,
+  "kept_files": 69,
+  "kept_bytes": 217362,
+  "omitted": [
+    {
+      "path": "addons/imgui-godot/bin/libimgui-godot-native.linux.debug.x86_64.so",
+      "bytes": 5821624,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/imgui-godot/bin/libimgui-godot-native.linux.release.x86_64.so",
+      "bytes": 5418168,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/imgui-godot/bin/libimgui-godot-native.macos.debug.framework/libimgui-godot-native.macos.debug",
+      "bytes": 7475560,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "addons/imgui-godot/bin/libimgui-godot-native.macos.release.framework/libimgui-godot-native.macos.release",
+      "bytes": 7129224,
+      "reason": "larger than 1 MiB"
+    },
+    {
+      "path": "addons/imgui-godot/bin/libimgui-godot-native.windows.debug.x86_64.dll",
+      "bytes": 4192256,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/imgui-godot/bin/libimgui-godot-native.windows.release.x86_64.dll",
+      "bytes": 3320832,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "addons/imgui-godot/bin/~libimgui-godot-native.windows.debug.x86_64.dll",
+      "bytes": 4192256,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/ocean_loop.wav",
+      "bytes": 3014788,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/skybox.png",
+      "bytes": 5953051,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/water/clipmap_high.obj",
+      "bytes": 14046660,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/water/clipmap_low.obj",
+      "bytes": 824056,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/water/sea_spray.png",
+      "bytes": 78006,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "assets/wind_loop.wav",
+      "bytes": 3599198,
+      "reason": "asset or binary"
+    },
+    {
+      "path": "icon.svg",
+      "bytes": 950,
+      "reason": "image asset"
+    }
+  ]
+}

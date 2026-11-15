@@ -1,0 +1,861 @@
+{
+  "source": "https://quaternius.com/packs/stylizednaturemegakit.html",
+  "downloaded": "2026-10-04",
+  "archive": "quaternius-nature-standard.zip",
+  "archive_sha256": "298f6732b872e4cf7b30e6e7abf9641c7f6dc6b326df37ac089533ed7e3d58c9",
+  "models": [
+    "CommonTree_1",
+    "CommonTree_2",
+    "CommonTree_3",
+    "CommonTree_4",
+    "CommonTree_5",
+    "Pine_1",
+    "Pine_2",
+    "Pine_3",
+    "Pine_4",
+    "Pine_5",
+    "DeadTree_1",
+    "DeadTree_3",
+    "DeadTree_5",
+    "TwistedTree_1",
+    "TwistedTree_3",
+    "TwistedTree_5",
+    "Bush_Common",
+    "Bush_Common_Flowers",
+    "Grass_Common_Short",
+    "Grass_Common_Tall",
+    "Grass_Wispy_Short",
+    "Grass_Wispy_Tall",
+    "Fern_1",
+    "Clover_1",
+    "Flower_3_Group",
+    "Flower_4_Group",
+    "Mushroom_Common",
+    "Mushroom_Laetiporus",
+    "Rock_Medium_1",
+    "Rock_Medium_2",
+    "Rock_Medium_3",
+    "Pebble_Round_1",
+    "Pebble_Round_3",
+    "Pebble_Square_1",
+    "Pebble_Square_3",
+    "RockPath_Round_Thin",
+    "RockPath_Square_Thin"
+  ],
+  "files": [
+    {
+      "path": "Bark_DeadTree.png",
+      "archive_path": "glTF/Bark_DeadTree.png",
+      "source_sha256": "8f055724c35f8e8c5685a505775b3b9ebfc6b4745308ef35ce1cfe6fd976153f",
+      "source_bytes": 4228870,
+      "bytes": 1108925,
+      "sha256": "60e28753c815794cce32967d10af6000f9ccc8c61a24e05bc7c8b6e34cca851e"
+    },
+    {
+      "path": "Bark_DeadTree_Normal.png",
+      "archive_path": "glTF/Bark_DeadTree_Normal.png",
+      "source_sha256": "692da2f58909263f074cb17b36defd09f56bf89ab7efda567a9a3e59261747b3",
+      "source_bytes": 5728199,
+      "bytes": 1451030,
+      "sha256": "e85acf2657a04434d9b82c06d611e48c941475192683493590cceb66a65e3c0e"
+    },
+    {
+      "path": "Bark_NormalTree.png",
+      "archive_path": "glTF/Bark_NormalTree.png",
+      "source_sha256": "f36e94fdd73255347325b998e02a0b2575fdf714b0315bfe5e8ff34bc8e13603",
+      "source_bytes": 3894788,
+      "bytes": 1030185,
+      "sha256": "7cb2956402f8a22338e1aead9564a944998337b78ee6b41760e680cc4605920a"
+    },
+    {
+      "path": "Bark_NormalTree_Normal.png",
+      "archive_path": "glTF/Bark_NormalTree_Normal.png",
+      "source_sha256": "852f6155404b8c39e100e41e26970e02a6a5c81b482d3726618dab28e3ad03a2",
+      "source_bytes": 4384496,
+      "bytes": 1105555,
+      "sha256": "e8f84988782c0756c1bfbae61dcdff9e650ed1d5ba1573b99402c2e7f3a6f0ca"
+    },
+    {
+      "path": "Bark_TwistedTree.png",
+      "archive_path": "glTF/Bark_TwistedTree.png",
+      "source_sha256": "01608a96c42954eb725b32824530b51e67a2f3d85432d21a8d8adff958d2084a",
+      "source_bytes": 4630805,
+      "bytes": 1213002,
+      "sha256": "ea7a16f8d5c7f14f7e6b0a5880b9f787b53dfa373e4c72198eebc51d6307cfd1"
+    },
+    {
+      "path": "Bark_TwistedTree_Normal.png",
+      "archive_path": "glTF/Bark_TwistedTree_Normal.png",
+      "source_sha256": "692da2f58909263f074cb17b36defd09f56bf89ab7efda567a9a3e59261747b3",
+      "source_bytes": 5728199,
+      "bytes": 1451030,
+      "sha256": "e85acf2657a04434d9b82c06d611e48c941475192683493590cceb66a65e3c0e"
+    },
+    {
+      "path": "Bush_Common.bin",
+      "archive_path": "glTF/Bush_Common.bin",
+      "source_sha256": "a5e1a773c8ba78fd9c05a8b342131eba4879302a8fddd2c5186cab9ee1ef4966",
+      "source_bytes": 91800,
+      "bytes": 91800,
+      "sha256": "a5e1a773c8ba78fd9c05a8b342131eba4879302a8fddd2c5186cab9ee1ef4966"
+    },
+    {
+      "path": "Bush_Common.gltf",
+      "archive_path": "glTF/Bush_Common.gltf",
+      "source_sha256": "77811fca92610cb254713d3d49d5029ab6cf13050c3afb61aa942786a7b2ca90",
+      "source_bytes": 2101,
+      "bytes": 2101,
+      "sha256": "77811fca92610cb254713d3d49d5029ab6cf13050c3afb61aa942786a7b2ca90"
+    },
+    {
+      "path": "Bush_Common_Flowers.bin",
+      "archive_path": "glTF/Bush_Common_Flowers.bin",
+      "source_sha256": "15f56a013afe0eecaded0eb97fd8f323305af11e1f0f7bb9b68472ec4cdc20d5",
+      "source_bytes": 128928,
+      "bytes": 128928,
+      "sha256": "15f56a013afe0eecaded0eb97fd8f323305af11e1f0f7bb9b68472ec4cdc20d5"
+    },
+    {
+      "path": "Bush_Common_Flowers.gltf",
+      "archive_path": "glTF/Bush_Common_Flowers.gltf",
+      "source_sha256": "08768c680e3abeafd25858c9d3f369bcb7eed014661d3b6825a397f2a6a3deea",
+      "source_bytes": 3654,
+      "bytes": 3654,
+      "sha256": "08768c680e3abeafd25858c9d3f369bcb7eed014661d3b6825a397f2a6a3deea"
+    },
+    {
+      "path": "Clover_1.bin",
+      "archive_path": "glTF/Clover_1.bin",
+      "source_sha256": "788fabaffc3f8f2825ad88399bd4725d8bc397225d93d00926c3223fdee9516b",
+      "source_bytes": 12956,
+      "bytes": 12956,
+      "sha256": "788fabaffc3f8f2825ad88399bd4725d8bc397225d93d00926c3223fdee9516b"
+    },
+    {
+      "path": "Clover_1.gltf",
+      "archive_path": "glTF/Clover_1.gltf",
+      "source_sha256": "05fe48cdf1f3db879371a6ba0d843fcd407667b7680def5716c9f286efe0306b",
+      "source_bytes": 2074,
+      "bytes": 2074,
+      "sha256": "05fe48cdf1f3db879371a6ba0d843fcd407667b7680def5716c9f286efe0306b"
+    },
+    {
+      "path": "CommonTree_1.bin",
+      "archive_path": "glTF/CommonTree_1.bin",
+      "source_sha256": "9dd689e84e1aa2f5b08db8def591254d582783c73737af54ba0d89b3e549c3ae",
+      "source_bytes": 491576,
+      "bytes": 491576,
+      "sha256": "9dd689e84e1aa2f5b08db8def591254d582783c73737af54ba0d89b3e549c3ae"
+    },
+    {
+      "path": "CommonTree_1.gltf",
+      "archive_path": "glTF/CommonTree_1.gltf",
+      "source_sha256": "b51cdea6545edb51d102dd6c27caafe62aa75e3c328ac8f9039f4e7bfd690bfa",
+      "source_bytes": 3869,
+      "bytes": 3869,
+      "sha256": "b51cdea6545edb51d102dd6c27caafe62aa75e3c328ac8f9039f4e7bfd690bfa"
+    },
+    {
+      "path": "CommonTree_2.bin",
+      "archive_path": "glTF/CommonTree_2.bin",
+      "source_sha256": "a273d69de31a675a9d7e3eb3c43f804aef2d1b031692111b9e76eb3b0b686d0c",
+      "source_bytes": 423024,
+      "bytes": 423024,
+      "sha256": "a273d69de31a675a9d7e3eb3c43f804aef2d1b031692111b9e76eb3b0b686d0c"
+    },
+    {
+      "path": "CommonTree_2.gltf",
+      "archive_path": "glTF/CommonTree_2.gltf",
+      "source_sha256": "67160975f0ac991b4a2ffb2add4ab4037b5e9c1bef9f66dac5235fcf0ba9bd52",
+      "source_bytes": 3866,
+      "bytes": 3866,
+      "sha256": "67160975f0ac991b4a2ffb2add4ab4037b5e9c1bef9f66dac5235fcf0ba9bd52"
+    },
+    {
+      "path": "CommonTree_3.bin",
+      "archive_path": "glTF/CommonTree_3.bin",
+      "source_sha256": "24541f46fd9553e2389aba15575f2697009226e82118ed76868284114fd12b49",
+      "source_bytes": 296984,
+      "bytes": 296984,
+      "sha256": "24541f46fd9553e2389aba15575f2697009226e82118ed76868284114fd12b49"
+    },
+    {
+      "path": "CommonTree_3.gltf",
+      "archive_path": "glTF/CommonTree_3.gltf",
+      "source_sha256": "17c6537aa8042bb7255fbb501bf7aeb2b6db87c16766f794f9c37be3ce70c976",
+      "source_bytes": 3864,
+      "bytes": 3864,
+      "sha256": "17c6537aa8042bb7255fbb501bf7aeb2b6db87c16766f794f9c37be3ce70c976"
+    },
+    {
+      "path": "CommonTree_4.bin",
+      "archive_path": "glTF/CommonTree_4.bin",
+      "source_sha256": "4fa52cc5bb9aa42d5ce1eee6cffca0f0a7f25dd07fe4431e371548e89bc30233",
+      "source_bytes": 307596,
+      "bytes": 307596,
+      "sha256": "4fa52cc5bb9aa42d5ce1eee6cffca0f0a7f25dd07fe4431e371548e89bc30233"
+    },
+    {
+      "path": "CommonTree_4.gltf",
+      "archive_path": "glTF/CommonTree_4.gltf",
+      "source_sha256": "ddf0e8837705702871d3f03de8cf7aeed61ad4bf8ee92052b6f95bdd771297b6",
+      "source_bytes": 3865,
+      "bytes": 3865,
+      "sha256": "ddf0e8837705702871d3f03de8cf7aeed61ad4bf8ee92052b6f95bdd771297b6"
+    },
+    {
+      "path": "CommonTree_5.bin",
+      "archive_path": "glTF/CommonTree_5.bin",
+      "source_sha256": "0e617612d50e6bb2ca3c64338383f8938ce9e04d55b548ff11cec7a7b7d8f072",
+      "source_bytes": 252996,
+      "bytes": 252996,
+      "sha256": "0e617612d50e6bb2ca3c64338383f8938ce9e04d55b548ff11cec7a7b7d8f072"
+    },
+    {
+      "path": "CommonTree_5.gltf",
+      "archive_path": "glTF/CommonTree_5.gltf",
+      "source_sha256": "fb7061f2bf9fe850870b056431f8f66cd8fdeb443c90695c5efbcf1fe6876d53",
+      "source_bytes": 3860,
+      "bytes": 3860,
+      "sha256": "fb7061f2bf9fe850870b056431f8f66cd8fdeb443c90695c5efbcf1fe6876d53"
+    },
+    {
+      "path": "DeadTree_1.bin",
+      "archive_path": "glTF/DeadTree_1.bin",
+      "source_sha256": "d623cfc5199a732cc988175fad149e8afcb84516df01a8dc1e378844019f408c",
+      "source_bytes": 422744,
+      "bytes": 422744,
+      "sha256": "d623cfc5199a732cc988175fad149e8afcb84516df01a8dc1e378844019f408c"
+    },
+    {
+      "path": "DeadTree_1.gltf",
+      "archive_path": "glTF/DeadTree_1.gltf",
+      "source_sha256": "b7ca9e90cbd8e8e3b3b17fd9c8fd57184ebf4986ff433ee3f2212f37f3114469",
+      "source_bytes": 2206,
+      "bytes": 2206,
+      "sha256": "b7ca9e90cbd8e8e3b3b17fd9c8fd57184ebf4986ff433ee3f2212f37f3114469"
+    },
+    {
+      "path": "DeadTree_3.bin",
+      "archive_path": "glTF/DeadTree_3.bin",
+      "source_sha256": "5c3b29bf37c700f5ca545b315f6423d966562d7af01116fdd2d8f94a6173959e",
+      "source_bytes": 415740,
+      "bytes": 415740,
+      "sha256": "5c3b29bf37c700f5ca545b315f6423d966562d7af01116fdd2d8f94a6173959e"
+    },
+    {
+      "path": "DeadTree_3.gltf",
+      "archive_path": "glTF/DeadTree_3.gltf",
+      "source_sha256": "aa74a47c69259f217388d7b3e2871d76c0385449fc1efd92299c2e55417fdffc",
+      "source_bytes": 2211,
+      "bytes": 2211,
+      "sha256": "aa74a47c69259f217388d7b3e2871d76c0385449fc1efd92299c2e55417fdffc"
+    },
+    {
+      "path": "DeadTree_5.bin",
+      "archive_path": "glTF/DeadTree_5.bin",
+      "source_sha256": "1723668be1f3da485ad31415d71ea9c8aa6e9b5962b628d68f3551c509dceda4",
+      "source_bytes": 393840,
+      "bytes": 393840,
+      "sha256": "1723668be1f3da485ad31415d71ea9c8aa6e9b5962b628d68f3551c509dceda4"
+    },
+    {
+      "path": "DeadTree_5.gltf",
+      "archive_path": "glTF/DeadTree_5.gltf",
+      "source_sha256": "8502cb23774f8771b047053bef8a4a25fbcb30340a160c4b00c0af6ba614284f",
+      "source_bytes": 2211,
+      "bytes": 2211,
+      "sha256": "8502cb23774f8771b047053bef8a4a25fbcb30340a160c4b00c0af6ba614284f"
+    },
+    {
+      "path": "Fern_1.bin",
+      "archive_path": "glTF/Fern_1.bin",
+      "source_sha256": "5e92b87a27f81a69fe15347a533df3c77d567b48298dceeef43168ccb7c22853",
+      "source_bytes": 11448,
+      "bytes": 11448,
+      "sha256": "5e92b87a27f81a69fe15347a533df3c77d567b48298dceeef43168ccb7c22853"
+    },
+    {
+      "path": "Fern_1.gltf",
+      "archive_path": "glTF/Fern_1.gltf",
+      "source_sha256": "d41915cffe9dbbde1ae88be381eb9c60f7caa2274511436cc78fe4de627468ab",
+      "source_bytes": 2058,
+      "bytes": 2058,
+      "sha256": "d41915cffe9dbbde1ae88be381eb9c60f7caa2274511436cc78fe4de627468ab"
+    },
+    {
+      "path": "Flower_3_Group.bin",
+      "archive_path": "glTF/Flower_3_Group.bin",
+      "source_sha256": "5ab387dd3d6fe181df3af4eeac4df85533e4c27e77545ae39a61e0c2aaaab248",
+      "source_bytes": 27772,
+      "bytes": 27772,
+      "sha256": "5ab387dd3d6fe181df3af4eeac4df85533e4c27e77545ae39a61e0c2aaaab248"
+    },
+    {
+      "path": "Flower_3_Group.gltf",
+      "archive_path": "glTF/Flower_3_Group.gltf",
+      "source_sha256": "4df1612371982c543f930d6b213967372e0d459622d7eff7fc2ed1ddbfaa3b6c",
+      "source_bytes": 3629,
+      "bytes": 3629,
+      "sha256": "4df1612371982c543f930d6b213967372e0d459622d7eff7fc2ed1ddbfaa3b6c"
+    },
+    {
+      "path": "Flower_4_Group.bin",
+      "archive_path": "glTF/Flower_4_Group.bin",
+      "source_sha256": "3ac30b4c9eaa5078a17c061aa29e2e9618cc9eb58cb6d5d2ab0c07fa0b851ae1",
+      "source_bytes": 62220,
+      "bytes": 62220,
+      "sha256": "3ac30b4c9eaa5078a17c061aa29e2e9618cc9eb58cb6d5d2ab0c07fa0b851ae1"
+    },
+    {
+      "path": "Flower_4_Group.gltf",
+      "archive_path": "glTF/Flower_4_Group.gltf",
+      "source_sha256": "69ead56b36b50f06a0cf18380797fce7434302e9b2da7bf68a85014b993c6134",
+      "source_bytes": 3645,
+      "bytes": 3645,
+      "sha256": "69ead56b36b50f06a0cf18380797fce7434302e9b2da7bf68a85014b993c6134"
+    },
+    {
+      "path": "Flowers.png",
+      "archive_path": "glTF/Flowers.png",
+      "source_sha256": "5c531f2329c241c625aafd6cb769de29f33b480ef2a16491c2489f3c68e62a6a",
+      "source_bytes": 444609,
+      "bytes": 444609,
+      "sha256": "5c531f2329c241c625aafd6cb769de29f33b480ef2a16491c2489f3c68e62a6a"
+    },
+    {
+      "path": "Grass.png",
+      "archive_path": "glTF/Grass.png",
+      "source_sha256": "5d69048193b246a73c996b892607fb36c75d0c60afcb2dab8aa12de3c0b2d9bd",
+      "source_bytes": 33605,
+      "bytes": 33605,
+      "sha256": "5d69048193b246a73c996b892607fb36c75d0c60afcb2dab8aa12de3c0b2d9bd"
+    },
+    {
+      "path": "Grass_Common_Short.bin",
+      "archive_path": "glTF/Grass_Common_Short.bin",
+      "source_sha256": "7a0f0f7a9ac39cfa4b303bac03a6594f43e48d873b73553fa06a79e4df1271e9",
+      "source_bytes": 7052,
+      "bytes": 7052,
+      "sha256": "7a0f0f7a9ac39cfa4b303bac03a6594f43e48d873b73553fa06a79e4df1271e9"
+    },
+    {
+      "path": "Grass_Common_Short.gltf",
+      "archive_path": "glTF/Grass_Common_Short.gltf",
+      "source_sha256": "6957b50622c9e26e7296c1b47ea8653bc0d957e0a547de444e2ed96f0075a21a",
+      "source_bytes": 2023,
+      "bytes": 2023,
+      "sha256": "6957b50622c9e26e7296c1b47ea8653bc0d957e0a547de444e2ed96f0075a21a"
+    },
+    {
+      "path": "Grass_Common_Tall.bin",
+      "archive_path": "glTF/Grass_Common_Tall.bin",
+      "source_sha256": "d7422b9360dd644f4095ac77a00dfa5d1f1078af71ebf18865a28ef031651379",
+      "source_bytes": 14076,
+      "bytes": 14076,
+      "sha256": "d7422b9360dd644f4095ac77a00dfa5d1f1078af71ebf18865a28ef031651379"
+    },
+    {
+      "path": "Grass_Common_Tall.gltf",
+      "archive_path": "glTF/Grass_Common_Tall.gltf",
+      "source_sha256": "783466c838163bf7da44e10675ace3851b8c9fb83322387125df7a080b05cd70",
+      "source_bytes": 2025,
+      "bytes": 2025,
+      "sha256": "783466c838163bf7da44e10675ace3851b8c9fb83322387125df7a080b05cd70"
+    },
+    {
+      "path": "Grass_Wispy_Short.bin",
+      "archive_path": "glTF/Grass_Wispy_Short.bin",
+      "source_sha256": "c38f46e5a66ed3917fd45104effb914228d43d3724f4659416e1533dcd71776d",
+      "source_bytes": 25324,
+      "bytes": 25324,
+      "sha256": "c38f46e5a66ed3917fd45104effb914228d43d3724f4659416e1533dcd71776d"
+    },
+    {
+      "path": "Grass_Wispy_Short.gltf",
+      "archive_path": "glTF/Grass_Wispy_Short.gltf",
+      "source_sha256": "3c1d3bdd332420e070abde72d73611d1f13acfbe027e26b2fb943f9bcbd6b1c5",
+      "source_bytes": 2025,
+      "bytes": 2025,
+      "sha256": "3c1d3bdd332420e070abde72d73611d1f13acfbe027e26b2fb943f9bcbd6b1c5"
+    },
+    {
+      "path": "Grass_Wispy_Tall.bin",
+      "archive_path": "glTF/Grass_Wispy_Tall.bin",
+      "source_sha256": "a46e091f39958242a96722ea331efa8d7fb055c6e24d21aea6b0ac091a7b1b66",
+      "source_bytes": 29492,
+      "bytes": 29492,
+      "sha256": "a46e091f39958242a96722ea331efa8d7fb055c6e24d21aea6b0ac091a7b1b66"
+    },
+    {
+      "path": "Grass_Wispy_Tall.gltf",
+      "archive_path": "glTF/Grass_Wispy_Tall.gltf",
+      "source_sha256": "a05e3ac05e43abbdb89c5b61134e367c7d33e285ff8d2a6e0a40180cb335af0b",
+      "source_bytes": 2023,
+      "bytes": 2023,
+      "sha256": "a05e3ac05e43abbdb89c5b61134e367c7d33e285ff8d2a6e0a40180cb335af0b"
+    },
+    {
+      "path": "Leaf_Pine_C.png",
+      "archive_path": "glTF/Leaf_Pine_C.png",
+      "source_sha256": "86f7ff7a214f5424de48d269568f36a15485e61c80677e426c7be9f45181eef9",
+      "source_bytes": 70055,
+      "bytes": 52235,
+      "sha256": "528a6d07188b3579ea31a1cda7d836ae3017d68769df93d7a307d53b17968fb6"
+    },
+    {
+      "path": "Leaves.png",
+      "archive_path": "glTF/Leaves.png",
+      "source_sha256": "23248cebe28a24e78add32db3c2ee2f4d7b9219e9d2467279722f0197a7b6bd5",
+      "source_bytes": 2586432,
+      "bytes": 744357,
+      "sha256": "5d778bbdf7b7ba4916cb9213f8f1f76de8810d33d3d48454c7bf5c9b3541232d"
+    },
+    {
+      "path": "Leaves_NormalTree_C.png",
+      "archive_path": "glTF/Leaves_NormalTree_C.png",
+      "source_sha256": "998612bdf0b76a22f5f54d65cd7a457815d2842d89653fa4348a4ebb42933ad3",
+      "source_bytes": 158796,
+      "bytes": 158796,
+      "sha256": "998612bdf0b76a22f5f54d65cd7a457815d2842d89653fa4348a4ebb42933ad3"
+    },
+    {
+      "path": "Leaves_TwistedTree_C.png",
+      "archive_path": "glTF/Leaves_TwistedTree_C.png",
+      "source_sha256": "0e459b56b14c0e81b1b7cf3d1e8c6f0bb71790eb6c46bb02a76a922d8df646ea",
+      "source_bytes": 70353,
+      "bytes": 70353,
+      "sha256": "0e459b56b14c0e81b1b7cf3d1e8c6f0bb71790eb6c46bb02a76a922d8df646ea"
+    },
+    {
+      "path": "Mushroom_Common.bin",
+      "archive_path": "glTF/Mushroom_Common.bin",
+      "source_sha256": "e4cee9f2570505a172990a2754d52ed5775a4d75857a832fffa1b573e38a4051",
+      "source_bytes": 23040,
+      "bytes": 23040,
+      "sha256": "e4cee9f2570505a172990a2754d52ed5775a4d75857a832fffa1b573e38a4051"
+    },
+    {
+      "path": "Mushroom_Common.gltf",
+      "archive_path": "glTF/Mushroom_Common.gltf",
+      "source_sha256": "2088b39d92f2f6331f45e59a048d02814dcd8b22767b024f4d220143bc8339f4",
+      "source_bytes": 1822,
+      "bytes": 1822,
+      "sha256": "2088b39d92f2f6331f45e59a048d02814dcd8b22767b024f4d220143bc8339f4"
+    },
+    {
+      "path": "Mushroom_Laetiporus.bin",
+      "archive_path": "glTF/Mushroom_Laetiporus.bin",
+      "source_sha256": "14f4835745947e7088bf706fbbbfde6b800f89bebf36122f40582fc8d45bb1ae",
+      "source_bytes": 77088,
+      "bytes": 77088,
+      "sha256": "14f4835745947e7088bf706fbbbfde6b800f89bebf36122f40582fc8d45bb1ae"
+    },
+    {
+      "path": "Mushroom_Laetiporus.gltf",
+      "archive_path": "glTF/Mushroom_Laetiporus.gltf",
+      "source_sha256": "88d264df9da6b0408ec276c36ae744ae79813046ba2938f03ed0837778f66fc9",
+      "source_bytes": 1833,
+      "bytes": 1833,
+      "sha256": "88d264df9da6b0408ec276c36ae744ae79813046ba2938f03ed0837778f66fc9"
+    },
+    {
+      "path": "Mushrooms.png",
+      "archive_path": "glTF/Mushrooms.png",
+      "source_sha256": "e29eed2db831e44a29634fe25c62e9e31edf201e978a52912b9e5221ffd4a1f3",
+      "source_bytes": 1208660,
+      "bytes": 1208660,
+      "sha256": "e29eed2db831e44a29634fe25c62e9e31edf201e978a52912b9e5221ffd4a1f3"
+    },
+    {
+      "path": "PathRocks_Diffuse.png",
+      "archive_path": "glTF/PathRocks_Diffuse.png",
+      "source_sha256": "85a04abb2c136fee53b376daf3b7d7f96fdf3966de0258dff6fe2b24da792b23",
+      "source_bytes": 811732,
+      "bytes": 811732,
+      "sha256": "85a04abb2c136fee53b376daf3b7d7f96fdf3966de0258dff6fe2b24da792b23"
+    },
+    {
+      "path": "Pebble_Round_1.bin",
+      "archive_path": "glTF/Pebble_Round_1.bin",
+      "source_sha256": "f3dacef3243ccaaad7df2beb5c72574a38fb3eae45357e1b5e2b40200d51c375",
+      "source_bytes": 10160,
+      "bytes": 10160,
+      "sha256": "f3dacef3243ccaaad7df2beb5c72574a38fb3eae45357e1b5e2b40200d51c375"
+    },
+    {
+      "path": "Pebble_Round_1.gltf",
+      "archive_path": "glTF/Pebble_Round_1.gltf",
+      "source_sha256": "9f6261c81134915e73cf35eb4e37076238fd1e79434515ac686d15cbd1f779ab",
+      "source_bytes": 1850,
+      "bytes": 1850,
+      "sha256": "9f6261c81134915e73cf35eb4e37076238fd1e79434515ac686d15cbd1f779ab"
+    },
+    {
+      "path": "Pebble_Round_3.bin",
+      "archive_path": "glTF/Pebble_Round_3.bin",
+      "source_sha256": "a7367e78163d396ea032c77042eb5d6a04f68594bd9242c860e34406c5f6a8ca",
+      "source_bytes": 8576,
+      "bytes": 8576,
+      "sha256": "a7367e78163d396ea032c77042eb5d6a04f68594bd9242c860e34406c5f6a8ca"
+    },
+    {
+      "path": "Pebble_Round_3.gltf",
+      "archive_path": "glTF/Pebble_Round_3.gltf",
+      "source_sha256": "d50c99d98abd4db9bc37a454a764b8c19256c889dc90f902ac3d923ca07fe9a3",
+      "source_bytes": 1848,
+      "bytes": 1848,
+      "sha256": "d50c99d98abd4db9bc37a454a764b8c19256c889dc90f902ac3d923ca07fe9a3"
+    },
+    {
+      "path": "Pebble_Square_1.bin",
+      "archive_path": "glTF/Pebble_Square_1.bin",
+      "source_sha256": "dcb3711eff865af8317c9f05ff7280c3187e813350b0f438bd013d70ba08ac59",
+      "source_bytes": 7536,
+      "bytes": 7536,
+      "sha256": "dcb3711eff865af8317c9f05ff7280c3187e813350b0f438bd013d70ba08ac59"
+    },
+    {
+      "path": "Pebble_Square_1.gltf",
+      "archive_path": "glTF/Pebble_Square_1.gltf",
+      "source_sha256": "c8a4226bfc4f026a06774afbdefc860633eab2b3fe750f637cab89db9a6cfdef",
+      "source_bytes": 1850,
+      "bytes": 1850,
+      "sha256": "c8a4226bfc4f026a06774afbdefc860633eab2b3fe750f637cab89db9a6cfdef"
+    },
+    {
+      "path": "Pebble_Square_3.bin",
+      "archive_path": "glTF/Pebble_Square_3.bin",
+      "source_sha256": "fff619340f9b70141e2291c7b465de179f25992bdd8cc3f06872ff4bb41a2013",
+      "source_bytes": 3768,
+      "bytes": 3768,
+      "sha256": "fff619340f9b70141e2291c7b465de179f25992bdd8cc3f06872ff4bb41a2013"
+    },
+    {
+      "path": "Pebble_Square_3.gltf",
+      "archive_path": "glTF/Pebble_Square_3.gltf",
+      "source_sha256": "da6e5ed6fec5cf1d72b3d492b479dae88a40f9c1cf9a809e2c708019fbaa9d68",
+      "source_bytes": 1847,
+      "bytes": 1847,
+      "sha256": "da6e5ed6fec5cf1d72b3d492b479dae88a40f9c1cf9a809e2c708019fbaa9d68"
+    },
+    {
+      "path": "Pine_1.bin",
+      "archive_path": "glTF/Pine_1.bin",
+      "source_sha256": "0cc0900d156359cab7028d87cd5d8897fbcb0479ddf1ddf524d5462c11e17af2",
+      "source_bytes": 275492,
+      "bytes": 275492,
+      "sha256": "0cc0900d156359cab7028d87cd5d8897fbcb0479ddf1ddf524d5462c11e17af2"
+    },
+    {
+      "path": "Pine_1.gltf",
+      "archive_path": "glTF/Pine_1.gltf",
+      "source_sha256": "adc85a72e6f46f71317ca5f7630876bfb207f687427bc9e37cd97ec4af5f2cbc",
+      "source_bytes": 3832,
+      "bytes": 3832,
+      "sha256": "adc85a72e6f46f71317ca5f7630876bfb207f687427bc9e37cd97ec4af5f2cbc"
+    },
+    {
+      "path": "Pine_2.bin",
+      "archive_path": "glTF/Pine_2.bin",
+      "source_sha256": "5ba81ed2b131243bf02f5fb18e278083205ce16b0f30c364ccbe9355e7637c60",
+      "source_bytes": 258336,
+      "bytes": 258336,
+      "sha256": "5ba81ed2b131243bf02f5fb18e278083205ce16b0f30c364ccbe9355e7637c60"
+    },
+    {
+      "path": "Pine_2.gltf",
+      "archive_path": "glTF/Pine_2.gltf",
+      "source_sha256": "57bd4732170b6c7e51bcf78fe5adaabf142f95a50378d8d3051d1f20a04d3c2f",
+      "source_bytes": 3833,
+      "bytes": 3833,
+      "sha256": "57bd4732170b6c7e51bcf78fe5adaabf142f95a50378d8d3051d1f20a04d3c2f"
+    },
+    {
+      "path": "Pine_3.bin",
+      "archive_path": "glTF/Pine_3.bin",
+      "source_sha256": "73edd69d7e789b12bfa32ab202c62d74ae98f0bba67975205211bf51906d8c82",
+      "source_bytes": 345288,
+      "bytes": 345288,
+      "sha256": "73edd69d7e789b12bfa32ab202c62d74ae98f0bba67975205211bf51906d8c82"
+    },
+    {
+      "path": "Pine_3.gltf",
+      "archive_path": "glTF/Pine_3.gltf",
+      "source_sha256": "54c72a4d614f053dd4b3d4404076a361de6085ec6a34560e42a76d7e79d89830",
+      "source_bytes": 3827,
+      "bytes": 3827,
+      "sha256": "54c72a4d614f053dd4b3d4404076a361de6085ec6a34560e42a76d7e79d89830"
+    },
+    {
+      "path": "Pine_4.bin",
+      "archive_path": "glTF/Pine_4.bin",
+      "source_sha256": "0a04c88f619924d9d4df10281e994da9d8e429c1a19fae2086ed6f1ebd1ba88a",
+      "source_bytes": 254844,
+      "bytes": 254844,
+      "sha256": "0a04c88f619924d9d4df10281e994da9d8e429c1a19fae2086ed6f1ebd1ba88a"
+    },
+    {
+      "path": "Pine_4.gltf",
+      "archive_path": "glTF/Pine_4.gltf",
+      "source_sha256": "d8978cfd5a29a22446b9277f1789f44c3f953fb6e29adb625a8f61c3dd032952",
+      "source_bytes": 3831,
+      "bytes": 3831,
+      "sha256": "d8978cfd5a29a22446b9277f1789f44c3f953fb6e29adb625a8f61c3dd032952"
+    },
+    {
+      "path": "Pine_5.bin",
+      "archive_path": "glTF/Pine_5.bin",
+      "source_sha256": "18982d7f6c430d1a42568d4ef62017398dedb1ddc60dfbab047f8cddea9cf797",
+      "source_bytes": 120996,
+      "bytes": 120996,
+      "sha256": "18982d7f6c430d1a42568d4ef62017398dedb1ddc60dfbab047f8cddea9cf797"
+    },
+    {
+      "path": "Pine_5.gltf",
+      "archive_path": "glTF/Pine_5.gltf",
+      "source_sha256": "bb060ce1420af32dc996241078d36e4c991577397474aa64f4c691362c482cfa",
+      "source_bytes": 3815,
+      "bytes": 3815,
+      "sha256": "bb060ce1420af32dc996241078d36e4c991577397474aa64f4c691362c482cfa"
+    },
+    {
+      "path": "RockPath_Round_Thin.bin",
+      "archive_path": "glTF/RockPath_Round_Thin.bin",
+      "source_sha256": "3bacc605d7bd1a525252ada6fa2362236493b6468fba3fbad4ba8f8e9360de8f",
+      "source_bytes": 159316,
+      "bytes": 159316,
+      "sha256": "3bacc605d7bd1a525252ada6fa2362236493b6468fba3fbad4ba8f8e9360de8f"
+    },
+    {
+      "path": "RockPath_Round_Thin.gltf",
+      "archive_path": "glTF/RockPath_Round_Thin.gltf",
+      "source_sha256": "afa02d5495b8ead8bf738f7142f299c336fbef80d98e2e591a2b775d65ab140e",
+      "source_bytes": 1868,
+      "bytes": 1868,
+      "sha256": "afa02d5495b8ead8bf738f7142f299c336fbef80d98e2e591a2b775d65ab140e"
+    },
+    {
+      "path": "RockPath_Square_Thin.bin",
+      "archive_path": "glTF/RockPath_Square_Thin.bin",
+      "source_sha256": "66d2bc07c49198d75e366a4f1d5aed103dea92716ca0966767d55dfc857932f3",
+      "source_bytes": 130024,
+      "bytes": 130024,
+      "sha256": "66d2bc07c49198d75e366a4f1d5aed103dea92716ca0966767d55dfc857932f3"
+    },
+    {
+      "path": "RockPath_Square_Thin.gltf",
+      "archive_path": "glTF/RockPath_Square_Thin.gltf",
+      "source_sha256": "6295fba5e2bf9cbd3762a7aeba6459f49b42092aa30e7ecb63a5749627302f73",
+      "source_bytes": 1871,
+      "bytes": 1871,
+      "sha256": "6295fba5e2bf9cbd3762a7aeba6459f49b42092aa30e7ecb63a5749627302f73"
+    },
+    {
+      "path": "Rock_Medium_1.bin",
+      "archive_path": "glTF/Rock_Medium_1.bin",
+      "source_sha256": "ea79527d4c2b3bdb7a28bf589bf0c1fd96d192a4d0738636753911dd58681e99",
+      "source_bytes": 13284,
+      "bytes": 13284,
+      "sha256": "ea79527d4c2b3bdb7a28bf589bf0c1fd96d192a4d0738636753911dd58681e99"
+    },
+    {
+      "path": "Rock_Medium_1.gltf",
+      "archive_path": "glTF/Rock_Medium_1.gltf",
+      "source_sha256": "5d1ab1fa03218f4a908728ed0eabe6486344a7e4f510b0d3d6f837fd1d011bd8",
+      "source_bytes": 1831,
+      "bytes": 1831,
+      "sha256": "5d1ab1fa03218f4a908728ed0eabe6486344a7e4f510b0d3d6f837fd1d011bd8"
+    },
+    {
+      "path": "Rock_Medium_2.bin",
+      "archive_path": "glTF/Rock_Medium_2.bin",
+      "source_sha256": "76b60bf8349f71abdb0ed462b3223d93c2dcabdfb5754bc132e18b021cc6c805",
+      "source_bytes": 9432,
+      "bytes": 9432,
+      "sha256": "76b60bf8349f71abdb0ed462b3223d93c2dcabdfb5754bc132e18b021cc6c805"
+    },
+    {
+      "path": "Rock_Medium_2.gltf",
+      "archive_path": "glTF/Rock_Medium_2.gltf",
+      "source_sha256": "fac2d05a05f2d0d2098de59c09b58f42cc875c9caca4fd4c4bd57f3d36e7b12e",
+      "source_bytes": 1825,
+      "bytes": 1825,
+      "sha256": "fac2d05a05f2d0d2098de59c09b58f42cc875c9caca4fd4c4bd57f3d36e7b12e"
+    },
+    {
+      "path": "Rock_Medium_3.bin",
+      "archive_path": "glTF/Rock_Medium_3.bin",
+      "source_sha256": "63f94bce2d3fb3fe25b2d6c843a828b1bec76855dbaac93fcf5d43582309caad",
+      "source_bytes": 20124,
+      "bytes": 20124,
+      "sha256": "63f94bce2d3fb3fe25b2d6c843a828b1bec76855dbaac93fcf5d43582309caad"
+    },
+    {
+      "path": "Rock_Medium_3.gltf",
+      "archive_path": "glTF/Rock_Medium_3.gltf",
+      "source_sha256": "9a575b911372cf91693aa3a56aea8137ec2251c2b99fb34a31272ee64503047f",
+      "source_bytes": 1832,
+      "bytes": 1832,
+      "sha256": "9a575b911372cf91693aa3a56aea8137ec2251c2b99fb34a31272ee64503047f"
+    },
+    {
+      "path": "Rocks_Diffuse.png",
+      "archive_path": "glTF/Rocks_Diffuse.png",
+      "source_sha256": "b813696df6081f469a127092eb0ce45cc39d56f3ccc0699152bfcd3804810b48",
+      "source_bytes": 2517398,
+      "bytes": 947318,
+      "sha256": "8de436b3bcc42bddeb2a455d3d5800237c80cb46e1ff7a589ecf6720d88473b1"
+    },
+    {
+      "path": "TwistedTree_1.bin",
+      "archive_path": "glTF/TwistedTree_1.bin",
+      "source_sha256": "58e4c16c16e0a71051af76a37be0641ea8f7089652687f957383d3c4bd24723b",
+      "source_bytes": 732456,
+      "bytes": 732456,
+      "sha256": "58e4c16c16e0a71051af76a37be0641ea8f7089652687f957383d3c4bd24723b"
+    },
+    {
+      "path": "TwistedTree_1.gltf",
+      "archive_path": "glTF/TwistedTree_1.gltf",
+      "source_sha256": "8544b084e1fadfbec981e964ce27463f50c39c460513e0d3442160880c5908a7",
+      "source_bytes": 3819,
+      "bytes": 3819,
+      "sha256": "8544b084e1fadfbec981e964ce27463f50c39c460513e0d3442160880c5908a7"
+    },
+    {
+      "path": "TwistedTree_3.bin",
+      "archive_path": "glTF/TwistedTree_3.bin",
+      "source_sha256": "04ad394055b72a3d3717d8e3617ae733ea155580330d94d7387238928755eaca",
+      "source_bytes": 771176,
+      "bytes": 771176,
+      "sha256": "04ad394055b72a3d3717d8e3617ae733ea155580330d94d7387238928755eaca"
+    },
+    {
+      "path": "TwistedTree_3.gltf",
+      "archive_path": "glTF/TwistedTree_3.gltf",
+      "source_sha256": "c719e6f2f26bb5f4a32f92194b71f432e2444870cb0f3b41989e05c7ad3b9ecd",
+      "source_bytes": 3817,
+      "bytes": 3817,
+      "sha256": "c719e6f2f26bb5f4a32f92194b71f432e2444870cb0f3b41989e05c7ad3b9ecd"
+    },
+    {
+      "path": "TwistedTree_5.bin",
+      "archive_path": "glTF/TwistedTree_5.bin",
+      "source_sha256": "687fe8183da031a2c6b66668081bf1bc8e5c408b49f165a2b13b45742280e07b",
+      "source_bytes": 811680,
+      "bytes": 811680,
+      "sha256": "687fe8183da031a2c6b66668081bf1bc8e5c408b49f165a2b13b45742280e07b"
+    },
+    {
+      "path": "TwistedTree_5.gltf",
+      "archive_path": "glTF/TwistedTree_5.gltf",
+      "source_sha256": "c193b23d5dc52e7b9c9d5ddda2bc0b89cd1cbbd4b8f1c08fae3216424bd1e982",
+      "source_bytes": 3822,
+      "bytes": 3822,
+      "sha256": "c193b23d5dc52e7b9c9d5ddda2bc0b89cd1cbbd4b8f1c08fae3216424bd1e982"
+    }
+  ],
+  "modifications": "PNG textures resized proportionally to at most 1024 px with Lanczos filtering; glTF geometry, materials, buffer files and original model scales unchanged. Full-resolution originals remain in the local archive.",
+  "resized_textures": [
+    {
+      "path": "Leaves.png",
+      "source_size": [
+        2048,
+        2048
+      ],
+      "retained_size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "path": "Bark_TwistedTree.png",
+      "source_size": [
+        2048,
+        2048
+      ],
+      "retained_size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "path": "Bark_TwistedTree_Normal.png",
+      "source_size": [
+        2048,
+        2048
+      ],
+      "retained_size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "path": "Bark_DeadTree.png",
+      "source_size": [
+        2048,
+        2048
+      ],
+      "retained_size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "path": "Bark_NormalTree.png",
+      "source_size": [
+        2048,
+        2048
+      ],
+      "retained_size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "path": "Bark_DeadTree_Normal.png",
+      "source_size": [
+        2048,
+        2048
+      ],
+      "retained_size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "path": "Rocks_Diffuse.png",
+      "source_size": [
+        2048,
+        2048
+      ],
+      "retained_size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "path": "Leaf_Pine_C.png",
+      "source_size": [
+        2048,
+        2048
+      ],
+      "retained_size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "path": "Bark_NormalTree_Normal.png",
+      "source_size": [
+        2048,
+        2048
+      ],
+      "retained_size": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

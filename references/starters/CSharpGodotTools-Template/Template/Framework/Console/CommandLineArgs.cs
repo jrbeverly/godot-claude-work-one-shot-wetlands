@@ -1,0 +1,111 @@
+using Godot;
+using System.Collections.Generic;
+
+namespace __TEMPLATE__.Ui.Console;
+
+/// <summary>
+/// Handles custom command line arguments set for each instance.
+/// </summary>
+public static class CommandLineArgs
+{
+    /// <summary>
+    /// Applies supported command-line window layout presets when running outside the editor.
+    /// </summary>
+    public static void Initialize()
+    {
+        // Skip command-line window placement while running inside the editor.
+        if (Engine.IsEmbeddedInEditor())
+            return;
+
+        // Get command-line arguments
+        string[] args = OS.GetCmdlineArgs();
+
+        Dictionary<string, WindowSettings> windowSettings = GetWindowSettingsMap();
+
+        // Loop through arguments to find the position argument
+        foreach (string arg in args)
+        {
+            // Skip unknown arguments that do not map to a window layout preset.
+            if (!windowSettings.TryGetValue(arg, out WindowSettings? settings))
+                continue;
+
+            // Set the window size
+            DisplayServer.WindowSetSize(settings.Size);
+
+            // Set the window position
+            DisplayServer.WindowSetPosition(settings.Position);
+            break;
+        }
+    }
+
+    /// <summary>
+    /// Builds the supported command-line window layout presets.
+    /// </summary>
+    /// <returns>Map of argument name to window size and position settings.</returns>
+    private static Dictionary<string, WindowSettings> GetWindowSettingsMap()
+    {
+        // Define the vertical space for the window bar
+        const int windowBarHeight = 30; // Adjust this value based on your actual window bar height
+
+        // Get screen size
+        Vector2 screenSize = DisplayServer.ScreenGetSize();
+
+        return new Dictionary<string, WindowSettings>()
+        {
+            {
+                "top_left",
+                new WindowSettings(
+                    new Vector2I(0, windowBarHeight),
+                    new Vector2I((int)(screenSize.X / 2), (int)((screenSize.Y - windowBarHeight) / 2)))
+            },
+            {
+                "top_right",
+                new WindowSettings(
+                    new Vector2I((int)(screenSize.X / 2), windowBarHeight),
+                    new Vector2I((int)(screenSize.X / 2), (int)((screenSize.Y - windowBarHeight) / 2)))
+            },
+            {
+                "bottom_left",
+                new WindowSettings(
+                    new Vector2I(0, (int)(screenSize.Y / 2) + windowBarHeight),
+                    new Vector2I((int)(screenSize.X / 2), (int)((screenSize.Y - windowBarHeight) / 2)))
+            },
+            {
+                "bottom_right",
+                new WindowSettings(
+                    new Vector2I((int)(screenSize.X / 2), (int)(screenSize.Y / 2) + windowBarHeight),
+                    new Vector2I((int)(screenSize.X / 2), (int)((screenSize.Y - windowBarHeight) / 2)))
+            },
+            {
+                "middle_left",
+                new WindowSettings(
+                    new Vector2I(0, windowBarHeight),
+                    new Vector2I((int)(screenSize.X / 2), (int)(screenSize.Y - windowBarHeight)))
+            },
+            {
+                "middle_right",
+                new WindowSettings(
+                    new Vector2I((int)(screenSize.X / 2), windowBarHeight),
+                    new Vector2I((int)(screenSize.X / 2), (int)(screenSize.Y - windowBarHeight)))
+            },
+            {
+                "middle_top",
+                new WindowSettings(
+                    new Vector2I(0, windowBarHeight),
+                    new Vector2I((int)screenSize.X, (int)((screenSize.Y - windowBarHeight) / 2)))
+            },
+            {
+                "middle_bottom",
+                new WindowSettings(
+                    new Vector2I(0, (int)(screenSize.Y / 2) + windowBarHeight),
+                    new Vector2I((int)screenSize.X, (int)((screenSize.Y - windowBarHeight) / 2)))
+            }
+        };
+    }
+
+    private class WindowSettings(Vector2I position, Vector2I size)
+    {
+        public Vector2I Position { get; } = position;
+        public Vector2I Size { get; } = size;
+    }
+}

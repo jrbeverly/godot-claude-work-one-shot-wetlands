@@ -1,0 +1,100 @@
+class_name ImageHelper
+extends Object
+
+const bmp := "bmp"
+const dds := "dds"
+const exr := "exr"
+const jpg := "jpg"
+const jpeg := "jpeg"
+const ktx := "ktx"
+const png := "png"
+const svg := "svg"
+const tga := "tga"
+const webp := "webp"
+const EXTENSIONS: PackedStringArray = [bmp, dds, exr, jpg, jpeg, ktx, png, svg, tga, webp]
+
+
+static func load_external_image(path: String) -> ImageTexture:
+	var image := Image.load_from_file(path)
+	return ImageTexture.create_from_image(image) if image != null and not image.is_empty() else null
+
+
+static func get_image_format(path: String, default_format: String = png) -> String:
+	var extension := StringUtils.substring_after_last(path.to_lower(), ".")
+	return extension if EXTENSIONS.has(extension) else default_format
+
+
+static func detect_image_format(bytes: PackedByteArray) -> String:
+	if bytes.size() >= 3 and bytes[0] == 0xff and bytes[1] == 0xd8 and bytes[2] == 0xff:
+		return jpg
+	if bytes.size() >= 8 and bytes.slice(0, 8) == PackedByteArray([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]):
+		return png
+	if bytes.size() >= 12 and bytes.slice(0, 4).get_string_from_ascii() == "RIFF" and bytes.slice(8, 12).get_string_from_ascii() == "WEBP":
+		return webp
+	var header := bytes.slice(0, mini(bytes.size(), 4096)).get_string_from_utf8().strip_edges()
+	if header.trim_prefix("\ufeff").find("<svg") >= 0:
+		return svg
+	return ""
+
+
+static func decode_image(bytes: PackedByteArray) -> Image:
+	var image := Image.new()
+	var error := ERR_FILE_UNRECOGNIZED
+	match detect_image_format(bytes):
+		jpg: error = image.load_jpg_from_buffer(bytes)
+		png: error = image.load_png_from_buffer(bytes)
+		webp: error = image.load_webp_from_buffer(bytes)
+		svg: error = image.load_svg_from_buffer(bytes)
+	if error == OK:
+		return image
+
+	if image.load_jpg_from_buffer(bytes) == OK:
+		return image
+	image = Image.new()
+	if image.load_png_from_buffer(bytes) == OK:
+		return image
+	image = Image.new()
+	if image.load_webp_from_buffer(bytes) == OK:
+		return image
+	image = Image.new()
+	if image.load_svg_from_buffer(bytes) == OK:
+		return image
+	image = Image.new()
+	if image.load_bmp_from_buffer(bytes) == OK:
+		return image
+	image = Image.new()
+	if image.load_tga_from_buffer(bytes) == OK:
+		return image
+	image = Image.new()
+	if image.load_dds_from_buffer(bytes) == OK:
+		return image
+	image = Image.new()
+	if image.load_exr_from_buffer(bytes) == OK:
+		return image
+	image = Image.new()
+	if image.load_ktx_from_buffer(bytes) == OK:
+		return image
+	return null
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+## Creates a theme-aware image card shown while remote content is loading.
+static func create_placeholder_texture(width: int = 160, height: int = 90) -> ImageTexture:
+	var background := ColorBase.control_surface.to_html(false)
+	var border := ColorBase.subtle_border.to_html(false)
+	var icon := ColorBase.secondary_text.to_html(false)
+	var svg_template := """
+	<svg xmlns="http://www.w3.org/2000/svg" width="{}" height="{}" viewBox="0 0 160 90">
+	<rect x="0.5" y="0.5" width="159" height="89" rx="8" fill="#{}" stroke="#{}"/>
+	<g fill="none" stroke="#{}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+		<rect x="61" y="29" width="38" height="32" rx="4"/>
+		<circle cx="88" cy="39" r="3" fill="#{}" stroke="none"/>
+		<path d="M65 56l10-10 7 7 5-5 8 8"/>
+	</g>
+	</svg>"""
+	var svg := StringUtils.format(svg_template, width, height, background, border, icon, icon)
+	var image := Image.new()
+	if image.load_svg_from_buffer(svg.to_utf8_buffer()) != OK:
+		image = Image.create(width, height, false, Image.FORMAT_RGBA8)
+		image.fill(ColorBase.control_surface)
+	return ImageTexture.create_from_image(image)

@@ -1,0 +1,50 @@
+using Godot;
+
+namespace GodotUtils;
+
+/// <summary>
+/// Factory helpers for GPU particles (2D).
+/// </summary>
+public static class GpuParticleFactory2D
+{
+    /// <summary>
+    /// Instantiates a one-shot GPU particle and frees it when finished.
+    /// </summary>
+    /// <param name="parent">Parent node that receives the particle instance.</param>
+    /// <param name="particleScene">Packed scene containing a <see cref="GpuParticles2D"/> root.</param>
+    /// <returns>Configured one-shot particle instance.</returns>
+    public static GpuParticles2D OneShot(Node parent, PackedScene particleScene)
+    {
+        GpuParticles2D particles = particleScene.Instantiate<GpuParticles2D>();
+        particles.OneShot = true;
+        particles.Finished += OnFinished;
+        particles.TreeExited += OnExitedTree;
+        parent.AddChild(particles);
+        return particles;
+
+        void OnFinished()
+        {
+            particles.QueueFree();
+        }
+
+        void OnExitedTree()
+        {
+            particles.Finished -= OnFinished;
+            particles.TreeExited -= OnExitedTree;
+        }
+    }
+
+    /// <summary>
+    /// Instantiates a looping GPU particle without auto-free.
+    /// </summary>
+    /// <param name="parent">Parent node that receives the particle instance.</param>
+    /// <param name="particleScene">Packed scene containing a <see cref="GpuParticles2D"/> root.</param>
+    /// <returns>Configured looping particle instance.</returns>
+    public static GpuParticles2D Looping(Node parent, PackedScene particleScene)
+    {
+        GpuParticles2D particles = particleScene.Instantiate<GpuParticles2D>();
+        particles.OneShot = false;
+        parent.AddChild(particles);
+        return particles;
+    }
+}
